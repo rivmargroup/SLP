@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find It! — SLP Activities Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1b2a33; --ink-soft: #4b5f6a; --muted: #7d8f97;
+  --primary: #1f5f6b; --primary-dark: #143f48; --primary-light: #e7f1f1;
+  --accent: #e08e45; --accent-soft: #fbe9d7;
+  --bg: #f8f7f4; --card-bg: #ffffff; --border: #e7e4dd;
+  --good: #2f7d4f; --good-bg: #e5f4ea; --bad: #c0392b; --bad-bg: #fbe7e4;
+  --radius-lg: 20px; --radius-md: 14px;
+  --shadow-md: 0 12px 28px -8px rgba(20,40,45,.16);
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:"Manrope",sans-serif; background:var(--bg); color:var(--ink); }
+.wrap { max-width: 820px; margin:0 auto; padding: 0 20px 60px; }
+header { background: linear-gradient(160deg, var(--primary-dark), var(--primary) 80%); color:#fff; padding: 28px 0; margin-bottom: -20px; }
+header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:600; }
+.back-link:hover { color:#fff; }
+h1 { font-family:"Fraunces",serif; font-weight:600; margin:6px 0 0; font-size: 1.7rem; }
+.eyebrow { margin:0; font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color: var(--accent-soft); }
+.scoreboard { display:flex; gap:10px; }
+.pill { background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); border-radius:999px; padding:8px 16px; font-size:.85rem; font-weight:700; }
+
+.panel {
+  margin-top: 24px; background: var(--card-bg); border:1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 28px; position:relative; z-index:1;
+}
+
+.chip-group { display:flex; flex-wrap:wrap; gap:8px; margin-bottom: 22px; }
+.chip {
+  border:1px solid var(--border); background: var(--bg); color: var(--ink-soft);
+  font:inherit; font-size:.82rem; font-weight:700; padding:7px 14px; border-radius:999px; cursor:pointer;
+}
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.active { background: var(--primary); border-color: var(--primary); color:#fff; }
+
+.prompt-card {
+  text-align:center; padding: 20px 10px 28px;
+}
+.prompt-label { font-size:.75rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color: var(--accent); margin-bottom: 10px; }
+.prompt-text { font-family:"Fraunces",serif; font-size:1.5rem; font-weight:600; color: var(--ink); margin: 0 0 26px; line-height:1.35; }
+
+.options-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (max-width: 500px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+
+.option-btn {
+  font-family: inherit; font-size: 1.9rem; padding: 20px 10px; border-radius: var(--radius-md);
+  border: 2px solid var(--border); background: var(--bg); cursor:pointer; transition: transform .12s ease, border-color .12s ease;
+  min-height: 84px; display:flex; align-items:center; justify-content:center; word-break:break-word;
+}
+.option-btn.word { font-size: 1.05rem; font-weight:700; font-family:"Manrope",sans-serif; color: var(--ink); }
+.option-btn:hover:not(:disabled) { border-color: var(--primary); transform: translateY(-2px); }
+.option-btn.correct { background: var(--good-bg); border-color: var(--good); }
+.option-btn.wrong { background: var(--bad-bg); border-color: var(--bad); }
+.option-btn:disabled { cursor:default; }
+
+.feedback { text-align:center; min-height: 30px; margin-top:18px; font-weight:700; }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.actions { display:flex; justify-content:center; margin-top: 18px; }
+.next-btn {
+  font: inherit; font-weight:700; font-size:.95rem; padding: 12px 28px; border-radius:999px;
+  border:none; background: var(--primary); color:#fff; cursor:pointer; visibility:hidden;
+}
+.next-btn.visible { visibility: visible; }
+.next-btn:hover { background: var(--primary-dark); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div>
+      <a class="back-link" href="index.html">&larr; All games</a>
+      <p class="eyebrow">Speech &amp; language practice</p>
+      <h1>🔍 Find It!</h1>
+    </div>
+    <div class="scoreboard">
+      <span class="pill" id="scorePill">Score: 0</span>
+      <span class="pill" id="streakPill">Streak: 0</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="chip-group" id="categoryChips"></div>
+
+    <div class="prompt-card">
+      <p class="prompt-label" id="promptCategory">Category</p>
+      <p class="prompt-text" id="promptText">Loading...</p>
+      <div class="options-grid" id="optionsGrid"></div>
+      <p class="feedback" id="feedback"></p>
+      <div class="actions">
+        <button class="next-btn" id="nextBtn">Next question →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORY_META = {
+  Describing: { label: 'Describing', icon: '🔎' },
+  Grammar: { label: 'Grammar', icon: '✏️' },
+  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭' },
+  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢' },
+  WH_Questions: { label: 'WH questions', icon: '❓' }
+};
+
+const QUESTIONS = [
+  { category: 'Describing', prompt: 'Which shape has NO corners?', options: ['⚪','🔺','⬛','⭐'], correct: 0 },
+  { category: 'Describing', prompt: 'Which shape has 3 corners?', options: ['⬛','⚪','🔺','⭐'], correct: 2 },
+  { category: 'Describing', prompt: 'Which animal is the BIGGEST?', options: ['🐘','🐭','🐝','🐜'], correct: 0 },
+  { category: 'Describing', prompt: 'Which animal is the SMALLEST?', options: ['🐘','🐕','🐭','🐎'], correct: 2 },
+  { category: 'Describing', prompt: 'Which one does NOT belong?', options: ['🍎','🍌','🍇','🚗'], correct: 3 },
+  { category: 'Describing', prompt: 'Which one does NOT belong?', options: ['🐶','🐱','🐮','🚌'], correct: 3 },
+
+  { category: 'Grammar', prompt: 'She ___ jumping.', options: ['is','are','am','were'], correct: 0, word: true },
+  { category: 'Grammar', prompt: 'They ___ playing outside.', options: ['is','are','am','was'], correct: 1, word: true },
+  { category: 'Grammar', prompt: 'He ___ a red backpack.', options: ['have','has','having','haves'], correct: 1, word: true },
+  { category: 'Grammar', prompt: 'I ___ two dogs.', options: ['has','have','having','haved'], correct: 1, word: true },
+  { category: 'Grammar', prompt: 'The cat ___ sleeping on the bed.', options: ['is','are','am','be'], correct: 0, word: true },
+  { category: 'Grammar', prompt: 'We ___ ready for the game.', options: ['is','am','are','has'], correct: 2, word: true },
+
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'The ball rolled ___ the table.', options: ['under','above','between','behind'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'The cat is sitting ___ the two pillows.', options: ['between','under','behind','over'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Put your backpack ___ the chair, not in front of it.', options: ['behind','on','between','near'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'The picture on the wall is ___ the door.', options: ['above','under','between','behind'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'What is the opposite of LEFT?', options: ['Right','Up','Down','Behind'], correct: 0, word: true },
+
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has MORE?', options: ['🍪🍪🍪🍪🍪','🍪🍪','🍪🍪🍪','🍪'], correct: 0 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has FEWER?', options: ['⭐⭐⭐⭐','⭐','⭐⭐⭐','⭐⭐'], correct: 1 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which shows the SAME amount as 🍎🍎🍎?', options: ['🍎🍎🍎','🍎🍎','🍎🍎🍎🍎','🍎'], correct: 0 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has the MOST stars?', options: ['⭐⭐','⭐⭐⭐⭐⭐⭐','⭐⭐⭐','⭐⭐⭐⭐'], correct: 1 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has the LEAST balloons?', options: ['🎈🎈🎈','🎈🎈🎈🎈','🎈','🎈🎈'], correct: 2 },
+
+  { category: 'WH_Questions', prompt: "Who lives on a farm and says 'moo'?", options: ['🐄','🐟','🦁','🐧'], correct: 0 },
+  { category: 'WH_Questions', prompt: 'Where would you find fish swimming?', options: ['🌊','🏔️','🏜️','🌳'], correct: 0 },
+  { category: 'WH_Questions', prompt: 'When do we usually sleep?', options: ['At night','At lunch','In the car','At recess'], correct: 0, word: true },
+  { category: 'WH_Questions', prompt: 'Why do we wear a coat?', options: ["Because it's cold","Because it's a toy","Because it's food","Because it's a book"], correct: 0, word: true },
+  { category: 'WH_Questions', prompt: 'What do you use to cut paper?', options: ['✂️','🍴','🖊️','📖'], correct: 0 },
+  { category: 'WH_Questions', prompt: 'What season comes right after winter?', options: ['Spring','Summer','Fall','Winter'], correct: 0, word: true }
+];
+
+let activeCategory = 'all';
+let pool = [];
+let current = null;
+let score = 0;
+let streak = 0;
+let answered = false;
+
+const chipsEl = document.getElementById('categoryChips');
+const promptCategoryEl = document.getElementById('promptCategory');
+const promptTextEl = document.getElementById('promptText');
+const optionsGridEl = document.getElementById('optionsGrid');
+const feedbackEl = document.getElementById('feedback');
+const nextBtn = document.getElementById('nextBtn');
+const scorePill = document.getElementById('scorePill');
+const streakPill = document.getElementById('streakPill');
+
+function buildChips() {
+  const cats = ['all', ...Object.keys(CATEGORY_META)];
+  cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (cat === activeCategory ? ' active' : '');
+    btn.type = 'button';
+    btn.dataset.value = cat;
+    btn.textContent = cat === 'all' ? '✨ All' : `${CATEGORY_META[cat].icon} ${CATEGORY_META[cat].label}`;
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      [...chipsEl.children].forEach(c => c.classList.toggle('active', c.dataset.value === cat));
+      rebuildPool();
+      nextQuestion();
+    });
+    chipsEl.appendChild(btn);
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rebuildPool() {
+  const source = activeCategory === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.category === activeCategory);
+  pool = shuffle(source);
+}
+
+function nextQuestion() {
+  answered = false;
+  feedbackEl.textContent = '';
+  feedbackEl.className = 'feedback';
+  nextBtn.classList.remove('visible');
+
+  if (pool.length === 0) rebuildPool();
+  current = pool.pop();
+
+  const meta = CATEGORY_META[current.category];
+  promptCategoryEl.textContent = `${meta.icon} ${meta.label}`;
+  promptTextEl.textContent = current.prompt;
+
+  optionsGridEl.innerHTML = '';
+  current.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn' + (current.word ? ' word' : '');
+    btn.textContent = opt;
+    btn.addEventListener('click', () => selectOption(idx, btn));
+    optionsGridEl.appendChild(btn);
+  });
+}
+
+function selectOption(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const buttons = [...optionsGridEl.children];
+  buttons.forEach(b => (b.disabled = true));
+
+  if (idx === current.correct) {
+    btn.classList.add('correct');
+    score++;
+    streak++;
+    feedbackEl.textContent = 'Correct! 🎉';
+    feedbackEl.classList.add('good');
+  } else {
+    btn.classList.add('wrong');
+    buttons[current.correct].classList.add('correct');
+    streak = 0;
+    feedbackEl.textContent = 'Not quite — the correct answer is highlighted.';
+    feedbackEl.classList.add('bad');
+  }
+
+  scorePill.textContent = `Score: ${score}`;
+  streakPill.textContent = `Streak: ${streak}`;
+  nextBtn.classList.add('visible');
+}
+
+nextBtn.addEventListener('click', nextQuestion);
+
+buildChips();
+rebuildPool();
+nextQuestion();
+</script>
+</body>
+</html>

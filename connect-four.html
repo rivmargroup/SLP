@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connect Four with Questions — SLP Activities Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%B4%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1b2a33;
+  --ink-soft: #4b5f6a;
+  --muted: #7d8f97;
+  --primary: #1f5f6b;
+  --primary-dark: #143f48;
+  --primary-light: #e7f1f1;
+  --accent: #e08e45;
+  --accent-soft: #fbe9d7;
+  --bg: #f8f7f4;
+  --card-bg: #ffffff;
+  --border: #e7e4dd;
+  --good: #2f8f5b;
+  --good-bg: #e5f5ec;
+  --bad: #c14b4b;
+  --bad-bg: #fbe9e9;
+  --p1-color: #1f5f6b;
+  --p2-color: #e08e45;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 3px rgba(20, 40, 45, 0.06);
+  --shadow-md: 0 12px 28px -8px rgba(20, 40, 45, 0.16);
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 780px; margin: 0 auto; padding: 0 24px 60px; }
+
+header.site-header {
+  background: radial-gradient(1100px 420px at 85% -10%, rgba(224, 142, 69, 0.18), transparent 60%),
+    linear-gradient(160deg, var(--primary-dark), var(--primary) 78%);
+  color: white;
+  padding: 34px 0 40px;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.86rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.back-link:hover { color: white; }
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  opacity: 0.9;
+}
+header.site-header h1 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2rem;
+  letter-spacing: -0.01em;
+}
+header.site-header p.sub {
+  margin: 0 0 20px;
+  color: rgba(255,255,255,0.85);
+  max-width: 560px;
+  font-size: 0.98rem;
+}
+.pill-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill {
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.panel {
+  margin-top: -22px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
+.chip {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.status-msg { font-weight: 700; color: var(--ink); }
+.reset-btn {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.board-wrap { overflow-x: auto; margin-bottom: 22px; }
+.board {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  background: var(--primary-dark);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  width: max-content;
+  min-width: 100%;
+}
+.col-btn {
+  grid-row: 1;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  padding: 6px 0;
+  cursor: pointer;
+  width: 56px;
+}
+.col-btn:hover:not(:disabled) { background: rgba(255,255,255,0.3); }
+.col-btn:disabled { opacity: 0.3; cursor: default; }
+
+.slot {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slot .piece {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: none;
+}
+.slot.p1 .piece { display: block; background: var(--p1-color); }
+.slot.p2 .piece { display: block; background: var(--p2-color); }
+.slot.win .piece { box-shadow: 0 0 0 4px var(--accent-soft); }
+
+.prompt-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  text-align: center;
+}
+.prompt-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+.prompt-text {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 18px;
+  line-height: 1.4;
+}
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.option-btn {
+  font: inherit;
+  font-size: 1rem;
+  padding: 14px 10px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  background: white;
+  cursor: pointer;
+  transition: transform 0.1s ease, border-color 0.15s ease;
+}
+.option-btn.word { font-weight: 700; }
+.option-btn:hover:not(:disabled) { border-color: var(--primary); }
+.option-btn:disabled { cursor: default; }
+.option-btn.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); }
+.option-btn.wrong { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+
+.feedback { margin: 16px 0 0; font-weight: 700; min-height: 1.4em; }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.continue-btn {
+  margin-top: 16px;
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+
+.idle-msg { text-align: center; color: var(--muted); padding: 20px 0; }
+
+@media (max-width: 560px) {
+  header.site-header h1 { font-size: 1.6rem; }
+  .options-grid { grid-template-columns: 1fr; }
+  .slot, .slot .piece { width: 40px; height: 40px; }
+  .col-btn { width: 40px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="back-link" href="index.html">&larr; Back to Games</a>
+    <p class="eyebrow">Speech &amp; language practice</p>
+    <h1>🔴 Connect Four with Questions</h1>
+    <p class="sub">Answer a question correctly to drop your piece. Connect four in a row — across, up-and-down, or diagonal — to win!</p>
+    <div class="pill-row">
+      <span class="pill" id="turnPill">🔵 Player 1's turn</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="panel">
+
+    <div class="chip-group" id="categoryChips"></div>
+
+    <div class="status-row">
+      <span class="status-msg" id="statusMsg">Pick a column to answer a question.</span>
+      <button type="button" class="reset-btn" id="resetBtn">🔄 New game</button>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+    </div>
+
+    <div id="questionArea">
+      <p class="idle-msg" id="idleMsg">👆 Click a column above the board to get started.</p>
+
+      <div class="prompt-card" id="promptCard" style="display:none;">
+        <span class="prompt-label" id="promptCategory">Category</span>
+        <p class="prompt-text" id="promptText">Question goes here</p>
+        <div class="options-grid" id="optionsGrid"></div>
+        <p class="feedback" id="feedback"></p>
+        <button type="button" class="continue-btn" id="continueBtn">Continue &rarr;</button>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<script>
+const CATEGORY_META = {
+  Describing: { label: 'Describing', icon: '🔎' },
+  Grammar: { label: 'Grammar', icon: '✏️' },
+  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭' },
+  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢' },
+  WH_Questions: { label: 'WH questions', icon: '❓' }
+};
+
+const QUESTIONS = [
+  { category: 'Describing', prompt: 'Which one has 4 straight sides?', options: ['⬛','⚪','🔺','⭐'], correct: 0 },
+  { category: 'Describing', prompt: 'Which one is the biggest?', options: ['🐭','🐝','🐋','🐦'], correct: 2 },
+  { category: 'Describing', prompt: "Which one would you describe as 'sharp'?", options: ['✂️','🧸','🎈','🧦'], correct: 0 },
+  { category: 'Describing', prompt: 'Which one is curved, not straight?', options: ['🌙','📏','📐','🧊'], correct: 0 },
+  { category: 'Describing', prompt: "Which word describes size, not shape?", options: ['big','round','square','flat'], correct: 0, word: true },
+
+  { category: 'Grammar', prompt: "Choose the correct word: 'The dogs ___ barking.'", options: ['is','are','am','be'], correct: 1, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'My brother ___ two cats.'", options: ['have','has','haves','having'], correct: 1, word: true },
+  { category: 'Grammar', prompt: "Choose the correct past-tense verb: 'She ___ a picture yesterday.'", options: ['draw','drew','draws','drawing'], correct: 1, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'They ___ at the park last night.'", options: ['was','were','is','are'], correct: 1, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'I ___ hungry right now.'", options: ['am','is','are','be'], correct: 0, word: true },
+
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the bird is above the tree?', options: ['under','over','behind','in'], correct: 1, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the shoe is beneath the bed?', options: ['under','on','next to','above'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means you are in the middle of two things?', options: ['behind','between','under','on'], correct: 1, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the picture is on the wall?', options: ['on','under','behind','between'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means something is right beside you?', options: ['far','next to','under','above'], correct: 1, word: true },
+
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has MORE?', options: ['🐝🐝','🐝🐝🐝🐝🐝','🐝🐝🐝','🐝'], correct: 1 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has FEWER?', options: ['🎈🎈🎈🎈','🎈','🎈🎈🎈','🎈🎈'], correct: 1 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which word means one group has a smaller amount?', options: ['more','less','same','equal'], correct: 1, word: true },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a lot'?", options: ['🍪','🍪🍪','🍪🍪🍪','🍪🍪🍪🍪🍪🍪'], correct: 3 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a little'?", options: ['🍪','🍪🍪🍪🍪','🍪🍪🍪🍪🍪','🍪🍪🍪🍪🍪🍪'], correct: 0 },
+
+  { category: 'WH_Questions', prompt: 'Which question word asks about an animal or object?', options: ['Who','What','When','Why'], correct: 1, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about a specific moment?', options: ['When','Where','Who','What'], correct: 0, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks how or why something happened?', options: ['Where','Who','Why','What'], correct: 2, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word would you use to ask about your teacher?', options: ['What','Who','Where','When'], correct: 1, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about a location?', options: ['Where','What','Who','Why'], correct: 0, word: true }
+];
+
+const ROWS = 6;
+const COLS = 7;
+
+let columns = Array.from({ length: COLS }, () => []); // bottom-up piece list per column, 'P1'/'P2'
+let currentPlayer = 'P1';
+let activeCategory = 'all';
+let pool = [];
+let activeCol = null;
+let gameOver = false;
+
+const boardEl = document.getElementById('board');
+const categoryChips = document.getElementById('categoryChips');
+const turnPill = document.getElementById('turnPill');
+const statusMsg = document.getElementById('statusMsg');
+const resetBtn = document.getElementById('resetBtn');
+
+const idleMsg = document.getElementById('idleMsg');
+const promptCard = document.getElementById('promptCard');
+const promptCategory = document.getElementById('promptCategory');
+const promptText = document.getElementById('promptText');
+const optionsGrid = document.getElementById('optionsGrid');
+const feedback = document.getElementById('feedback');
+const continueBtn = document.getElementById('continueBtn');
+
+function buildChips() {
+  const allChip = document.createElement('button');
+  allChip.type = 'button';
+  allChip.className = 'chip active';
+  allChip.textContent = '✨ All skills';
+  allChip.dataset.value = 'all';
+  allChip.addEventListener('click', () => selectCategory('all', allChip));
+  categoryChips.appendChild(allChip);
+
+  Object.keys(CATEGORY_META).forEach(key => {
+    const meta = CATEGORY_META[key];
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chip';
+    btn.textContent = `${meta.icon} ${meta.label}`;
+    btn.dataset.value = key;
+    btn.addEventListener('click', () => selectCategory(key, btn));
+    categoryChips.appendChild(btn);
+  });
+}
+
+function selectCategory(value, el) {
+  activeCategory = value;
+  [...categoryChips.children].forEach(c => c.classList.toggle('active', c === el));
+  rebuildPool();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rebuildPool() {
+  const source = activeCategory === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.category === activeCategory);
+  pool = shuffle(source);
+}
+
+function buildBoard() {
+  boardEl.innerHTML = '';
+  boardEl.style.gridTemplateRows = `auto repeat(${ROWS}, 1fr)`;
+
+  for (let c = 0; c < COLS; c++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'col-btn';
+    btn.textContent = '▼';
+    btn.dataset.col = c;
+    btn.style.gridColumn = c + 1;
+    btn.addEventListener('click', () => onColumnClick(c));
+    boardEl.appendChild(btn);
+  }
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot';
+      slot.dataset.row = r;
+      slot.dataset.col = c;
+      slot.style.gridColumn = c + 1;
+      slot.style.gridRow = r + 2;
+      const piece = document.createElement('div');
+      piece.className = 'piece';
+      slot.appendChild(piece);
+      boardEl.appendChild(slot);
+    }
+  }
+  renderBoard();
+}
+
+function renderBoard(winCells) {
+  const winSet = new Set((winCells || []).map(([r, c]) => `${r}-${c}`));
+  for (let c = 0; c < COLS; c++) {
+    const colBtn = boardEl.querySelector(`.col-btn[data-col="${c}"]`);
+    colBtn.disabled = columns[c].length >= ROWS || gameOver;
+    for (let r = 0; r < ROWS; r++) {
+      const slot = boardEl.querySelector(`.slot[data-row="${r}"][data-col="${c}"]`);
+      const pieceIdx = ROWS - 1 - r; // piece index from bottom for this visual row
+      const val = columns[c][pieceIdx];
+      slot.classList.remove('p1', 'p2', 'win');
+      if (val === 'P1') slot.classList.add('p1');
+      if (val === 'P2') slot.classList.add('p2');
+      if (winSet.has(`${r}-${c}`)) slot.classList.add('win');
+    }
+  }
+}
+
+function updateTurnPill() {
+  turnPill.textContent = currentPlayer === 'P1' ? "🔵 Player 1's turn" : "🟠 Player 2's turn";
+}
+
+function onColumnClick(c) {
+  if (gameOver || activeCol !== null || columns[c].length >= ROWS) return;
+  activeCol = c;
+  showQuestion();
+}
+
+function showQuestion() {
+  if (pool.length === 0) rebuildPool();
+  const q = pool.pop();
+  const meta = CATEGORY_META[q.category];
+  promptCategory.textContent = `${meta.icon} ${meta.label}`;
+  promptText.textContent = q.prompt;
+
+  optionsGrid.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'option-btn' + (q.word ? ' word' : '');
+    btn.textContent = opt;
+    btn.addEventListener('click', () => onAnswer(i, q));
+    optionsGrid.appendChild(btn);
+  });
+
+  feedback.textContent = '';
+  feedback.className = 'feedback';
+  continueBtn.style.display = 'none';
+  idleMsg.style.display = 'none';
+  promptCard.style.display = 'block';
+  statusMsg.textContent = `${currentPlayer === 'P1' ? 'Player 1' : 'Player 2'} is answering...`;
+}
+
+function onAnswer(i, q) {
+  const correct = i === q.correct;
+  [...optionsGrid.children].forEach((b, bi) => {
+    b.disabled = true;
+    if (bi === q.correct) b.classList.add('correct');
+    if (bi === i && !correct) b.classList.add('wrong');
+  });
+
+  if (correct) {
+    columns[activeCol].push(currentPlayer);
+    feedback.textContent = '✅ Correct! Piece dropped.';
+    feedback.className = 'feedback good';
+  } else {
+    feedback.textContent = '❌ Not quite — no piece dropped this turn.';
+    feedback.className = 'feedback bad';
+  }
+  continueBtn.style.display = 'inline-block';
+}
+
+function afterQuestion() {
+  activeCol = null;
+  promptCard.style.display = 'none';
+  idleMsg.style.display = 'block';
+
+  const win = checkWin();
+  if (win) {
+    renderBoard(win);
+    gameOver = true;
+    const winnerLabel = currentPlayer === 'P1' ? 'Player 1' : 'Player 2';
+    statusMsg.textContent = `🎉 ${winnerLabel} wins!`;
+    turnPill.textContent = `🏆 ${winnerLabel} wins!`;
+    return;
+  }
+  if (columns.every(col => col.length >= ROWS)) {
+    renderBoard();
+    gameOver = true;
+    statusMsg.textContent = "🤝 It's a draw! New game?";
+    return;
+  }
+
+  currentPlayer = currentPlayer === 'P1' ? 'P2' : 'P1';
+  renderBoard();
+  updateTurnPill();
+  statusMsg.textContent = 'Pick a column to answer a question.';
+}
+
+function cellValue(r, c) {
+  const pieceIdx = ROWS - 1 - r;
+  return columns[c][pieceIdx] || null;
+}
+
+function checkWin() {
+  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const val = cellValue(r, c);
+      if (!val) continue;
+      for (const [dr, dc] of dirs) {
+        const cells = [[r,c]];
+        for (let k = 1; k < 4; k++) {
+          const rr = r + dr * k;
+          const cc = c + dc * k;
+          if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) break;
+          if (cellValue(rr, cc) !== val) break;
+          cells.push([rr, cc]);
+        }
+        if (cells.length === 4) return cells;
+      }
+    }
+  }
+  return null;
+}
+
+function resetGame() {
+  columns = Array.from({ length: COLS }, () => []);
+  currentPlayer = 'P1';
+  activeCol = null;
+  gameOver = false;
+  rebuildPool();
+  buildBoard();
+  updateTurnPill();
+  statusMsg.textContent = 'Pick a column to answer a question.';
+  promptCard.style.display = 'none';
+  idleMsg.style.display = 'block';
+}
+
+continueBtn.addEventListener('click', afterQuestion);
+resetBtn.addEventListener('click', resetGame);
+
+buildChips();
+rebuildPool();
+buildBoard();
+updateTurnPill();
+</script>
+</body>
+</html>
