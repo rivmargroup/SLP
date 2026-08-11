@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%95%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --ink: #1b2a33;
@@ -25,14 +25,14 @@
   --good-bg: #e5f5ec;
   --bad: #c14b4b;
   --bad-bg: #fbe9e9;
-  --x-color: #1f5f6b;
-  --o-color: #e08e45;
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
+  --x-color: #4d8dfa;
+  --o-color: #ff6a6a;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
   --shadow-sm: 0 1px 3px rgba(20, 40, 45, 0.06);
   --shadow-md: 0 12px 28px -8px rgba(20, 40, 45, 0.16);
-  --font-display: "Fraunces", Georgia, serif;
+  --font-display: "Baloo 2", Georgia, serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 * { box-sizing: border-box; }
@@ -43,6 +43,26 @@ body {
   color: var(--ink);
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: hidden;
+}
+body::before, body::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.4;
+  z-index: -1;
+}
+body::before {
+  width: 340px; height: 340px;
+  background: #cfe0ff;
+  top: -110px; right: -90px;
+}
+body::after {
+  width: 300px; height: 300px;
+  background: #ffd6d6;
+  bottom: -100px; left: -100px;
 }
 .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px 60px; }
 
@@ -50,8 +70,47 @@ header.site-header {
   background: radial-gradient(1100px 420px at 85% -10%, rgba(224, 142, 69, 0.18), transparent 60%),
     linear-gradient(160deg, var(--primary-dark), var(--primary) 78%);
   color: white;
-  padding: 34px 0 40px;
+  padding: 34px 0 44px;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Floating decorative sparkles drifting up through the header */
+.bg-floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.floaty { position:absolute; opacity:0; animation: floatUp linear infinite; will-change: transform, opacity; }
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
+  12%  { opacity:.6; }
+  88%  { opacity:.5; }
+  100% { transform: translateY(-190px) translateX(var(--drift,10px)) rotate(30deg); opacity:0; }
+}
+
+/* Mascot that patrols back and forth along the bottom of the header */
+.mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
+.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 8.5s ease-in-out infinite; }
+@keyframes patrol {
+  0%   { left:0%;  transform: scaleX(1); }
+  45%  { left:85%; transform: scaleX(1); }
+  50%  { left:85%; transform: scaleX(-1); }
+  95%  { left:0%;  transform: scaleX(-1); }
+  100% { left:0%;  transform: scaleX(1); }
+}
+.mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
+@keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+
+/* Big celebration overlay for the win */
+.celebrate-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:1200; opacity:0; transition: opacity .3s ease; }
+.celebrate-overlay.show { opacity:1; }
+.celebrate-banner {
+  font-family: var(--font-display); font-weight:800; font-size: 1.9rem; color:#fff; text-align:center;
+  background: linear-gradient(135deg, var(--accent), #ff8fce);
+  padding: 20px 38px; border-radius: 26px; box-shadow: 0 20px 40px -12px rgba(0,0,0,.35);
+  transform: scale(0); animation: bannerPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes bannerPop { 0%{ transform: scale(0) rotate(-8deg);} 60%{ transform: scale(1.12) rotate(3deg);} 100%{ transform: scale(1) rotate(0deg);} }
+.spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
+@keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -75,9 +134,20 @@ header.site-header {
 header.site-header h1 {
   margin: 0 0 6px;
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 2rem;
+  font-weight: 700;
+  font-size: 2.1rem;
   letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mascot {
+  display: inline-block;
+  animation: bounce 2.2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-6deg); }
 }
 header.site-header p.sub {
   margin: 0 0 20px;
@@ -88,40 +158,47 @@ header.site-header p.sub {
 .pill-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .pill {
   padding: 8px 16px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
+  font-family: var(--font-display);
   display: flex;
   align-items: center;
   gap: 6px;
 }
+.pill.pop { animation: pillPop 0.35s ease; }
+@keyframes pillPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
 
 .panel {
-  margin-top: -22px;
+  margin-top: -26px;
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  padding: 22px;
+  padding: 24px;
   position: relative;
   z-index: 1;
 }
 
-.chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
+.chip-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
 .chip {
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--ink-soft);
+  border: none;
   font: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 7px 14px;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 9px 16px;
   border-radius: 999px;
   cursor: pointer;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
-.chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+.chip:active { transform: translateY(3px) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.15) !important; }
 
 .status-row {
   display: flex;
@@ -129,75 +206,86 @@ header.site-header p.sub {
   justify-content: space-between;
   gap: 10px;
   margin-bottom: 18px;
+  flex-wrap: wrap;
 }
 .status-msg {
   font-weight: 700;
   color: var(--ink);
 }
 .reset-btn {
-  border: 1px solid var(--border);
+  border: none;
   background: var(--bg);
   color: var(--ink-soft);
   font: inherit;
-  font-size: 0.82rem;
+  font-family: var(--font-display);
+  font-size: 0.86rem;
   font-weight: 700;
-  padding: 8px 14px;
+  padding: 9px 16px;
   border-radius: 999px;
   cursor: pointer;
+  box-shadow: 0 4px 0 var(--border);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
+.reset-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--border); }
 
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 10px;
   max-width: 340px;
-  margin: 0 auto 22px;
+  margin: 0 auto 24px;
 }
 .cell {
   aspect-ratio: 1;
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 2.4rem;
-  font-weight: 600;
+  font-size: 2.6rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 4px 0 var(--border);
 }
-.cell:hover:not(.filled) { background: var(--primary-light); }
+.cell:hover:not(.filled) { background: var(--primary-light); transform: translateY(-2px); }
 .cell.filled { cursor: default; }
+.cell.filled.pop { animation: correctPop 0.4s ease; }
 .cell.x { color: var(--x-color); }
 .cell.o { color: var(--o-color); }
-.cell.win { background: var(--accent-soft); }
+.cell.win { background: var(--accent-soft); border-color: var(--accent); animation: pillPop 0.5s ease infinite alternate; }
 .cell.active-target { outline: 3px solid var(--accent); outline-offset: -3px; }
+@keyframes correctPop {
+  0% { transform: scale(0.5); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
 
 .prompt-card {
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 22px;
+  padding: 24px;
   text-align: center;
 }
 .prompt-label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  font-size: 0.72rem;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .prompt-text {
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--ink);
   margin: 0 0 18px;
@@ -206,23 +294,42 @@ header.site-header p.sub {
 .options-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 .option-btn {
   font: inherit;
-  font-size: 1rem;
-  padding: 14px 10px;
+  font-size: 1.1rem;
+  padding: 16px 10px;
   border-radius: var(--radius-sm);
-  border: 2px solid var(--border);
+  border: none;
   background: white;
   cursor: pointer;
-  transition: transform 0.1s ease, border-color 0.15s ease;
+  box-shadow: 0 4px 0 var(--border);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  opacity: 0;
+  animation: popIn 0.35s ease forwards;
 }
-.option-btn.word { font-weight: 700; }
-.option-btn:hover:not(:disabled) { border-color: var(--primary); }
+.options-grid .option-btn:nth-child(1) { animation-delay: 0.02s; }
+.options-grid .option-btn:nth-child(2) { animation-delay: 0.08s; }
+.options-grid .option-btn:nth-child(3) { animation-delay: 0.14s; }
+.options-grid .option-btn:nth-child(4) { animation-delay: 0.2s; }
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.7) translateY(10px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.option-btn.word { font-weight: 700; font-family: var(--font-display); }
+.option-btn:hover:not(:disabled) { transform: translateY(-2px); }
+.option-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--border); }
 .option-btn:disabled { cursor: default; }
-.option-btn.correct { border-color: var(--good); background: var(--good-bg); color: var(--good); }
-.option-btn.wrong { border-color: var(--bad); background: var(--bad-bg); color: var(--bad); }
+.option-btn.correct { background: var(--good-bg); color: var(--good); box-shadow: 0 4px 0 #b9dcc4; animation: correctPop 0.4s ease; }
+.option-btn.wrong { background: var(--bad-bg); color: var(--bad); box-shadow: 0 4px 0 #edc4c4; animation: shake 0.4s ease; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
 
 .feedback { margin: 16px 0 0; font-weight: 700; min-height: 1.4em; }
 .feedback.good { color: var(--good); }
@@ -231,25 +338,46 @@ header.site-header p.sub {
 .continue-btn {
   margin-top: 16px;
   font: inherit;
+  font-family: var(--font-display);
   font-weight: 800;
-  font-size: 0.95rem;
-  padding: 12px 22px;
+  font-size: 1rem;
+  padding: 13px 24px;
   border-radius: 999px;
   border: none;
   background: var(--primary);
   color: white;
   cursor: pointer;
   display: none;
+  box-shadow: 0 4px 0 var(--primary-dark);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
+.continue-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--primary-dark); }
 
 .idle-msg {
   text-align: center;
   color: var(--muted);
   padding: 20px 0;
+  font-weight: 600;
+}
+
+.confetti-piece {
+  position: fixed;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 999;
+  animation-name: confettiFall;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--dx), 300px) rotate(var(--dr)); opacity: 0; }
 }
 
 @media (max-width: 560px) {
-  header.site-header h1 { font-size: 1.6rem; }
+  header.site-header h1 { font-size: 1.65rem; }
   .options-grid { grid-template-columns: 1fr; }
 }
 </style>
@@ -257,15 +385,17 @@ header.site-header p.sub {
 <body>
 
 <header class="site-header">
+  <div class="bg-floaties" id="bgFloaties"></div>
   <div class="wrap">
     <a class="back-link" href="index.html">&larr; Back to Games</a>
     <p class="eyebrow">Speech &amp; language practice</p>
-    <h1>⭕ Tic-Tac-Toe with Questions</h1>
+    <h1><span class="mascot">🦁</span> Tic-Tac-Toe with Questions</h1>
     <p class="sub">Answer a question correctly to claim your square. Get three in a row to win!</p>
     <div class="pill-row">
       <span class="pill" id="turnPill">✖️ Player X's turn</span>
     </div>
   </div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🐝</span></div></div>
 </header>
 
 <main class="wrap">
@@ -297,12 +427,14 @@ header.site-header p.sub {
 
 <script>
 const CATEGORY_META = {
-  Describing: { label: 'Describing', icon: '🔎' },
-  Grammar: { label: 'Grammar', icon: '✏️' },
-  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭' },
-  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢' },
-  WH_Questions: { label: 'WH questions', icon: '❓' }
+  Describing: { label: 'Describing', icon: '🔎', color: '#4d8dfa', soft: '#e8f0ff' },
+  Grammar: { label: 'Grammar', icon: '✏️', color: '#ff6a6a', soft: '#ffe9e9' },
+  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭', color: '#17b897', soft: '#e2f9f2' },
+  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢', color: '#ffb020', soft: '#fff3dc' },
+  WH_Questions: { label: 'WH questions', icon: '❓', color: '#9b6bff', soft: '#f1e9ff' }
 };
+const ALL_COLOR = '#1f5f6b';
+const ALL_SOFT = '#e7f1f1';
 
 const QUESTIONS = [
   { category: 'Describing', prompt: 'Which shape has 3 corners?', options: ['⭐','⬛','🔺','⚪'], correct: 2 },
@@ -363,12 +495,102 @@ const optionsGrid = document.getElementById('optionsGrid');
 const feedback = document.getElementById('feedback');
 const continueBtn = document.getElementById('continueBtn');
 
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const amt = Math.round(2.55 * percent);
+  let R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+  R = R < 255 ? (R < 0 ? 0 : R) : 255; G = G < 255 ? (G < 0 ? 0 : G) : 255; B = B < 255 ? (B < 0 ? 0 : B) : 255;
+  return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+}
+
+function popPill(el) {
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function confettiBurst(count) {
+  const colors = ['#ff6a6a', '#4d8dfa', '#ffb020', '#17b897', '#9b6bff', '#ff8fce'];
+  const cx = window.innerWidth / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'confetti-piece';
+    el.style.left = (cx + (Math.random() * 300 - 150)) + 'px';
+    el.style.top = '110px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+    el.style.setProperty('--dr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.7 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+}
+
+function spawnFloaties(container, emojis, count) {
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'floaty';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 90 + 2) + '%';
+    el.style.bottom = '0px';
+    el.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+    el.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+    el.style.animationDuration = (5 + Math.random() * 4) + 's';
+    el.style.animationDelay = (Math.random() * 6) + 's';
+    container.appendChild(el);
+  }
+}
+
+function sparkleBurst(count) {
+  const sparkles = ['✨', '⭐', '🌟', '💫'];
+  const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'spark-piece';
+    el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+    el.style.left = cx + 'px'; el.style.top = cy + 'px';
+    const angle = Math.random() * Math.PI * 2, dist = 80 + Math.random() * 220;
+    el.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+    el.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+    el.style.setProperty('--sr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1600);
+  }
+}
+
+function celebrateWin(message) {
+  const overlay = document.createElement('div');
+  overlay.className = 'celebrate-overlay';
+  overlay.innerHTML = `<div class="celebrate-banner">${message}</div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  sparkleBurst(55);
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 400);
+  }, 1900);
+}
+
+function styleChip(el, color, soft, active) {
+  if (active) {
+    el.style.background = color;
+    el.style.color = '#fff';
+    el.style.boxShadow = `0 4px 0 ${shadeColor(color, -20)}`;
+  } else {
+    el.style.background = soft;
+    el.style.color = shadeColor(color, -35);
+    el.style.boxShadow = `0 4px 0 ${shadeColor(soft, -12)}`;
+  }
+}
+
 function buildChips() {
   const allChip = document.createElement('button');
   allChip.type = 'button';
   allChip.className = 'chip active';
   allChip.textContent = '✨ All skills';
   allChip.dataset.value = 'all';
+  styleChip(allChip, ALL_COLOR, ALL_SOFT, true);
   allChip.addEventListener('click', () => selectCategory('all', allChip));
   categoryChips.appendChild(allChip);
 
@@ -379,6 +601,7 @@ function buildChips() {
     btn.className = 'chip';
     btn.textContent = `${meta.icon} ${meta.label}`;
     btn.dataset.value = key;
+    styleChip(btn, meta.color, meta.soft, false);
     btn.addEventListener('click', () => selectCategory(key, btn));
     categoryChips.appendChild(btn);
   });
@@ -386,7 +609,12 @@ function buildChips() {
 
 function selectCategory(value, el) {
   activeCategory = value;
-  [...categoryChips.children].forEach(c => c.classList.toggle('active', c === el));
+  [...categoryChips.children].forEach(c => {
+    const isActive = c === el;
+    c.classList.toggle('active', isActive);
+    const meta = c.dataset.value === 'all' ? { color: ALL_COLOR, soft: ALL_SOFT } : CATEGORY_META[c.dataset.value];
+    styleChip(c, meta.color, meta.soft, isActive);
+  });
   rebuildPool();
 }
 
@@ -429,6 +657,7 @@ function renderBoard(winLine) {
 
 function updateTurnPill() {
   turnPill.textContent = currentPlayer === 'X' ? "✖️ Player X's turn" : "⭕ Player O's turn";
+  popPill(turnPill);
 }
 
 function onCellClick(idx) {
@@ -443,6 +672,8 @@ function showQuestion() {
   const q = pool.pop();
   const meta = CATEGORY_META[q.category];
   promptCategory.textContent = `${meta.icon} ${meta.label}`;
+  promptCategory.style.background = meta.soft;
+  promptCategory.style.color = shadeColor(meta.color, -35);
   promptText.textContent = q.prompt;
 
   optionsGrid.innerHTML = '';
@@ -475,6 +706,7 @@ function onAnswer(i, q, btn) {
     board[activeCell] = currentPlayer;
     feedback.textContent = '✅ Correct! Square claimed.';
     feedback.className = 'feedback good';
+    confettiBurst(14);
   } else {
     feedback.textContent = "❌ Not quite — square stays open.";
     feedback.className = 'feedback bad';
@@ -494,6 +726,9 @@ function afterQuestion() {
     gameOver = true;
     statusMsg.textContent = `🎉 Player ${currentPlayer} wins!`;
     turnPill.textContent = `🏆 Player ${currentPlayer} wins!`;
+    popPill(turnPill);
+    confettiBurst(50);
+    celebrateWin(`🏆 Player ${currentPlayer} wins! 🏆`);
     return;
   }
   if (board.every(c => c)) {
@@ -505,6 +740,7 @@ function afterQuestion() {
 
   currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
   renderBoard();
+  boardEl.children[target].classList.add('pop');
   updateTurnPill();
   statusMsg.textContent = 'Click any open square to answer a question.';
 }
@@ -533,6 +769,7 @@ function resetGame() {
 continueBtn.addEventListener('click', afterQuestion);
 resetBtn.addEventListener('click', resetGame);
 
+spawnFloaties(document.getElementById('bgFloaties'), ['✨', '⭐', '💫', '🌟'], 10);
 buildChips();
 rebuildPool();
 buildBoard();
