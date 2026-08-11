@@ -1,0 +1,64 @@
+{
+  "_note": "Mapa de COBERTURA de temas/habilidades de terapia del habla (SLP). Contiene únicamente nombres genéricos de categorías y subcategorías (no protegidos por derechos de autor). No contiene texto, wording, imágenes ni formato de ningún PDF con copyright. Se usa solo como checklist para que el agente de IA sepa qué áreas ya están cubiertas y genere contenido 100% original en las que falten o para variar temas dentro de las que ya existen.",
+  "categories": {
+    "Describing": {
+      "skills": [
+        "Describir formas (shapes)",
+        "Describir ubicación/lugar (location: cielo/suelo, cuartos de la casa, océano/bosque)",
+        "Categorías: qué NO pertenece a un grupo",
+        "Categorías: clasificar por tipo (animales de zoo/granja/océano, alimentos, ropa, animales vs. vehículos)",
+        "Conceptos de tamaño (grande/pequeño)"
+      ]
+    },
+    "Grammar": {
+      "skills": [
+        "Verbo ser/estar (is/are) con conteo de objetos",
+        "Tiempo presente simple (go/goes, do/does) con sujetos singular/plural",
+        "Presente progresivo (is/are + -ing)",
+        "Verbo 'have/has' (posesión)",
+        "Concordancia sujeto-verbo en general"
+      ]
+    },
+    "Following_Directions_Conceptos_Espaciales": {
+      "skills": [
+        "Preposiciones espaciales: arriba/abajo (over/under, above/below, top/bottom)",
+        "Dentro/fuera (in/out), encima/debajo (on/off)",
+        "Cerca/lejos (near/far, close/away)",
+        "Delante/detrás (in front/behind)",
+        "Entre/al lado de (between, next to)",
+        "Izquierda/derecha (left/right)",
+        "Medio (middle)"
+      ]
+    },
+    "Following_Directions_Conceptos_Cuantitativos": {
+      "skills": [
+        "Más/menos (more/less, greater/smaller than)",
+        "Más/menos cantidad (most/least, fewer/fewest)",
+        "Algunos/muchos (some/many/a few/a lot)",
+        "Igual/diferente (equal, same/different, match)",
+        "Cada/todos (each/every/all/both)",
+        "Líneas numéricas y comparación de números"
+      ]
+    },
+    "WH_Questions": {
+      "skills": [
+        "Preguntas 'Qué' (What): objetos, función de objetos, colores, categorías",
+        "Preguntas 'Quién' (Who): nombres, familia, ayudantes de la comunidad, niño/niña",
+        "Preguntas 'Dónde' (Where): casa, escuela, naturaleza, pueblo/ciudad",
+        "Preguntas 'Cuándo' (When): momentos del día, estaciones, calendario/fechas, días de la semana, reloj, causa-efecto",
+        "Preguntas 'Por qué' (Why): 'because', 'to', 'so', inferencial vs. literal",
+        "Preguntas 'Qué acción' (What Actions): a partir de historias o escenas con animales/personas"
+      ]
+    }
+  },
+  "formatos_de_actividad_observados_genericos": [
+    "Coloring page (página para colorear ligada a un concepto)",
+    "Sorting (clasificar tarjetas/imágenes en 2+ grupos)",
+    "Matching (emparejar conceptos relacionados)",
+    "Historias cortas con preguntas de comprensión",
+    "Oraciones para completar o corregir",
+    "Escritura guiada corta",
+    "Opción múltiple"
+  ],
+  "aviso_legal": "Estos nombres de habilidades y formatos son ideas/temas generales de terapia del habla, de dominio común en el campo (no exclusivos de ningún creador). Todo el contenido nuevo que genere el agente de IA debe ser redactado, ilustrado y diseñado desde cero — nunca copiar texto, frases, instrucciones exactas ni el diseño de 'The SLP Curriculum' u otro material con derechos de autor."
+}

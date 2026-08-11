@@ -1,0 +1,137 @@
+[
+  {
+    "id": "describing-mystery-bag-shapes-001",
+    "title": "Mystery Shape Bag",
+    "category": "Describing",
+    "skill": "Describing shapes using attributes",
+    "ageRange": "4-7 years",
+    "groupSize": "1-4 students",
+    "goal": "Student will describe an object's shape using at least 2 descriptive attributes (number of sides, size, curved/straight) without naming it directly.",
+    "materials": [
+      "A small cloth or paper bag",
+      "5-6 familiar classroom objects or shape cutouts (circle, square, triangle, rectangle, star)",
+      "Optional: describing-words visual support card"
+    ],
+    "instructions": [
+      "Place all shapes/objects inside the bag without the student seeing them.",
+      "Student reaches in, feels one item, and describes it out loud using shape words (round, has corners, has 3/4 sides, big/small) before pulling it out.",
+      "Peers or the clinician guess the shape based on the description.",
+      "Reveal the item and confirm or expand the description together.",
+      "Rotate turns so every student both describes and guesses."
+    ],
+    "extension": "For older students, add texture and function clues ('it has 4 straight sides and we use it to check corners are square').",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  },
+  {
+    "id": "grammar-is-are-freeze-dance-001",
+    "title": "Is / Are Freeze Dance",
+    "category": "Grammar",
+    "skill": "Present progressive with is/are (subject-verb agreement)",
+    "ageRange": "4-6 years",
+    "groupSize": "2-6 students",
+    "goal": "Student will produce a grammatically correct sentence using 'is' or 'are' + verb+ing to describe an action.",
+    "materials": [
+      "Music (any playable source)",
+      "Action cards or just open floor space"
+    ],
+    "instructions": [
+      "Play music; students move/dance freely.",
+      "Pause the music. Whoever is closest to the clinician must say a sentence describing what one or more classmates is/are doing (e.g., 'She is jumping,' 'They are spinning').",
+      "Clinician models and corrects verb agreement as needed (he/she/it + is; they/we/you + are).",
+      "Resume music and repeat, prompting different sentence subjects each round."
+    ],
+    "extension": "Have the group vote whether the sentence used 'is' or 'are' correctly before moving on.",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  },
+  {
+    "id": "spatial-concepts-teddy-bear-hunt-001",
+    "title": "Teddy Bear Hide-and-Seek",
+    "category": "Following_Directions_Conceptos_Espaciales",
+    "skill": "Spatial/positional concepts (in, on, under, behind, next to)",
+    "ageRange": "3-6 years",
+    "groupSize": "1-3 students",
+    "goal": "Student will follow and later produce 1-2 step directions containing a positional concept with 80% accuracy.",
+    "materials": [
+      "A small stuffed animal or toy",
+      "A few household/classroom items to hide it near (box, chair, book)"
+    ],
+    "instructions": [
+      "Clinician hides the toy while student's eyes are closed, then gives a direction: 'Look under the chair' or 'Look behind the box.'",
+      "Student follows the direction and checks the location.",
+      "After a few rounds, switch roles: student hides the toy and gives the clinician a positional direction to find it.",
+      "Track which concepts (in/on/under/behind/next to) need more practice."
+    ],
+    "extension": "Add two-step directions: 'Put the bear on the box, then hide behind the chair.'",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  },
+  {
+    "id": "quant-concepts-more-less-snack-sort-001",
+    "title": "More or Less Snack Sort",
+    "category": "Following_Directions_Conceptos_Cuantitativos",
+    "skill": "Quantitative concepts (more/less/same)",
+    "ageRange": "4-7 years",
+    "groupSize": "1-4 students",
+    "goal": "Student will correctly identify and label groups as having 'more,' 'less/fewer,' or 'the same' with 80% accuracy.",
+    "materials": [
+      "Small counters (dry cereal, buttons, pom-poms)",
+      "2-4 small plates or cups"
+    ],
+    "instructions": [
+      "Place uneven small piles of counters on two or more plates.",
+      "Ask the student to point to the plate with 'more' or the plate with 'less/fewer.'",
+      "Have the student explain how they know (count aloud together if needed).",
+      "Adjust piles so one round has equal amounts and introduce 'the same.'"
+    ],
+    "extension": "Turn it into a game where the student must physically move counters to make two plates equal.",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  },
+  {
+    "id": "wh-questions-story-detective-001",
+    "title": "Story Detective: Who, What, Where, When, Why",
+    "category": "WH_Questions",
+    "skill": "Answering WH-questions after listening to a short narrative",
+    "ageRange": "5-8 years",
+    "groupSize": "1-4 students",
+    "goal": "Student will answer WH-questions about a short orally-presented story with 80% accuracy.",
+    "materials": [
+      "A short 4-6 sentence original story read aloud by the clinician (create a new one each session, e.g., about a child who loses a shoe at the park)",
+      "Optional: simple drawn scene or stick-figure sketch of the story"
+    ],
+    "instructions": [
+      "Read the short story aloud once or twice.",
+      "Ask a mix of WH-questions: Who was in the story? What happened first? Where did it happen? When did it happen? Why did the character feel that way?",
+      "For missed questions, reread the relevant sentence and ask again.",
+      "Have the student retell the story in their own words as a wrap-up."
+    ],
+    "extension": "Let the student invent the next short story and clinician asks the WH-questions back to them.",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  },
+  {
+    "id": "grammar-have-has-scavenger-002",
+    "title": "Whose Is It? Have/Has Scavenger Hunt",
+    "category": "Grammar",
+    "skill": "Verb 'have/has' for possession",
+    "ageRange": "5-8 years",
+    "groupSize": "2-5 students",
+    "goal": "Student will produce sentences using 'have' or 'has' correctly to describe ownership with 80% accuracy.",
+    "materials": [
+      "5-8 everyday objects belonging to different people in the room (backpack, water bottle, pencil case, jacket)",
+      "Optional: name tags or photos of the owners"
+    ],
+    "instructions": [
+      "Gather a small pile of objects that belong to different students or staff members.",
+      "Hold up one object and ask 'Who has this?' or 'Whose is this?'",
+      "Student answers in a full sentence: 'She has the backpack' or 'I have the water bottle.'",
+      "Correct have vs. has as needed based on the subject (I/you/we/they = have; he/she/it = has).",
+      "Return each object to its owner as it's identified, then rotate to a new player asking the questions."
+    ],
+    "extension": "Add a memory twist: after collecting 5 objects, ask the student to recall from memory who has what without looking.",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated"
+  }
+]
