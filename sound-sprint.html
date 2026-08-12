@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Board Race — SLP Activities Hub</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B2%3C/text%3E%3C/svg%3E">
+<title>Sound Sprint — SLP Activities Hub</title>
+<meta name="description" content="Free articulation practice game — race the board while practicing target speech sounds.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%97%A3%EF%B8%8F%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -54,7 +55,7 @@ body::before, body::after {
 }
 body::before {
   width: 360px; height: 360px;
-  background: #ffd9a0;
+  background: #ffc9c9;
   top: -120px; right: -100px;
 }
 body::after {
@@ -74,7 +75,6 @@ header.site-header {
   overflow: hidden;
 }
 
-/* Floating decorative sparkles drifting up through the header */
 .bg-floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
 .floaty { position:absolute; opacity:0; animation: floatUp linear infinite; will-change: transform, opacity; }
 @keyframes floatUp {
@@ -84,7 +84,6 @@ header.site-header {
   100% { transform: translateY(-190px) translateX(var(--drift,10px)) rotate(30deg); opacity:0; }
 }
 
-/* Mascot that patrols back and forth along the bottom of the header */
 .mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
 .mascot-patrol { position:absolute; left:0; top:0; animation: patrol 9s ease-in-out infinite; }
 @keyframes patrol {
@@ -97,7 +96,6 @@ header.site-header {
 .mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
 @keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
 
-/* Big celebration overlay for the win banner */
 .celebrate-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:1200; opacity:0; transition: opacity .3s ease; }
 .celebrate-overlay.show { opacity:1; }
 .celebrate-banner {
@@ -110,9 +108,9 @@ header.site-header {
 .spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
 @keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
 
-/* Token hop when landing on a new tile */
 .tile.just-moved .tokens { animation: tokenLand .5s ease; }
 @keyframes tokenLand { 0%{ transform: scale(.3) translateY(-26px); } 55%{ transform: scale(1.35) translateY(-4px); } 100%{ transform: scale(1) translateY(0); } }
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -143,10 +141,7 @@ header.site-header h1 {
   align-items: center;
   gap: 10px;
 }
-.mascot {
-  display: inline-block;
-  animation: bounce 2.2s ease-in-out infinite;
-}
+.mascot { display: inline-block; animation: bounce 2.2s ease-in-out infinite; }
 @keyframes bounce {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   50% { transform: translateY(-8px) rotate(-6deg); }
@@ -198,10 +193,7 @@ header.site-header p.sub {
   padding-bottom: 18px;
   border-bottom: 1px dashed var(--border);
 }
-.mode-toggle {
-  display: flex;
-  gap: 10px;
-}
+.mode-toggle { display: flex; gap: 10px; }
 .mode-btn {
   border: 3px solid var(--border);
   background: #fff;
@@ -235,55 +227,27 @@ header.site-header p.sub {
 .chip:active { transform: translateY(3px) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.15) !important; }
 
 .turn-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  background: var(--primary-light);
-  color: var(--primary-dark);
-  padding: 12px 18px;
-  border-radius: var(--radius-sm);
-  font-weight: 700;
-  margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--primary-light); color: var(--primary-dark);
+  padding: 12px 18px; border-radius: var(--radius-sm); font-weight: 700; margin-bottom: 18px;
 }
 .turn-banner .token { font-size: 1.3rem; }
 
-/* Board */
-.board-scroll {
-  overflow-x: auto;
-  padding: 6px 2px 16px;
-  margin-bottom: 20px;
-}
-.board {
-  display: flex;
-  gap: 7px;
-  width: max-content;
-}
+.board-scroll { overflow-x: auto; padding: 6px 2px 16px; margin-bottom: 20px; }
+.board { display: flex; gap: 7px; width: max-content; }
 .tile {
-  width: 58px;
-  height: 70px;
-  flex-shrink: 0;
+  width: 58px; height: 70px; flex-shrink: 0;
   border: 3px solid var(--tileC, var(--border));
   border-radius: 14px;
   background: var(--tileSoft, var(--bg));
   box-shadow: 0 4px 0 var(--tileC, var(--border));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  color: var(--tileC, var(--muted));
-  font-weight: 800;
-  position: relative;
-  gap: 2px;
-  transition: transform 0.15s ease;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--tileC, var(--muted)); font-weight: 800;
+  position: relative; gap: 2px; transition: transform 0.15s ease;
 }
 .tile.start, .tile.finish {
-  background: var(--primary);
-  color: white;
-  font-size: 0.62rem;
-  border-color: var(--primary-dark);
-  box-shadow: 0 4px 0 var(--primary-dark);
+  background: var(--primary); color: white; font-size: 0.62rem;
+  border-color: var(--primary-dark); box-shadow: 0 4px 0 var(--primary-dark);
 }
 .tile.finish { background: var(--accent); border-color: #b8681f; box-shadow: 0 4px 0 #b8681f; }
 .tile.occupied { transform: scale(1.1) translateY(-2px); }
@@ -294,43 +258,25 @@ header.site-header p.sub {
   background: var(--bg);
   border: 3px solid var(--promptC, var(--border));
   border-radius: var(--radius-md);
-  padding: 24px;
-  text-align: center;
+  padding: 24px; text-align: center;
   box-shadow: 0 5px 0 var(--promptC, var(--border));
   transition: border-color .2s ease, box-shadow .2s ease;
 }
 .prompt-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-display);
-  font-size: 0.74rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 6px 14px;
-  border-radius: 999px;
-  margin-bottom: 16px;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-display); font-size: 0.74rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 6px 14px; border-radius: 999px; margin-bottom: 16px;
 }
 .prompt-text {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin: 0 0 24px;
-  line-height: 1.4;
+  font-family: var(--font-display); font-size: 1.35rem; font-weight: 600;
+  color: var(--ink); margin: 0 0 24px; line-height: 1.4;
 }
 
 .action-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .action-btn {
-  font: inherit;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1rem;
-  padding: 14px 24px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
+  font: inherit; font-family: var(--font-display); font-weight: 800; font-size: 1rem;
+  padding: 14px 24px; border-radius: 999px; border: none; cursor: pointer;
   transition: transform 0.08s ease, box-shadow 0.08s ease;
 }
 .action-btn:active { transform: translateY(3px); }
@@ -343,51 +289,25 @@ header.site-header p.sub {
 .btn-next { background: var(--primary); color: white; box-shadow: 0 4px 0 var(--primary-dark); }
 .btn-next:active { box-shadow: 0 1px 0 var(--primary-dark); }
 
-.dice-result {
-  margin: 16px 0;
-  font-family: var(--font-display);
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--primary-dark);
-}
+.dice-result { margin: 16px 0; font-family: var(--font-display); font-size: 2.4rem; font-weight: 800; color: var(--primary-dark); }
 .dice-result.roll { animation: diceRoll 0.4s ease; }
 @keyframes diceRoll {
   0% { transform: scale(0.5) rotate(-20deg); opacity: 0; }
   60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
   100% { transform: scale(1) rotate(0deg); }
 }
-.feedback-msg {
-  margin: 0 0 6px;
-  font-weight: 700;
-  font-size: 1.05rem;
-}
+.feedback-msg { margin: 0 0 6px; font-weight: 700; font-size: 1.05rem; }
 .feedback-msg.good { color: var(--good); }
 .feedback-msg.bad { color: var(--bad); }
 
-.win-banner {
-  display: none;
-  text-align: center;
-  padding: 34px 20px;
-}
+.win-banner { display: none; text-align: center; padding: 34px 20px; }
 .win-banner.show { display: block; }
-.win-banner h2 {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  color: var(--primary-dark);
-  margin: 0 0 8px;
-}
+.win-banner h2 { font-family: var(--font-display); font-size: 2rem; color: var(--primary-dark); margin: 0 0 8px; }
 .win-banner p { color: var(--ink-soft); margin: 0 0 22px; }
 
 .confetti-piece {
-  position: fixed;
-  width: 9px;
-  height: 9px;
-  border-radius: 2px;
-  pointer-events: none;
-  z-index: 999;
-  animation-name: confettiFall;
-  animation-timing-function: ease-in;
-  animation-fill-mode: forwards;
+  position: fixed; width: 9px; height: 9px; border-radius: 2px; pointer-events: none; z-index: 999;
+  animation-name: confettiFall; animation-timing-function: ease-in; animation-fill-mode: forwards;
 }
 @keyframes confettiFall {
   0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
@@ -396,7 +316,7 @@ header.site-header p.sub {
 
 @media (max-width: 560px) {
   header.site-header h1 { font-size: 1.7rem; }
-  .prompt-text { font-size: 1.15rem; }
+  .prompt-text { font-size: 1.1rem; }
 }
 </style>
 </head>
@@ -407,13 +327,13 @@ header.site-header p.sub {
   <div class="wrap">
     <a class="back-link" href="index.html">&larr; Back to Games</a>
     <p class="eyebrow">Speech &amp; language practice</p>
-    <h1><span class="mascot">🐢</span> Board Race</h1>
-    <p class="sub">Answer the prompt, roll the dice, and race to the finish! Great for 1 or 2 players, self-graded by the clinician.</p>
+    <h1><span class="mascot">🗣️</span> Sound Sprint</h1>
+    <p class="sub">Say your target sound, roll the dice, and sprint to the finish! Great for 1 or 2 players, self-graded by the clinician or grown-up listening.</p>
     <div class="pill-row">
-      <span class="pill" id="turnPill">🐢 Player 1's turn</span>
+      <span class="pill" id="turnPill">🦁 Player 1's turn</span>
     </div>
   </div>
-  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🐇</span></div></div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🦁</span></div></div>
 </header>
 
 <main class="wrap">
@@ -439,7 +359,7 @@ header.site-header p.sub {
         <p class="prompt-text" id="promptText">Prompt goes here</p>
 
         <div id="answerStage" class="action-row">
-          <button type="button" class="action-btn btn-good" id="correctBtn">✅ Got it right</button>
+          <button type="button" class="action-btn btn-good" id="correctBtn">✅ Said it clearly</button>
           <button type="button" class="action-btn btn-bad" id="tryAgainBtn">🔁 Needs practice</button>
         </div>
 
@@ -457,7 +377,7 @@ header.site-header p.sub {
 
       <div class="win-banner" id="winBanner">
         <h2 id="winText">🎉 Player 1 wins!</h2>
-        <p>Great job practicing! Ready for a rematch?</p>
+        <p>Great job practicing your sounds! Ready for a rematch?</p>
         <button type="button" class="action-btn btn-next" id="playAgainBtn">🔄 Play again</button>
       </div>
     </div>
@@ -467,48 +387,48 @@ header.site-header p.sub {
 
 <script>
 const CATEGORY_META = {
-  Describing: { label: 'Describing', icon: '🔎', color: '#4d8dfa', soft: '#e8f0ff' },
-  Grammar: { label: 'Grammar', icon: '✏️', color: '#ff6a6a', soft: '#ffe9e9' },
-  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭', color: '#17b897', soft: '#e2f9f2' },
-  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢', color: '#ffb020', soft: '#fff3dc' },
-  WH_Questions: { label: 'WH questions', icon: '❓', color: '#9b6bff', soft: '#f1e9ff' }
+  S_Sounds: { label: 'S sounds', icon: '🐍', color: '#4d8dfa', soft: '#e8f0ff' },
+  R_Sounds: { label: 'R sounds', icon: '🦖', color: '#ff6a6a', soft: '#ffe9e9' },
+  L_Sounds: { label: 'L sounds', icon: '🦎', color: '#17b897', soft: '#e2f9f2' },
+  TH_Sounds: { label: 'TH sounds', icon: '🦷', color: '#ffb020', soft: '#fff3dc' },
+  CH_SH_Sounds: { label: 'CH & SH sounds', icon: '🚂', color: '#9b6bff', soft: '#f1e9ff' }
 };
 const ALL_COLOR = '#1f5f6b';
 const ALL_SOFT = '#e7f1f1';
 
 const PROMPTS = [
-  { category: 'Describing', prompt: 'Describe your favorite animal without saying its name. Give at least 3 clues.' },
-  { category: 'Describing', prompt: 'Pick an object in the room and describe its shape, color, and size.' },
-  { category: 'Describing', prompt: 'Describe a birthday cake to someone who has never seen one.' },
-  { category: 'Describing', prompt: 'Think of a fruit. Describe how it looks, feels, and tastes.' },
-  { category: 'Describing', prompt: 'Describe what a school bus looks like and what it is used for.' },
+  { category: 'S_Sounds', prompt: "Say the word 'sun' three times, then use it in a sentence." },
+  { category: 'S_Sounds', prompt: "Say the word 'bus' and notice the /s/ sound at the end." },
+  { category: 'S_Sounds', prompt: "Say the word 'missing' slowly, stretching the /s/ sound in the middle." },
+  { category: 'S_Sounds', prompt: "Practice this sentence: 'Sam sees six silly seals.'" },
+  { category: 'S_Sounds', prompt: "Say the word 'glasses' and point to where you hear the /s/ sound." },
 
-  { category: 'Grammar', prompt: "Make a sentence using 'is' to describe what someone is doing right now." },
-  { category: 'Grammar', prompt: "Make a sentence using 'are' to describe what two people are doing." },
-  { category: 'Grammar', prompt: "Finish this sentence correctly: 'He ___ (have/has) a red backpack.'" },
-  { category: 'Grammar', prompt: "Make a sentence using the past tense of the word 'run'." },
-  { category: 'Grammar', prompt: "Make a sentence using 'was' or 'were' to talk about yesterday." },
+  { category: 'R_Sounds', prompt: "Say the word 'rabbit' and use it in a sentence about what a rabbit eats." },
+  { category: 'R_Sounds', prompt: "Say the word 'car' and notice the /r/ sound at the end." },
+  { category: 'R_Sounds', prompt: "Say the word 'carrot' slowly, stretching the /r/ sound in the middle." },
+  { category: 'R_Sounds', prompt: "Practice this sentence: 'The red rooster runs around the road.'" },
+  { category: 'R_Sounds', prompt: "Say the word 'star' and use it in a sentence about the night sky." },
 
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: "Tell where you could hide a toy so a friend could find it — use the word 'under' or 'behind'." },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Describe where your feet are compared to your head.' },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: "Give a direction using the word 'next to' or 'between'." },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: "Tell someone how to put a book 'on top of' a table." },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Describe where the ceiling is compared to the floor.' },
+  { category: 'L_Sounds', prompt: "Say the word 'lion' and use it in a sentence about the zoo." },
+  { category: 'L_Sounds', prompt: "Say the word 'ball' and notice the /l/ sound at the end." },
+  { category: 'L_Sounds', prompt: "Say the word 'yellow' slowly, stretching the /l/ sound in the middle." },
+  { category: 'L_Sounds', prompt: "Practice this sentence: 'Lily likes lemon lollipops.'" },
+  { category: 'L_Sounds', prompt: "Say the word 'table' and use it in a sentence about dinner time." },
 
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Name two groups of things and tell which one has 'more.'" },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Tell about a time you had 'less' of something than a friend." },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Explain what it means for two groups to be 'the same' amount." },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Name something you could have 'a lot' of and something you could have 'a little' of." },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "If you have 3 cookies and your friend has 5, who has 'more'?" },
+  { category: 'TH_Sounds', prompt: "Say the word 'thumb' and use it in a sentence about your hand." },
+  { category: 'TH_Sounds', prompt: "Say the word 'bath' and notice the /th/ sound at the end." },
+  { category: 'TH_Sounds', prompt: "Say the word 'toothbrush' slowly, stretching the /th/ sound in the middle." },
+  { category: 'TH_Sounds', prompt: "Practice this sentence: 'Three thin thieves thought about thunder.'" },
+  { category: 'TH_Sounds', prompt: "Say the word 'mother' and use it in a sentence about your family." },
 
-  { category: 'WH_Questions', prompt: "Ask a 'who' question about someone in your family." },
-  { category: 'WH_Questions', prompt: "Ask a 'what' question about something you did today." },
-  { category: 'WH_Questions', prompt: "Ask a 'where' question about a place you like to visit." },
-  { category: 'WH_Questions', prompt: "Ask a 'when' question about something that happens every day." },
-  { category: 'WH_Questions', prompt: "Ask a 'why' question about something that made you happy." }
+  { category: 'CH_SH_Sounds', prompt: "Say the word 'chair' and use it in a sentence about your classroom." },
+  { category: 'CH_SH_Sounds', prompt: "Say the word 'fish' and notice the /sh/ sound at the end." },
+  { category: 'CH_SH_Sounds', prompt: "Say the word 'washing' slowly, stretching the /sh/ sound in the middle." },
+  { category: 'CH_SH_Sounds', prompt: "Practice this sentence: 'Chip chose cheese and chocolate chips.'" },
+  { category: 'CH_SH_Sounds', prompt: "Say the word 'shoe' and use it in a sentence about getting dressed." }
 ];
 
-const TOKENS = ['🐢', '🦊'];
+const TOKENS = ['🦁', '🐯'];
 const FINISH = 21;
 
 let numPlayers = 1;
@@ -635,7 +555,7 @@ function buildChips() {
   const allChip = document.createElement('button');
   allChip.type = 'button';
   allChip.className = 'chip active';
-  allChip.textContent = '✨ All skills';
+  allChip.textContent = '✨ All sounds';
   allChip.dataset.value = 'all';
   styleChip(allChip, ALL_COLOR, ALL_SOFT, true);
   allChip.addEventListener('click', () => selectCategory('all', allChip));
@@ -762,12 +682,12 @@ function handleAnswer(correct) {
   pendingCorrect = correct;
 
   if (correct) {
-    feedbackMsg.textContent = 'Nice work! Roll the dice to move ahead.';
+    feedbackMsg.textContent = 'Great articulation! Roll the dice to move ahead.';
     feedbackMsg.className = 'feedback-msg good';
     diceStage.style.display = 'flex';
     confettiBurst(14);
   } else {
-    feedbackMsg.textContent = "That's okay — let's practice more next turn!";
+    feedbackMsg.textContent = "That's okay — let's practice that sound again next turn!";
     feedbackMsg.className = 'feedback-msg bad';
     nextStage.style.display = 'flex';
   }
@@ -803,7 +723,7 @@ function showWin() {
   winBanner.classList.add('show');
   winText.textContent = `🎉 Player ${currentPlayer + 1} wins!`;
   confettiBurst(50);
-  celebrateWin(`🏆 Player ${currentPlayer + 1} wins the race! 🏆`);
+  celebrateWin(`🏆 Player ${currentPlayer + 1} sprints to the finish! 🏆`);
 }
 
 function nextTurn() {

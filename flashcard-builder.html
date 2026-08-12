@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard Builder — SLP Activities Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🗂️%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #2b2a3d; --ink-soft: #5a5872; --muted: #8b8aa0;
+  --primary: #1f5f6b; --primary-dark: #143f48;
+  --bg: #fbf8f2; --card-bg: #ffffff; --border: #ece7f5;
+  --good: #1fa971; --good-bg: #e2faef; --bad: #ef5b5b; --bad-bg: #ffe9e9;
+  --radius-lg: 26px; --radius-md: 18px; --radius-sm: 12px;
+  --shadow-md: 0 14px 30px -10px rgba(43,42,61,.18);
+  --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; font-family: var(--font-body); background: var(--bg); color: var(--ink); overflow-x:hidden;
+}
+body::before, body::after {
+  content:''; position:fixed; border-radius:50%; filter: blur(70px); opacity:.4; z-index:-1;
+}
+body::before { width:360px; height:360px; background:#ddd6fe; top:-100px; right:-100px; }
+body::after { width:400px; height:400px; background:#fef3c7; bottom:-120px; left:-120px; }
+
+.wrap { max-width: 900px; margin:0 auto; padding: 0 20px 60px; }
+
+header {
+  background: linear-gradient(155deg, var(--primary-dark), var(--primary) 80%);
+  color:#fff; padding: 30px 0 46px; margin-bottom: -30px;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.floaty { position:absolute; opacity:0; animation: floatUp linear infinite; will-change: transform, opacity; }
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
+  12%  { opacity:.6; }
+  88%  { opacity:.5; }
+  100% { transform: translateY(-190px) translateX(var(--drift,10px)) rotate(30deg); opacity:0; }
+}
+
+.mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
+.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 9s ease-in-out infinite; }
+@keyframes patrol {
+  0%   { left:0%;  transform: scaleX(1); }
+  45%  { left:82%; transform: scaleX(1); }
+  50%  { left:82%; transform: scaleX(-1); }
+  95%  { left:0%;  transform: scaleX(-1); }
+  100% { left:0%;  transform: scaleX(1); }
+}
+.mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
+@keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+
+.celebrate-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:1200; opacity:0; transition: opacity .3s ease; }
+.celebrate-overlay.show { opacity:1; }
+.celebrate-banner {
+  font-family: var(--font-display); font-weight:800; font-size: 1.9rem; color:#fff; text-align:center;
+  background: linear-gradient(135deg, #8b5cf6, #17b897);
+  padding: 20px 38px; border-radius: 26px; box-shadow: 0 20px 40px -12px rgba(0,0,0,.35);
+  transform: scale(0); animation: bannerPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes bannerPop { 0%{ transform: scale(0) rotate(-8deg);} 60%{ transform: scale(1.12) rotate(3deg);} 100%{ transform: scale(1) rotate(0deg);} }
+.spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
+@keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
+
+header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
+.back-link:hover { color:#fff; }
+h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
+.mascot { display:inline-block; animation: bounce 2.2s ease-in-out infinite; font-size: 1.6rem; }
+@keyframes bounce { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-9px) rotate(4deg);} }
+.eyebrow { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color: #e4d9ff; font-family: var(--font-display); }
+.scoreboard { display:flex; gap:10px; }
+.pill {
+  background: rgba(255,255,255,.16); border:2px solid rgba(255,255,255,.25); border-radius:999px;
+  padding:9px 18px; font-size:.88rem; font-weight:800; font-family: var(--font-display); transition: transform .2s ease;
+}
+.pill.pop { animation: pillPop .35s ease; }
+@keyframes pillPop { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+
+.panel {
+  margin-top: 30px; background: var(--card-bg); border:1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 30px; position:relative; z-index:1;
+}
+.panel h2 { font-family: var(--font-display); font-size:1.15rem; margin: 0 0 16px; display:flex; align-items:center; gap:8px; }
+
+.chip-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 18px; }
+.chip {
+  border:2px solid transparent; background: #f1eef9; color: var(--ink-soft);
+  font-family: var(--font-display); font-size:.86rem; font-weight:700; padding:9px 16px; border-radius:999px; cursor:pointer;
+  box-shadow: 0 3px 0 rgba(43,42,61,.08); transition: transform .1s ease, box-shadow .1s ease;
+}
+.chip:hover { transform: translateY(-1px); }
+.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(43,42,61,.08); }
+.chip.active { color: #fff; }
+
+.filter-row { display:flex; flex-wrap:wrap; gap:12px; margin-bottom: 4px; }
+.filter-field { display:flex; flex-direction:column; gap:5px; }
+.filter-field label { font-family: var(--font-display); font-size:.72rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color: var(--muted); }
+.filter-field select, .filter-field input[type="text"] {
+  font-family: var(--font-body); font-size:.92rem; font-weight:600; color: var(--ink);
+  border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 9px 14px; background:#fff;
+  min-width: 150px;
+}
+.filter-field input[type="text"] { min-width: 200px; }
+.filter-field select:focus, .filter-field input[type="text"]:focus { outline:none; border-color: var(--primary); }
+.reset-btn {
+  align-self:flex-end; font-family: var(--font-display); font-weight:700; font-size:.85rem; color: var(--ink-soft);
+  background: none; border: 2px dashed var(--border); border-radius: var(--radius-sm); padding: 9px 16px; cursor:pointer;
+}
+.reset-btn:hover { border-color: var(--muted); }
+
+.flash-grid {
+  display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 22px;
+}
+.flash-card {
+  border: 2px solid var(--border); border-radius: var(--radius-md); padding: 16px 12px; text-align:center;
+  background:#fff; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+.flash-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px -8px rgba(43,42,61,.25); }
+.flash-emoji { font-size: 2.4rem; display:block; margin-bottom: 8px; }
+.flash-word { font-family: var(--font-display); font-weight:800; font-size: 1.02rem; margin: 0 0 8px; text-transform: capitalize; }
+.flash-tags { display:flex; justify-content:center; gap:5px; flex-wrap:wrap; margin-bottom: 10px; }
+.flash-tag {
+  font-family: var(--font-display); font-size:.62rem; font-weight:800; text-transform:uppercase; letter-spacing:.03em;
+  padding: 3px 8px; border-radius: 999px;
+}
+.add-btn {
+  width:100%; font-family: var(--font-display); font-weight:800; font-size:.8rem; padding: 9px 8px; border-radius:999px;
+  border: 2px solid var(--primary); background:#fff; color: var(--primary); cursor:pointer; transition: transform .1s ease;
+}
+.add-btn:hover { transform: translateY(-1px); }
+.add-btn.added { background: var(--good); border-color: var(--good); color:#fff; }
+.empty-msg { text-align:center; color: var(--muted); font-weight:600; padding: 30px 10px; grid-column: 1 / -1; }
+
+.list-panel-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom: 16px; }
+.list-actions { display:flex; gap:10px; flex-wrap:wrap; }
+.action-btn {
+  font-family: var(--font-display); font-weight:800; font-size:.85rem; padding: 11px 20px; border-radius:999px;
+  border:none; cursor:pointer; transition: transform .1s ease, box-shadow .1s ease;
+}
+.print-btn { background: var(--primary); color:#fff; box-shadow: 0 5px 0 var(--primary-dark); }
+.print-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 var(--primary-dark); }
+.print-btn:disabled { opacity:.5; cursor:default; }
+.clear-btn { background: var(--bad-bg); color: var(--bad); box-shadow: 0 5px 0 #f6c9c9; }
+.clear-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 #f6c9c9; }
+.clear-btn:disabled { opacity:.5; cursor:default; }
+
+.my-list { display:flex; flex-wrap:wrap; gap:8px; min-height: 40px; }
+.list-chip {
+  display:flex; align-items:center; gap:7px; background: #f1eef9; border-radius:999px; padding: 7px 8px 7px 14px;
+  font-family: var(--font-display); font-weight:700; font-size:.86rem;
+}
+.list-chip .remove-x {
+  background: rgba(0,0,0,.08); border:none; border-radius:50%; width:20px; height:20px; cursor:pointer;
+  font-size:.75rem; line-height:1; color: var(--ink-soft);
+}
+.list-chip .remove-x:hover { background: var(--bad-bg); color: var(--bad); }
+.list-empty { color: var(--muted); font-weight:600; padding: 8px 0; }
+
+.print-sheet { display:none; }
+@media print {
+  body::before, body::after, header, .no-print { display:none !important; }
+  .print-sheet {
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+  }
+  .print-card {
+    border: 2px solid #999; border-radius: 14px; padding: 18px 10px; text-align:center; page-break-inside: avoid;
+  }
+  .print-card .pe { font-size: 2.6rem; display:block; margin-bottom: 8px; }
+  .print-card .pw { font-family: Georgia, serif; font-weight:700; font-size: 1.1rem; text-transform: capitalize; }
+}
+
+.confetti-piece { position:fixed; width:9px; height:9px; border-radius:3px; pointer-events:none; z-index:999; animation: confettiFall linear forwards; }
+@keyframes confettiFall { to { transform: translate(var(--dx), 300px) rotate(var(--dr)); opacity:0; } }
+
+@media (max-width: 500px) {
+  h1 { font-size: 1.5rem; }
+  .flash-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bg-floaties" id="bgFloaties"></div>
+  <div class="wrap">
+    <div>
+      <a class="back-link" href="index.html">&larr; All games</a>
+      <p class="eyebrow">Speech &amp; language practice</p>
+      <h1><span class="mascot">🗂️</span> Flashcard Builder</h1>
+    </div>
+    <div class="scoreboard">
+      <span class="pill" id="showingPill">🔎 Showing: 0</span>
+      <span class="pill" id="listPill">🃏 My List: 0</span>
+    </div>
+  </div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🦉</span></div></div>
+</header>
+
+<div class="wrap">
+  <div class="panel no-print">
+    <h2>🎛️ Filter flashcards</h2>
+    <div class="chip-group" id="categoryChips"></div>
+    <div class="filter-row">
+      <div class="filter-field">
+        <label for="soundSelect">Target sound</label>
+        <select id="soundSelect"></select>
+      </div>
+      <div class="filter-field">
+        <label for="positionSelect">Sound position</label>
+        <select id="positionSelect">
+          <option value="all">All positions</option>
+          <option value="Initial">Initial</option>
+          <option value="Medial">Medial</option>
+          <option value="Final">Final</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="syllableSelect">Syllables</label>
+        <select id="syllableSelect">
+          <option value="all">Any</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label for="searchInput">Search word</label>
+        <input type="text" id="searchInput" placeholder="Type a word...">
+      </div>
+      <button class="reset-btn" id="resetBtn" type="button">↺ Reset filters</button>
+    </div>
+
+    <div class="flash-grid" id="flashGrid"></div>
+  </div>
+
+  <div class="panel no-print">
+    <div class="list-panel-header">
+      <h2 style="margin:0;">🃏 My flashcard list</h2>
+      <div class="list-actions">
+        <button class="action-btn print-btn" id="printBtn" type="button">🖨️ Print my flashcards</button>
+        <button class="action-btn clear-btn" id="clearBtn" type="button">🗑️ Clear list</button>
+      </div>
+    </div>
+    <div class="my-list" id="myListEl"></div>
+  </div>
+</div>
+
+<div class="print-sheet" id="printSheet"></div>
+
+<script>
+const CATEGORY_META = {
+  Animals: { label: 'Animals', icon: '🐾', color: '#4d8dfa', soft: '#e8f0ff' },
+  Food: { label: 'Food', icon: '🍎', color: '#ff6a6a', soft: '#ffe9e9' },
+  Nature: { label: 'Nature', icon: '🌿', color: '#17b897', soft: '#e2f9f2' },
+  Objects: { label: 'Everyday objects', icon: '📦', color: '#9b6bff', soft: '#f1e9ff' },
+  Transportation: { label: 'Transportation', icon: '🚗', color: '#ffb020', soft: '#fff3dc' }
+};
+const ALL_COLOR = '#8b5cf6';
+
+const WORD_BANK = [
+  { word: 'cat', emoji: '🐱', sound: 's', position: 'Final', syllables: 1, category: 'Animals' },
+  { word: 'dog', emoji: '🐶', sound: 'd', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'fish', emoji: '🐟', sound: 'sh', position: 'Final', syllables: 1, category: 'Animals' },
+  { word: 'bird', emoji: '🐦', sound: 'b', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'bear', emoji: '🐻', sound: 'r', position: 'Final', syllables: 1, category: 'Animals' },
+  { word: 'lion', emoji: '🦁', sound: 'l', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'tiger', emoji: '🐯', sound: 't', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'zebra', emoji: '🦓', sound: 'z', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'rabbit', emoji: '🐰', sound: 'r', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'monkey', emoji: '🐒', sound: 'm', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'turtle', emoji: '🐢', sound: 't', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'snake', emoji: '🐍', sound: 'sn', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'spider', emoji: '🕷️', sound: 'sp', position: 'Initial', syllables: 2, category: 'Animals' },
+  { word: 'frog', emoji: '🐸', sound: 'fr', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'duck', emoji: '🦆', sound: 'k', position: 'Final', syllables: 1, category: 'Animals' },
+  { word: 'goat', emoji: '🐐', sound: 'g', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'sheep', emoji: '🐑', sound: 'sh', position: 'Initial', syllables: 1, category: 'Animals' },
+  { word: 'whale', emoji: '🐳', sound: 'w', position: 'Initial', syllables: 1, category: 'Animals' },
+
+  { word: 'apple', emoji: '🍎', sound: 'p', position: 'Medial', syllables: 2, category: 'Food' },
+  { word: 'banana', emoji: '🍌', sound: 'n', position: 'Medial', syllables: 3, category: 'Food' },
+  { word: 'grape', emoji: '🍇', sound: 'g', position: 'Initial', syllables: 1, category: 'Food' },
+  { word: 'orange', emoji: '🍊', sound: 'j', position: 'Final', syllables: 2, category: 'Food' },
+  { word: 'lemon', emoji: '🍋', sound: 'l', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'pizza', emoji: '🍕', sound: 'z', position: 'Medial', syllables: 2, category: 'Food' },
+  { word: 'cookie', emoji: '🍪', sound: 'k', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'cake', emoji: '🎂', sound: 'k', position: 'Final', syllables: 1, category: 'Food' },
+  { word: 'milk', emoji: '🥛', sound: 'k', position: 'Final', syllables: 1, category: 'Food' },
+  { word: 'juice', emoji: '🧃', sound: 'j', position: 'Initial', syllables: 1, category: 'Food' },
+  { word: 'bread', emoji: '🍞', sound: 'br', position: 'Initial', syllables: 1, category: 'Food' },
+  { word: 'taco', emoji: '🌮', sound: 't', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'soup', emoji: '🍲', sound: 's', position: 'Initial', syllables: 1, category: 'Food' },
+  { word: 'candy', emoji: '🍬', sound: 'k', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'donut', emoji: '🍩', sound: 'd', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'popcorn', emoji: '🍿', sound: 'p', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'carrot', emoji: '🥕', sound: 'k', position: 'Initial', syllables: 2, category: 'Food' },
+  { word: 'pickle', emoji: '🥒', sound: 'p', position: 'Initial', syllables: 2, category: 'Food' },
+
+  { word: 'sun', emoji: '☀️', sound: 's', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'moon', emoji: '🌙', sound: 'm', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'star', emoji: '⭐', sound: 'st', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'cloud', emoji: '☁️', sound: 'cl', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'rain', emoji: '🌧️', sound: 'r', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'snow', emoji: '❄️', sound: 'sn', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'flower', emoji: '🌸', sound: 'fl', position: 'Initial', syllables: 2, category: 'Nature' },
+  { word: 'tree', emoji: '🌳', sound: 'tr', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'leaf', emoji: '🍃', sound: 'f', position: 'Final', syllables: 1, category: 'Nature' },
+  { word: 'rainbow', emoji: '🌈', sound: 'r', position: 'Initial', syllables: 2, category: 'Nature' },
+  { word: 'mountain', emoji: '⛰️', sound: 'm', position: 'Initial', syllables: 2, category: 'Nature' },
+  { word: 'ocean', emoji: '🌊', sound: 'sh', position: 'Medial', syllables: 2, category: 'Nature' },
+  { word: 'rock', emoji: '🪨', sound: 'r', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'fire', emoji: '🔥', sound: 'f', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'wind', emoji: '💨', sound: 'w', position: 'Initial', syllables: 1, category: 'Nature' },
+  { word: 'volcano', emoji: '🌋', sound: 'v', position: 'Initial', syllables: 3, category: 'Nature' },
+
+  { word: 'sock', emoji: '🧦', sound: 's', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'boot', emoji: '👢', sound: 'b', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'hat', emoji: '🎩', sound: 'h', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'glasses', emoji: '👓', sound: 'gl', position: 'Initial', syllables: 2, category: 'Objects' },
+  { word: 'key', emoji: '🔑', sound: 'k', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'clock', emoji: '🕐', sound: 'cl', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'phone', emoji: '📱', sound: 'f', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'book', emoji: '📖', sound: 'k', position: 'Final', syllables: 1, category: 'Objects' },
+  { word: 'chair', emoji: '🪑', sound: 'ch', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'lamp', emoji: '💡', sound: 'l', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'door', emoji: '🚪', sound: 'r', position: 'Final', syllables: 1, category: 'Objects' },
+  { word: 'window', emoji: '🪟', sound: 'w', position: 'Initial', syllables: 2, category: 'Objects' },
+  { word: 'box', emoji: '📦', sound: 'b', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'bag', emoji: '👜', sound: 'b', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'ring', emoji: '💍', sound: 'r', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'crown', emoji: '👑', sound: 'cr', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'drum', emoji: '🥁', sound: 'dr', position: 'Initial', syllables: 1, category: 'Objects' },
+  { word: 'balloon', emoji: '🎈', sound: 'b', position: 'Initial', syllables: 2, category: 'Objects' },
+
+  { word: 'car', emoji: '🚗', sound: 'k', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'bus', emoji: '🚌', sound: 'b', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'truck', emoji: '🚚', sound: 'tr', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'train', emoji: '🚂', sound: 'tr', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'bike', emoji: '🚲', sound: 'b', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'plane', emoji: '✈️', sound: 'pl', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'boat', emoji: '⛵', sound: 'b', position: 'Initial', syllables: 1, category: 'Transportation' },
+  { word: 'rocket', emoji: '🚀', sound: 'r', position: 'Initial', syllables: 2, category: 'Transportation' },
+  { word: 'scooter', emoji: '🛴', sound: 'sk', position: 'Initial', syllables: 2, category: 'Transportation' },
+  { word: 'tractor', emoji: '🚜', sound: 'tr', position: 'Initial', syllables: 2, category: 'Transportation' },
+  { word: 'helicopter', emoji: '🚁', sound: 'h', position: 'Initial', syllables: 4, category: 'Transportation' },
+  { word: 'skateboard', emoji: '🛹', sound: 'sk', position: 'Initial', syllables: 2, category: 'Transportation' }
+];
+
+let activeCategory = 'all';
+let activeSound = 'all';
+let activePosition = 'all';
+let activeSyllables = 'all';
+let searchText = '';
+let myList = [];
+
+const chipsEl = document.getElementById('categoryChips');
+const soundSelect = document.getElementById('soundSelect');
+const positionSelect = document.getElementById('positionSelect');
+const syllableSelect = document.getElementById('syllableSelect');
+const searchInput = document.getElementById('searchInput');
+const resetBtn = document.getElementById('resetBtn');
+const flashGrid = document.getElementById('flashGrid');
+const showingPill = document.getElementById('showingPill');
+const listPill = document.getElementById('listPill');
+const myListEl = document.getElementById('myListEl');
+const printBtn = document.getElementById('printBtn');
+const clearBtn = document.getElementById('clearBtn');
+const printSheet = document.getElementById('printSheet');
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const amt = Math.round(2.55 * percent);
+  let R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+  R = R < 255 ? (R < 0 ? 0 : R) : 255; G = G < 255 ? (G < 0 ? 0 : G) : 255; B = B < 255 ? (B < 0 ? 0 : B) : 255;
+  return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+}
+
+function popPill(el) {
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function confettiBurst(count) {
+  const colors = ['#8b5cf6', '#4d8dfa', '#ffb020', '#17b897', '#ff6a6a', '#ff8fce'];
+  const cx = window.innerWidth / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'confetti-piece';
+    el.style.left = (cx + (Math.random() * 300 - 150)) + 'px';
+    el.style.top = '110px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+    el.style.setProperty('--dr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.7 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+}
+
+function spawnFloaties(container, emojis, count) {
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'floaty';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 90 + 2) + '%';
+    el.style.bottom = '0px';
+    el.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+    el.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+    el.style.animationDuration = (5 + Math.random() * 4) + 's';
+    el.style.animationDelay = (Math.random() * 6) + 's';
+    container.appendChild(el);
+  }
+}
+
+function buildChips() {
+  const cats = ['all', ...Object.keys(CATEGORY_META)];
+  cats.forEach(cat => {
+    const color = cat === 'all' ? ALL_COLOR : CATEGORY_META[cat].color;
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (cat === activeCategory ? ' active' : '');
+    btn.type = 'button';
+    btn.dataset.value = cat;
+    btn.textContent = cat === 'all' ? '✨ All' : `${CATEGORY_META[cat].icon} ${CATEGORY_META[cat].label}`;
+    if (cat === activeCategory) {
+      btn.style.background = color;
+      btn.style.boxShadow = `0 3px 0 ${shadeColor(color, -20)}`;
+    }
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      [...chipsEl.children].forEach(c => {
+        const isActive = c.dataset.value === cat;
+        c.classList.toggle('active', isActive);
+        const cColor = c.dataset.value === 'all' ? ALL_COLOR : CATEGORY_META[c.dataset.value].color;
+        if (isActive) {
+          c.style.background = cColor;
+          c.style.boxShadow = `0 3px 0 ${shadeColor(cColor, -20)}`;
+        } else {
+          c.style.background = '';
+          c.style.boxShadow = '';
+        }
+      });
+      renderGrid();
+    });
+    chipsEl.appendChild(btn);
+  });
+}
+
+function buildSoundOptions() {
+  const sounds = Array.from(new Set(WORD_BANK.map(w => w.sound))).sort();
+  const allOpt = document.createElement('option');
+  allOpt.value = 'all';
+  allOpt.textContent = 'All sounds';
+  soundSelect.appendChild(allOpt);
+  sounds.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s.toUpperCase();
+    soundSelect.appendChild(opt);
+  });
+}
+
+function getFiltered() {
+  return WORD_BANK.filter(w => {
+    if (activeCategory !== 'all' && w.category !== activeCategory) return false;
+    if (activeSound !== 'all' && w.sound !== activeSound) return false;
+    if (activePosition !== 'all' && w.position !== activePosition) return false;
+    if (activeSyllables !== 'all' && String(w.syllables) !== activeSyllables) return false;
+    if (searchText && !w.word.toLowerCase().includes(searchText.toLowerCase())) return false;
+    return true;
+  });
+}
+
+function isInList(word) {
+  return myList.some(w => w.word === word);
+}
+
+function renderGrid() {
+  const filtered = getFiltered();
+  flashGrid.innerHTML = '';
+  showingPill.textContent = `🔎 Showing: ${filtered.length}`;
+  popPill(showingPill);
+
+  if (filtered.length === 0) {
+    const msg = document.createElement('p');
+    msg.className = 'empty-msg';
+    msg.textContent = '🤔 No flashcards match these filters — try adjusting them!';
+    flashGrid.appendChild(msg);
+    return;
+  }
+
+  filtered.forEach(item => {
+    const meta = CATEGORY_META[item.category];
+    const card = document.createElement('div');
+    card.className = 'flash-card';
+    const added = isInList(item.word);
+    card.innerHTML = `
+      <span class="flash-emoji">${item.emoji}</span>
+      <p class="flash-word">${item.word}</p>
+      <div class="flash-tags">
+        <span class="flash-tag" style="background:${meta.soft}; color:${meta.color};">${item.sound.toUpperCase()} · ${item.position}</span>
+        <span class="flash-tag" style="background:#f1eef9; color:var(--ink-soft);">${item.syllables} syl</span>
+      </div>
+      <button class="add-btn${added ? ' added' : ''}" type="button">${added ? '✓ Added' : '+ Add to list'}</button>
+    `;
+    const btn = card.querySelector('.add-btn');
+    btn.addEventListener('click', () => toggleListItem(item, btn));
+    flashGrid.appendChild(card);
+  });
+}
+
+function toggleListItem(item, btn) {
+  if (isInList(item.word)) {
+    myList = myList.filter(w => w.word !== item.word);
+    if (btn) { btn.classList.remove('added'); btn.textContent = '+ Add to list'; }
+  } else {
+    myList.push(item);
+    if (btn) { btn.classList.add('added'); btn.textContent = '✓ Added'; }
+    confettiBurst(10);
+  }
+  renderMyList();
+}
+
+function renderMyList() {
+  listPill.textContent = `🃏 My List: ${myList.length}`;
+  popPill(listPill);
+  myListEl.innerHTML = '';
+
+  if (myList.length === 0) {
+    const p = document.createElement('p');
+    p.className = 'list-empty';
+    p.textContent = 'Your list is empty — add some flashcards above!';
+    myListEl.appendChild(p);
+  } else {
+    myList.forEach(item => {
+      const chip = document.createElement('div');
+      chip.className = 'list-chip';
+      chip.innerHTML = `<span>${item.emoji} ${item.word}</span><button class="remove-x" type="button" aria-label="Remove ${item.word}">✕</button>`;
+      chip.querySelector('.remove-x').addEventListener('click', () => {
+        myList = myList.filter(w => w.word !== item.word);
+        renderMyList();
+        renderGrid();
+      });
+      myListEl.appendChild(chip);
+    });
+  }
+
+  printBtn.disabled = myList.length === 0;
+  clearBtn.disabled = myList.length === 0;
+}
+
+function preparePrintSheet() {
+  printSheet.innerHTML = '';
+  myList.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'print-card';
+    div.innerHTML = `<span class="pe">${item.emoji}</span><span class="pw">${item.word}</span>`;
+    printSheet.appendChild(div);
+  });
+}
+
+soundSelect.addEventListener('change', () => { activeSound = soundSelect.value; renderGrid(); });
+positionSelect.addEventListener('change', () => { activePosition = positionSelect.value; renderGrid(); });
+syllableSelect.addEventListener('change', () => { activeSyllables = syllableSelect.value; renderGrid(); });
+searchInput.addEventListener('input', () => { searchText = searchInput.value; renderGrid(); });
+resetBtn.addEventListener('click', () => {
+  activeCategory = 'all'; activeSound = 'all'; activePosition = 'all'; activeSyllables = 'all'; searchText = '';
+  soundSelect.value = 'all'; positionSelect.value = 'all'; syllableSelect.value = 'all'; searchInput.value = '';
+  chipsEl.innerHTML = '';
+  buildChips();
+  renderGrid();
+});
+printBtn.addEventListener('click', () => {
+  if (myList.length === 0) return;
+  preparePrintSheet();
+  window.print();
+});
+clearBtn.addEventListener('click', () => {
+  if (myList.length === 0) return;
+  myList = [];
+  renderMyList();
+  renderGrid();
+});
+
+spawnFloaties(document.getElementById('bgFloaties'), ['🗂️', '✨', '⭐', '💫'], 10);
+buildChips();
+buildSoundOptions();
+renderGrid();
+renderMyList();
+</script>
+</body>
+</html>
