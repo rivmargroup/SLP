@@ -14,11 +14,11 @@ const modalContent = document.getElementById('modalContent');
 const modalClose = document.getElementById('modalClose');
 
 const CATEGORY_META = {
-  Describing: { label: 'Describir', icon: '🔎' },
-  Grammar: { label: 'Gramática', icon: '✏️' },
-  Following_Directions_Conceptos_Espaciales: { label: 'Conceptos espaciales', icon: '🧭' },
-  Following_Directions_Conceptos_Cuantitativos: { label: 'Conceptos cuantitativos', icon: '🔢' },
-  WH_Questions: { label: 'Preguntas WH', icon: '❓' }
+  Describing: { label: 'Describing', icon: '🔎' },
+  Grammar: { label: 'Grammar', icon: '✏️' },
+  Following_Directions_Conceptos_Espaciales: { label: 'Spatial concepts', icon: '🧭' },
+  Following_Directions_Conceptos_Cuantitativos: { label: 'Quantitative concepts', icon: '🔢' },
+  WH_Questions: { label: 'WH Questions', icon: '❓' }
 };
 
 function metaFor(category) {
@@ -37,7 +37,7 @@ async function loadActivities() {
     const res = await fetch('activities.json', { cache: 'no-store' });
     ALL_ACTIVITIES = await res.json();
   } catch (err) {
-    console.error('No se pudo cargar activities.json', err);
+    console.error('Could not load activities.json', err);
     ALL_ACTIVITIES = [];
   }
   statCount.textContent = ALL_ACTIVITIES.length;
@@ -48,7 +48,7 @@ async function loadActivities() {
 function buildCategoryChips() {
   const categories = [...new Set(ALL_ACTIVITIES.map(a => a.category))];
 
-  const allChip = makeChip('all', 'Todas', '✨');
+  const allChip = makeChip('all', 'All', '✨');
   categoryChips.appendChild(allChip);
 
   categories.forEach(cat => {
@@ -98,9 +98,9 @@ function render() {
     card.innerHTML = `
       <div class="card-top">
         <span class="badge">${meta.icon} ${meta.label}</span>
-        ${isNew(activity.dateAdded) ? '<span class="new-badge">NUEVO</span>' : ''}
+        ${isNew(activity.dateAdded) ? '<span class="new-badge">NEW</span>' : ''}
       </div>
-      ${activity.worksheetPdf ? '<p class="skill" style="margin:-4px 0 6px;font-size:0.78rem;color:var(--accent);font-weight:700;">📄 Incluye hoja imprimible</p>' : ''}
+      ${activity.worksheetPdf ? '<p class="skill" style="margin:-4px 0 6px;font-size:0.78rem;color:var(--accent);font-weight:700;">📄 Includes printable sheet</p>' : ''}
       <h3>${activity.title}</h3>
       <p class="skill">${activity.skill}</p>
       <div class="card-meta">
@@ -118,25 +118,25 @@ function openModal(activity) {
   modalContent.innerHTML = `
     <span class="badge">${meta.icon} ${meta.label}</span>
     <h2>${activity.title}</h2>
-    <p class="meta-line">👤 Edad: ${activity.ageRange} &nbsp;·&nbsp; 👥 Grupo: ${activity.groupSize}</p>
+    <p class="meta-line">👤 Age: ${activity.ageRange} &nbsp;·&nbsp; 👥 Group: ${activity.groupSize}</p>
 
     <div class="modal-section">
-      <h4>🎯 Objetivo</h4>
+      <h4>🎯 Goal</h4>
       <p class="goal-text">${activity.goal}</p>
     </div>
 
     <div class="modal-section">
-      <h4>🧰 Materiales</h4>
+      <h4>🧰 Materials</h4>
       <ul>${activity.materials.map(m => `<li>${m}</li>`).join('')}</ul>
     </div>
 
     <div class="modal-section">
-      <h4>📋 Instrucciones</h4>
+      <h4>📋 Instructions</h4>
       <ol>${activity.instructions.map(i => `<li>${i}</li>`).join('')}</ol>
     </div>
 
     <div class="modal-section">
-      <h4>🚀 Extensión</h4>
+      <h4>🚀 Extension</h4>
       <p class="extension-text">${activity.extension}</p>
     </div>
 
@@ -145,8 +145,8 @@ function openModal(activity) {
       <a class="worksheet-download" href="${activity.worksheetPdf}" target="_blank" rel="noopener">
         <span class="wd-icon">📄</span>
         <span class="wd-text">
-          <span class="wd-title">Descargar hoja de trabajo imprimible (PDF)</span>
-          <span class="wd-sub">Lista para imprimir y usar con tu estudiante</span>
+          <span class="wd-title">Download printable worksheet (PDF)</span>
+          <span class="wd-sub">Ready to print and use with your student</span>
         </span>
       </a>
     </div>` : ''}

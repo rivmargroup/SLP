@@ -10,12 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #2b2a3d; --ink-soft: #5a5872; --muted: #8b8aa0;
-  --primary: #1f5f6b; --primary-dark: #143f48;
-  --bg: #fbf8f2; --card-bg: #ffffff; --border: #ece7f5;
+  --ink: #263430; --ink-soft: #4f5f5a; --muted: #839089;
+  --primary: #4f7a6c; --primary-dark: #345448;
+  --bg: #f9f7f2; --card-bg: #ffffff; --border: #e7e2d8;
   --good: #1fa971; --good-bg: #e2faef; --bad: #ef5b5b; --bad-bg: #ffe9e9;
-  --radius-lg: 26px; --radius-md: 18px;
-  --shadow-md: 0 14px 30px -10px rgba(43,42,61,.18);
+  --radius-lg: 24px; --radius-md: 18px;
+  --shadow-md: 0 14px 30px -10px rgba(38,52,48,.16);
   --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -72,6 +72,12 @@ header {
 .spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
 @keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
 header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.topnav { position: sticky; top: 0; z-index: 500; background: var(--primary-dark); box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+.topnav-inner { max-width: 1120px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 8px 14px; border-radius: 999px; transition: background 0.15s ease, color 0.15s ease; white-space: nowrap; }
+.topnav-link:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.topnav-link.active { background: #fff; color: var(--primary-dark); }
+@media (max-width: 560px) { .topnav-inner { padding: 8px 14px; gap: 4px; } .topnav-link { padding: 7px 10px; font-size: 0.8rem; } }
 .back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
 .back-link:hover { color:#fff; }
 h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
@@ -95,10 +101,10 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 .chip {
   border:2px solid transparent; background: #f1eef9; color: var(--ink-soft);
   font-family: var(--font-display); font-size:.86rem; font-weight:700; padding:9px 16px; border-radius:999px; cursor:pointer;
-  box-shadow: 0 3px 0 rgba(43,42,61,.08); transition: transform .1s ease, box-shadow .1s ease;
+  box-shadow: 0 3px 0 rgba(38,52,48,.08); transition: transform .1s ease, box-shadow .1s ease;
 }
 .chip:hover { transform: translateY(-1px); }
-.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(43,42,61,.08); }
+.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(38,52,48,.08); }
 .chip.active { color: #fff; }
 
 .prompt-card { text-align:center; padding: 16px 6px 24px; }
@@ -110,6 +116,24 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
   font-size: .92rem; color: var(--ink-soft); background: #fff8ec; border: 2px dashed #ffd9a0; border-radius: var(--radius-md);
   padding: 10px 16px; margin: 0 0 22px; display:inline-block;
 }
+
+.scene { position:relative; width:104px; height:104px; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; }
+.scene-ring {
+  position:absolute; inset:0; border-radius:50%;
+  background: var(--stageSoft, #fff4e0);
+  border: 3px solid var(--stageC, #ffb020);
+  animation: sceneFloat 3s ease-in-out infinite;
+}
+@keyframes sceneFloat { 0%,100%{ transform: translateY(0) scale(1);} 50%{ transform: translateY(-6px) scale(1.03);} }
+.scene-char { position:relative; font-size:3.2rem; z-index:1; animation: sceneBob 2.4s ease-in-out infinite; }
+@keyframes sceneBob { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-6px) rotate(4deg);} }
+.scene-char.pacing { animation: paceHop .5s ease-in-out infinite; }
+@keyframes paceHop { 0%,50%,100%{ transform: translateY(0);} 25%{ transform: translateY(-14px);} }
+.scene-char.happy { animation: sceneHappy .5s ease; }
+@keyframes sceneHappy { 0%{transform:scale(1);} 40%{transform:scale(1.35) rotate(8deg);} 100%{transform:scale(1);} }
+
+.pace-track { position:relative; height:8px; width: 100%; max-width: 360px; margin: 0 auto 18px; background:#f1eef9; border-radius:999px; overflow:hidden; }
+.pace-track-fill { position:absolute; left:0; top:0; bottom:0; width:0%; background: var(--stageC, #ffb020); border-radius:999px; transition: width .15s linear; }
 
 .pace-display {
   display:flex; flex-wrap:wrap; justify-content:center; gap: 10px 12px; margin-bottom: 22px; min-height: 60px; align-items:center;
@@ -173,11 +197,20 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 </head>
 <body>
 
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-link">🏠 Home</a>
+    <a href="actividades.html" class="topnav-link">📋 Activities</a>
+    <a href="games.html" class="topnav-link active">🎮 Games</a>
+    <a href="books.html" class="topnav-link">📚 Books</a>
+  </div>
+</nav>
+
 <header>
   <div class="bg-floaties" id="bgFloaties"></div>
   <div class="wrap">
     <div>
-      <a class="back-link" href="index.html">&larr; All games</a>
+      <a class="back-link" href="games.html">&larr; All games</a>
       <p class="eyebrow">Speech &amp; language practice</p>
       <h1><span class="mascot">🎵</span> Fluency Pacer</h1>
     </div>
@@ -193,11 +226,16 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
   <div class="panel">
     <div class="chip-group" id="categoryChips"></div>
 
-    <div class="prompt-card">
+    <div class="prompt-card" id="promptCard">
       <p class="prompt-label" id="promptCategory">Level</p>
+      <div class="scene">
+        <span class="scene-ring" id="sceneRing"></span>
+        <span class="scene-char" id="sceneChar">🐣</span>
+      </div>
       <p class="tip-text" id="tipText">💡 Tip: loading...</p>
 
       <div class="pace-display" id="paceDisplay"></div>
+      <div class="pace-track"><div class="pace-track-fill" id="paceTrackFill"></div></div>
 
       <div class="speed-toggle" id="speedToggle">
         <button class="speed-btn" data-speed="1000" type="button">🐢 Slow</button>
@@ -223,10 +261,10 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 
 <script>
 const CATEGORY_META = {
-  Level_Words: { label: 'Single words', icon: '🔤', color: '#4d8dfa', soft: '#e8f0ff' },
-  Level_Phrases: { label: 'Short phrases', icon: '🗨️', color: '#ff6a6a', soft: '#ffe9e9' },
-  Level_Sentences: { label: 'Full sentences', icon: '📝', color: '#17b897', soft: '#e2f9f2' },
-  Level_Conversation: { label: 'Conversation', icon: '💬', color: '#9b6bff', soft: '#f1e9ff' }
+  Level_Words: { label: 'Single words', icon: '🔤', color: '#4d8dfa', soft: '#e8f0ff', char: '🐣' },
+  Level_Phrases: { label: 'Short phrases', icon: '🗨️', color: '#ff6a6a', soft: '#ffe9e9', char: '🐥' },
+  Level_Sentences: { label: 'Full sentences', icon: '📝', color: '#17b897', soft: '#e2f9f2', char: '🦜' },
+  Level_Conversation: { label: 'Conversation', icon: '💬', color: '#9b6bff', soft: '#f1e9ff', char: '🦉' }
 };
 const ALL_COLOR = '#ffb020';
 
@@ -276,9 +314,13 @@ let pacing = false;
 let rated = false;
 
 const chipsEl = document.getElementById('categoryChips');
+const promptCardEl = document.getElementById('promptCard');
+const sceneRingEl = document.getElementById('sceneRing');
+const sceneCharEl = document.getElementById('sceneChar');
 const promptCategoryEl = document.getElementById('promptCategory');
 const tipTextEl = document.getElementById('tipText');
 const paceDisplay = document.getElementById('paceDisplay');
+const paceTrackFillEl = document.getElementById('paceTrackFill');
 const speedToggle = document.getElementById('speedToggle');
 const paceBtn = document.getElementById('paceBtn');
 const rateButtons = document.getElementById('rateButtons');
@@ -439,8 +481,10 @@ function startPacing() {
   pacing = true;
   paceBtn.disabled = true;
   paceBtn.textContent = '⏳ Pacing...';
+  sceneCharEl.classList.add('pacing');
   const words = [...paceDisplay.children];
   words.forEach(w => w.classList.remove('active'));
+  paceTrackFillEl.style.width = '0%';
   let i = 0;
   function step() {
     words.forEach(w => w.classList.remove('active'));
@@ -449,9 +493,12 @@ function startPacing() {
       paceBtn.disabled = false;
       paceBtn.textContent = '🔁 Pace it again';
       rateButtons.style.display = 'flex';
+      sceneCharEl.classList.remove('pacing');
+      paceTrackFillEl.style.width = '100%';
       return;
     }
     words[i].classList.add('active');
+    paceTrackFillEl.style.width = (((i + 1) / words.length) * 100) + '%';
     i++;
     setTimeout(step, wordSpeed);
   }
@@ -475,6 +522,11 @@ function nextItem() {
   promptCategoryEl.textContent = `${meta.icon} ${meta.label}`;
   promptCategoryEl.style.background = meta.soft;
   promptCategoryEl.style.color = meta.color;
+  promptCardEl.style.setProperty('--stageC', meta.color);
+  promptCardEl.style.setProperty('--stageSoft', meta.soft);
+  sceneCharEl.textContent = meta.char;
+  sceneCharEl.classList.remove('happy', 'pacing');
+  paceTrackFillEl.style.width = '0%';
 
   tipTextEl.textContent = `💡 Tip: ${TIPS[tipIndex % TIPS.length]}`;
   tipIndex++;
@@ -492,6 +544,12 @@ function rate(isSmooth) {
     feedbackEl.textContent = 'Nice and smooth! 🎉';
     feedbackEl.classList.add('good');
     confettiBurst(18);
+    sceneCharEl.textContent = '🎉';
+    sceneCharEl.classList.add('happy');
+    setTimeout(() => {
+      sceneCharEl.textContent = CATEGORY_META[current.category].char;
+      sceneCharEl.classList.remove('happy');
+    }, 700);
   } else {
     streak = 0;
     feedbackEl.textContent = "That's okay — practice makes progress. Try the tip again next time!";

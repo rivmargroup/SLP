@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estantería de Libros — SLP Activities Hub</title>
-<meta name="description" content="Libros infantiles recomendados para terapia del habla y lenguaje, organizados por temporada. Enlaces de afiliado de Amazon.">
+<title>Book Shelf — SLP Activities Hub</title>
+<meta name="description" content="Recommended children's books for speech and language therapy, organized by season. Amazon affiliate links.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%9A%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,7 +71,7 @@
   font-weight: 700; font-size: .86rem; padding: 10px 16px; border-radius: 999px;
   transition: background .15s ease, transform .15s ease;
 }
-.amazon-btn:hover { background: #c9772f; transform: translateY(-1px); }
+.amazon-btn:hover { background: #a97840; transform: translateY(-1px); }
 
 @media (max-width: 560px) {
   .book-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
@@ -82,10 +82,10 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a href="index.html" class="topnav-link">🏠 Inicio</a>
-    <a href="index.html#activityGrid" class="topnav-link">📋 Actividades</a>
-    <a href="games.html" class="topnav-link">🎮 Juegos</a>
-    <a href="books.html" class="topnav-link active">📚 Libros</a>
+    <a href="index.html" class="topnav-link">🏠 Home</a>
+    <a href="actividades.html" class="topnav-link">📋 Activities</a>
+    <a href="games.html" class="topnav-link">🎮 Games</a>
+    <a href="books.html" class="topnav-link active">📚 Books</a>
   </div>
 </nav>
 
@@ -94,24 +94,24 @@
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">📚</span>
       <div>
-        <p class="eyebrow">Terapia del habla · Recursos gratuitos</p>
-        <h1>Estantería de Libros</h1>
+        <p class="eyebrow">Speech therapy · Free resources</p>
+        <h1>Book Shelf</h1>
       </div>
     </div>
-    <p class="tagline">Libros infantiles que funcionan muy bien en sesión — organizados por temporada. Cada tarjeta te lleva directo a Amazon para comprarlo.</p>
+    <p class="tagline">Children's books that work beautifully in session — organized by season. Each card takes you straight to Amazon to buy it.</p>
 
     <div class="stats-row" id="statsRow" aria-live="polite">
       <div class="stat">
         <span class="stat-number" id="statBookCount">—</span>
-        <span class="stat-label">libros</span>
+        <span class="stat-label">books</span>
       </div>
       <div class="stat">
         <span class="stat-number" id="statCatCount">—</span>
-        <span class="stat-label">temporadas</span>
+        <span class="stat-label">seasons</span>
       </div>
       <div class="stat">
         <span class="stat-number">100%</span>
-        <span class="stat-label">selección curada</span>
+        <span class="stat-label">curated picks</span>
       </div>
     </div>
   </div>
@@ -120,20 +120,20 @@
 <main class="wrap">
 
   <p class="disclosure-box">
-    🔗 <strong>Aviso de afiliado:</strong> Como Afiliados de Amazon, ganamos por las compras que califican — esto no representa costo extra para ti.
+    🔗 <strong>Affiliate disclosure:</strong> As an Amazon Associate, we earn from qualifying purchases — at no extra cost to you.
     <br>As an Amazon Associate, I earn from qualifying purchases.
   </p>
 
-  <section class="toolbar" aria-label="Filtros">
+  <section class="toolbar" aria-label="Filters">
     <div class="search-field">
       <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
         <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
-      <input type="text" id="bookSearch" placeholder="Buscar por título o autor...">
+      <input type="text" id="bookSearch" placeholder="Search by title or author...">
     </div>
 
-    <div class="chip-group" id="bookCategoryChips" role="tablist" aria-label="Filtrar por temporada">
+    <div class="chip-group" id="bookCategoryChips" role="tablist" aria-label="Filter by season">
       <!-- Chips injected by script below -->
     </div>
   </section>
@@ -144,14 +144,14 @@
 
   <div id="bookEmptyState" class="empty-state" hidden>
     <span class="empty-icon" aria-hidden="true">📭</span>
-    <p>No se encontraron libros con ese filtro.</p>
+    <p>No books matched that filter.</p>
   </div>
 
 </main>
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <p class="footer-note">Las reseñas y sugerencias de uso son redactadas por este proyecto. Los enlaces de compra dirigen a Amazon a través de nuestro programa de afiliados.</p>
+    <p class="footer-note">Reviews and usage suggestions are written by this project. Purchase links go to Amazon through our affiliate program.</p>
     <p class="footer-copy">&copy; <span id="year"></span> SLP Activities Hub</p>
   </div>
 </footer>
@@ -162,105 +162,105 @@
 const AMAZON_TAG = 'YOUR-AFFILIATE-TAG';
 
 const CATEGORY_META = {
-  Todo_El_Anio:        { label: 'Todo el año',        icon: '📚', color: '#1f5f6b', soft: '#e7f1f1' },
-  Otono:                { label: 'Otoño',               icon: '🍂', color: '#c9772f', soft: '#fbe9d7' },
-  Accion_de_Gracias:    { label: 'Acción de Gracias',   icon: '🦃', color: '#a1562b', soft: '#f6e2ce' },
-  Halloween:            { label: 'Halloween',           icon: '🎃', color: '#e08e45', soft: '#fdecd6' },
-  Vuelta_a_Clases:      { label: 'Vuelta a clases',     icon: '🎒', color: '#2f7a8c', soft: '#e1f0f3' },
-  Invierno:             { label: 'Invierno',            icon: '❄️', color: '#3f7dc9', soft: '#e4eefb' },
-  Navidad:               { label: 'Navidad',             icon: '🎄', color: '#2e7d4f', soft: '#e0f3e7' },
-  Verano:                { label: 'Verano',              icon: '🏖️', color: '#d6a326', soft: '#faf0d6' }
+  Todo_El_Anio:        { label: 'Year-round',      icon: '📚', color: '#4f7a6c', soft: '#e8f0ec' },
+  Otono:                { label: 'Fall',             icon: '🍂', color: '#c68a52', soft: '#f6e9dc' },
+  Accion_de_Gracias:    { label: 'Thanksgiving',     icon: '🦃', color: '#a1562b', soft: '#f6e2ce' },
+  Halloween:            { label: 'Halloween',        icon: '🎃', color: '#c17a3d', soft: '#fbe8d2' },
+  Vuelta_a_Clases:      { label: 'Back to School',   icon: '🎒', color: '#2f7a8c', soft: '#e1f0f3' },
+  Invierno:             { label: 'Winter',           icon: '❄️', color: '#3f7dc9', soft: '#e4eefb' },
+  Navidad:               { label: 'Christmas',        icon: '🎄', color: '#2e7d4f', soft: '#e0f3e7' },
+  Verano:                { label: 'Summer',           icon: '🏖️', color: '#d6a326', soft: '#faf0d6' }
 };
 
 const BOOKS = [
-  // Todo el año
-  { title: 'Brown Bear, Brown Bear, What Do You See?', author: 'Bill Martin Jr. & Eric Carle', category: 'Todo_El_Anio', isbn: '9780805047905', emoji: '🐻', note: 'Estructura repetitiva perfecta para practicar patrones de lenguaje y colores.' },
-  { title: 'The Very Hungry Caterpillar', author: 'Eric Carle', category: 'Todo_El_Anio', isbn: '9780399226908', emoji: '🐛', note: 'Ideal para trabajar secuencias, días de la semana y vocabulario de alimentos.' },
-  { title: 'Where the Wild Things Are', author: 'Maurice Sendak', category: 'Todo_El_Anio', isbn: '9780064431781', emoji: '👹', note: 'Excelente para explorar el vocabulario de las emociones y la narración de historias.' },
-  { title: 'Dear Zoo', author: 'Rod Campbell', category: 'Todo_El_Anio', isbn: '9781416947370', emoji: '🦒', note: 'Formato de solapas genial para preguntas WH y vocabulario de animales.' },
-  { title: 'The Pigeon Wants a Puppy!', author: 'Mo Willems', category: 'Todo_El_Anio', isbn: '9781423109600', emoji: '🐦', note: 'Gran apoyo para pragmática, expresión de opiniones y negociación.' },
-  { title: 'Chicka Chicka Boom Boom', author: 'Bill Martin Jr. & John Archambault', category: 'Todo_El_Anio', isbn: '9780689835681', emoji: '🥥', note: 'Rima y ritmo pegajoso que ayudan a practicar conciencia fonológica y el abecedario.' },
-  { title: 'Five Little Monkeys Jumping on the Bed', author: 'Eileen Christelow', category: 'Todo_El_Anio', isbn: '9780547896915', emoji: '🐒', note: 'Perfecto para practicar el conteo regresivo y la relación de causa y efecto.' },
-  { title: 'The Very Busy Spider', author: 'Eric Carle', category: 'Todo_El_Anio', isbn: '9780399211669', emoji: '🕷️', note: 'Los sonidos de los animales y la frase repetida ayudan a la imitación verbal.' },
-  { title: 'If You Give a Mouse a Cookie', author: 'Laura Numeroff', category: 'Todo_El_Anio', isbn: '9780060245863', emoji: '🐭', note: 'Cadena circular de causa y efecto ideal para trabajar la secuenciación de eventos.' },
-  { title: 'Barnyard Dance!', author: 'Sandra Boynton', category: 'Todo_El_Anio', isbn: '9781563054426', emoji: '🐷', note: 'Texto rítmico con animales de granja que favorece el vocabulario y el ritmo silábico.' },
+  // Year-round
+  { title: 'Brown Bear, Brown Bear, What Do You See?', author: 'Bill Martin Jr. & Eric Carle', category: 'Todo_El_Anio', isbn: '9780805047905', emoji: '🐻', note: 'A repetitive structure that\'s perfect for practicing language patterns and colors.' },
+  { title: 'The Very Hungry Caterpillar', author: 'Eric Carle', category: 'Todo_El_Anio', isbn: '9780399226908', emoji: '🐛', note: 'Great for working on sequencing, days of the week, and food vocabulary.' },
+  { title: 'Where the Wild Things Are', author: 'Maurice Sendak', category: 'Todo_El_Anio', isbn: '9780064431781', emoji: '👹', note: 'Excellent for exploring emotion vocabulary and storytelling.' },
+  { title: 'Dear Zoo', author: 'Rod Campbell', category: 'Todo_El_Anio', isbn: '9781416947370', emoji: '🦒', note: 'A fun lift-the-flap format for WH questions and animal vocabulary.' },
+  { title: 'The Pigeon Wants a Puppy!', author: 'Mo Willems', category: 'Todo_El_Anio', isbn: '9781423109600', emoji: '🐦', note: 'Great support for pragmatics, expressing opinions, and negotiation.' },
+  { title: 'Chicka Chicka Boom Boom', author: 'Bill Martin Jr. & John Archambault', category: 'Todo_El_Anio', isbn: '9780689835681', emoji: '🥥', note: 'Catchy rhyme and rhythm that help build phonological awareness and the alphabet.' },
+  { title: 'Five Little Monkeys Jumping on the Bed', author: 'Eileen Christelow', category: 'Todo_El_Anio', isbn: '9780547896915', emoji: '🐒', note: 'Perfect for practicing counting down and cause-and-effect.' },
+  { title: 'The Very Busy Spider', author: 'Eric Carle', category: 'Todo_El_Anio', isbn: '9780399211669', emoji: '🕷️', note: 'Animal sounds and a repeated phrase support verbal imitation.' },
+  { title: 'If You Give a Mouse a Cookie', author: 'Laura Numeroff', category: 'Todo_El_Anio', isbn: '9780060245863', emoji: '🐭', note: 'A circular cause-and-effect chain, ideal for working on event sequencing.' },
+  { title: 'Barnyard Dance!', author: 'Sandra Boynton', category: 'Todo_El_Anio', isbn: '9781563054426', emoji: '🐷', note: 'Rhythmic text with farm animals that builds vocabulary and syllable rhythm.' },
 
-  // Otoño
-  { title: 'Leaf Man', author: 'Lois Ehlert', category: 'Otono', isbn: '9780152053048', emoji: '🍁', note: 'Vocabulario descriptivo y conceptos espaciales (direcciones).' },
-  { title: 'Fletcher and the Falling Leaves', author: 'Julia Rawlinson', category: 'Otono', isbn: '9780061134012', emoji: '🦊', note: 'Trabaja causa y efecto, y vocabulario emocional.' },
-  { title: 'Pumpkin Soup', author: 'Helen Cooper', category: 'Otono', isbn: '9780374361648', emoji: '🎃', note: 'Buena historia para secuenciar pasos y resolver conflictos entre personajes.' },
-  { title: "Fall Mixed Up", author: 'Bob Raczka', category: 'Otono', isbn: '9780761346067', emoji: '🍂', note: 'Rimas divertidas para conciencia fonológica y corrección de errores.' },
-  { title: 'Apples and Pumpkins', author: 'Anne Rockwell', category: 'Otono', isbn: '9780689718618', emoji: '🍎', note: 'Perfecto para preguntas de qué y dónde mientras se secuencia una visita a la granja.' },
-  { title: "It's Fall!", author: 'Linda Glaser', category: 'Otono', isbn: '9780761313427', emoji: '🍂', note: 'Vocabulario descriptivo sencillo para asociar ropa, clima y actividades de otoño.' },
-  { title: 'Red Leaf, Yellow Leaf', author: 'Lois Ehlert', category: 'Otono', isbn: '9780152661977', emoji: '🍁', note: 'Introduce el ciclo de vida del árbol y refuerza colores y clasificación.' },
-  { title: 'Big Pumpkin', author: 'Erica Silverman', category: 'Otono', isbn: '9780689801297', emoji: '🎃', note: 'Cuento acumulativo excelente para practicar secuencias y repetir frases completas.' },
-  { title: "Mouse's First Fall", author: 'Lauren Thompson', category: 'Otono', isbn: '9780689858376', emoji: '🐭', note: 'Fomenta describir texturas y colores de las hojas con vocabulario sensorial.' },
+  // Fall
+  { title: 'Leaf Man', author: 'Lois Ehlert', category: 'Otono', isbn: '9780152053048', emoji: '🍁', note: 'Descriptive vocabulary and spatial concepts (directions).' },
+  { title: 'Fletcher and the Falling Leaves', author: 'Julia Rawlinson', category: 'Otono', isbn: '9780061134012', emoji: '🦊', note: 'Works on cause and effect, plus emotion vocabulary.' },
+  { title: 'Pumpkin Soup', author: 'Helen Cooper', category: 'Otono', isbn: '9780374361648', emoji: '🎃', note: 'A good story for sequencing steps and resolving conflicts between characters.' },
+  { title: "Fall Mixed Up", author: 'Bob Raczka', category: 'Otono', isbn: '9780761346067', emoji: '🍂', note: 'Playful rhymes for phonological awareness and error correction.' },
+  { title: 'Apples and Pumpkins', author: 'Anne Rockwell', category: 'Otono', isbn: '9780689718618', emoji: '🍎', note: 'Perfect for what and where questions while sequencing a farm visit.' },
+  { title: "It's Fall!", author: 'Linda Glaser', category: 'Otono', isbn: '9780761313427', emoji: '🍂', note: 'Simple descriptive vocabulary connecting clothing, weather, and fall activities.' },
+  { title: 'Red Leaf, Yellow Leaf', author: 'Lois Ehlert', category: 'Otono', isbn: '9780152661977', emoji: '🍁', note: 'Introduces a tree\'s life cycle and reinforces colors and classification.' },
+  { title: 'Big Pumpkin', author: 'Erica Silverman', category: 'Otono', isbn: '9780689801297', emoji: '🎃', note: 'An excellent cumulative tale for practicing sequencing and repeating full phrases.' },
+  { title: "Mouse's First Fall", author: 'Lauren Thompson', category: 'Otono', isbn: '9780689858376', emoji: '🐭', note: 'Encourages describing leaf textures and colors with sensory vocabulary.' },
 
-  // Acción de Gracias
-  { title: '10 Fat Turkeys', author: 'Tony Johnston', category: 'Accion_de_Gracias', isbn: '9780439459488', emoji: '🦃', note: 'Rima y conteo regresivo — genial para articulación de sonidos finales.' },
-  { title: 'Turkey Trouble', author: 'Wendi Silvano', category: 'Accion_de_Gracias', isbn: '9780761455295', emoji: '🦃', note: 'Predicciones, resolución de problemas y descripción de disfraces.' },
-  { title: 'Bear Says Thanks', author: 'Karma Wilson', category: 'Accion_de_Gracias', isbn: '9781416958567', emoji: '🐻', note: 'Vocabulario de sentimientos y turnos de conversación entre personajes.' },
-  { title: 'The Night Before Thanksgiving', author: 'Natasha Wing', category: 'Accion_de_Gracias', isbn: '9780448425290', emoji: '🦃', note: 'Rima predecible que ayuda a anticipar y secuenciar los preparativos del día.' },
-  { title: "'Twas the Night Before Thanksgiving", author: 'Dav Pilkey', category: 'Accion_de_Gracias', isbn: '9780439669375', emoji: '🚜', note: 'Apoya el recuento de historias y la identificación del problema y la solución.' },
-  { title: 'Thanksgiving Day', author: 'Gail Gibbons', category: 'Accion_de_Gracias', isbn: '9780823404896', emoji: '📖', note: 'Texto informativo que amplía vocabulario histórico y conceptos de causa y efecto.' },
-  { title: 'Balloons Over Broadway', author: 'Melissa Sweet', category: 'Accion_de_Gracias', isbn: '9780547199450', emoji: '🎈', note: 'Ideal para trabajar secuencias de un proceso y vocabulario de resolución de problemas.' },
-  { title: 'Gobble-Gobble Crash! A Barnyard Counting Bash', author: 'Julie Stiegemeyer', category: 'Accion_de_Gracias', isbn: '9780525479598', emoji: '🐔', note: 'Conteo ascendente y descendente con sonidos divertidos para practicar números.' },
-  { title: 'The Thankful Book', author: 'Todd Parr', category: 'Accion_de_Gracias', isbn: '9780316181013', emoji: '🙏', note: 'Estructura simple para que el niño exprese con sus propias palabras razones para dar gracias.' },
+  // Thanksgiving
+  { title: '10 Fat Turkeys', author: 'Tony Johnston', category: 'Accion_de_Gracias', isbn: '9780439459488', emoji: '🦃', note: 'Rhyme and countdown counting — great for final-sound articulation.' },
+  { title: 'Turkey Trouble', author: 'Wendi Silvano', category: 'Accion_de_Gracias', isbn: '9780761455295', emoji: '🦃', note: 'Predictions, problem-solving, and describing disguises.' },
+  { title: 'Bear Says Thanks', author: 'Karma Wilson', category: 'Accion_de_Gracias', isbn: '9781416958567', emoji: '🐻', note: 'Feelings vocabulary and conversational turn-taking between characters.' },
+  { title: 'The Night Before Thanksgiving', author: 'Natasha Wing', category: 'Accion_de_Gracias', isbn: '9780448425290', emoji: '🦃', note: 'A predictable rhyme that helps with anticipating and sequencing the day\'s preparations.' },
+  { title: "'Twas the Night Before Thanksgiving", author: 'Dav Pilkey', category: 'Accion_de_Gracias', isbn: '9780439669375', emoji: '🚜', note: 'Supports retelling stories and identifying problem and solution.' },
+  { title: 'Thanksgiving Day', author: 'Gail Gibbons', category: 'Accion_de_Gracias', isbn: '9780823404896', emoji: '📖', note: 'An informational text that expands historical vocabulary and cause-and-effect concepts.' },
+  { title: 'Balloons Over Broadway', author: 'Melissa Sweet', category: 'Accion_de_Gracias', isbn: '9780547199450', emoji: '🎈', note: 'Great for practicing process sequencing and problem-solving vocabulary.' },
+  { title: 'Gobble-Gobble Crash! A Barnyard Counting Bash', author: 'Julie Stiegemeyer', category: 'Accion_de_Gracias', isbn: '9780525479598', emoji: '🐔', note: 'Counting up and down with fun sounds for practicing numbers.' },
+  { title: 'The Thankful Book', author: 'Todd Parr', category: 'Accion_de_Gracias', isbn: '9780316181013', emoji: '🙏', note: 'A simple structure for children to express, in their own words, reasons to be thankful.' },
 
   // Halloween
-  { title: 'Room on the Broom', author: 'Julia Donaldson', category: 'Halloween', isbn: '9780142501122', emoji: '🧙', note: 'Rima predecible, excelente para secuenciación y sonidos finales.' },
-  { title: 'Ten Timid Ghosts', author: 'Jennifer O’Connell', category: 'Halloween', isbn: '9780439158046', emoji: '👻', note: 'Conteo regresivo y vocabulario de cantidad, sin sustos.' },
-  { title: 'Go Away, Big Green Monster!', author: 'Ed Emberley', category: 'Halloween', isbn: '9780316236539', emoji: '👹', note: 'Vocabulario de partes de la cara y conceptos de aparecer/desaparecer.' },
-  { title: 'Pete the Cat: Trick or Pete', author: 'James Dean', category: 'Halloween', isbn: '9780062198709', emoji: '🐱', note: 'Las solapas fomentan hacer predicciones y practicar disfraces y categorías.' },
-  { title: 'Five Little Pumpkins', author: 'Dan Yaccarino', category: 'Halloween', isbn: '9780694011773', emoji: '🎃', note: 'Rima tradicional perfecta para el conteo regresivo y la articulación de números.' },
-  { title: 'The Little Old Lady Who Was Not Afraid of Anything', author: 'Linda Williams', category: 'Halloween', isbn: '9780064431835', emoji: '👻', note: 'Cuento acumulativo con onomatopeyas ideal para secuenciar y repetir frases.' },
-  { title: 'Happy Halloween, Curious George', author: 'H. A. Rey', category: 'Halloween', isbn: '9780618919529', emoji: '🐵', note: 'Buen apoyo para describir acciones y disfraces con vocabulario sencillo.' },
-  { title: 'Winnie the Witch', author: 'Valerie Thomas', category: 'Halloween', isbn: '9780061173127', emoji: '🧙', note: 'Trabaja causa y efecto a través de los hechizos y sus consecuencias.' },
-  { title: "Mouse's First Halloween", author: 'Lauren Thompson', category: 'Halloween', isbn: '9780689831768', emoji: '🐭', note: 'Ayuda a hablar sobre el miedo y cómo se transforma en diversión.' },
+  { title: 'Room on the Broom', author: 'Julia Donaldson', category: 'Halloween', isbn: '9780142501122', emoji: '🧙', note: 'A predictable rhyme, excellent for sequencing and final sounds.' },
+  { title: 'Ten Timid Ghosts', author: 'Jennifer O’Connell', category: 'Halloween', isbn: '9780439158046', emoji: '👻', note: 'Countdown counting and quantity vocabulary, with no scares involved.' },
+  { title: 'Go Away, Big Green Monster!', author: 'Ed Emberley', category: 'Halloween', isbn: '9780316236539', emoji: '👹', note: 'Face-part vocabulary and appear/disappear concepts.' },
+  { title: 'Pete the Cat: Trick or Pete', author: 'James Dean', category: 'Halloween', isbn: '9780062198709', emoji: '🐱', note: 'The flaps encourage making predictions and practicing costumes and categories.' },
+  { title: 'Five Little Pumpkins', author: 'Dan Yaccarino', category: 'Halloween', isbn: '9780694011773', emoji: '🎃', note: 'A traditional rhyme perfect for countdown counting and number articulation.' },
+  { title: 'The Little Old Lady Who Was Not Afraid of Anything', author: 'Linda Williams', category: 'Halloween', isbn: '9780064431835', emoji: '👻', note: 'A cumulative tale with sound effects, ideal for sequencing and repeating phrases.' },
+  { title: 'Happy Halloween, Curious George', author: 'H. A. Rey', category: 'Halloween', isbn: '9780618919529', emoji: '🐵', note: 'Good support for describing actions and costumes with simple vocabulary.' },
+  { title: 'Winnie the Witch', author: 'Valerie Thomas', category: 'Halloween', isbn: '9780061173127', emoji: '🧙', note: 'Works on cause and effect through spells and their consequences.' },
+  { title: "Mouse's First Halloween", author: 'Lauren Thompson', category: 'Halloween', isbn: '9780689831768', emoji: '🐭', note: 'Helps talk about fear and how it turns into fun.' },
 
-  // Vuelta a clases
-  { title: 'The Kissing Hand', author: 'Audrey Penn', category: 'Vuelta_a_Clases', isbn: '9781933718002', emoji: '🦝', note: 'Perfecto para hablar de emociones al iniciar clases y estrategias de afrontamiento.' },
-  { title: 'First Day Jitters', author: 'Julie Danneberg', category: 'Vuelta_a_Clases', isbn: '9781580890540', emoji: '🎒', note: 'Giro sorpresa ideal para inferencias y predicción.' },
-  { title: 'Pete the Cat: Rocking in My School Shoes', author: 'Eric Litwin', category: 'Vuelta_a_Clases', isbn: '9780061910258', emoji: '🐱', note: 'Estructura repetitiva y vocabulario de lugares dentro de la escuela.' },
-  { title: 'Llama Llama Misses Mama', author: 'Anna Dewdney', category: 'Vuelta_a_Clases', isbn: '9780670061983', emoji: '🦙', note: 'Aborda la ansiedad de separación y amplía el vocabulario de los sentimientos.' },
-  { title: 'The Night Before Kindergarten', author: 'Natasha Wing', category: 'Vuelta_a_Clases', isbn: '9780448425009', emoji: '🏫', note: 'Rima predecible ideal para anticipar la rutina de un primer día de clases.' },
-  { title: 'Miss Bindergarten Gets Ready for Kindergarten', author: 'Joseph Slate', category: 'Vuelta_a_Clases', isbn: '9780140562736', emoji: '🔤', note: 'Estructura paralela con el abecedario que refuerza la formulación de oraciones.' },
-  { title: 'Wemberly Worried', author: 'Kevin Henkes', category: 'Vuelta_a_Clases', isbn: '9780688170271', emoji: '🐭', note: 'Ayuda a nombrar preocupaciones específicas y ampliar el vocabulario emocional.' },
-  { title: 'David Goes to School', author: 'David Shannon', category: 'Vuelta_a_Clases', isbn: '9780439321716', emoji: '🙅', note: 'Permite conversar sobre las normas de la clase y responder preguntas de qué pasó.' },
-  { title: "School's First Day of School", author: 'Adam Rex', category: 'Vuelta_a_Clases', isbn: '9781596439641', emoji: '🏫', note: 'Perspectiva original que ayuda a trabajar la toma de perspectiva y las emociones.' },
+  // Back to School
+  { title: 'The Kissing Hand', author: 'Audrey Penn', category: 'Vuelta_a_Clases', isbn: '9781933718002', emoji: '🦝', note: 'Perfect for talking about back-to-school emotions and coping strategies.' },
+  { title: 'First Day Jitters', author: 'Julie Danneberg', category: 'Vuelta_a_Clases', isbn: '9781580890540', emoji: '🎒', note: 'A surprise twist that\'s ideal for inference and prediction.' },
+  { title: 'Pete the Cat: Rocking in My School Shoes', author: 'Eric Litwin', category: 'Vuelta_a_Clases', isbn: '9780061910258', emoji: '🐱', note: 'A repetitive structure and vocabulary for places around school.' },
+  { title: 'Llama Llama Misses Mama', author: 'Anna Dewdney', category: 'Vuelta_a_Clases', isbn: '9780670061983', emoji: '🦙', note: 'Addresses separation anxiety and expands feelings vocabulary.' },
+  { title: 'The Night Before Kindergarten', author: 'Natasha Wing', category: 'Vuelta_a_Clases', isbn: '9780448425009', emoji: '🏫', note: 'A predictable rhyme ideal for anticipating a first-day-of-school routine.' },
+  { title: 'Miss Bindergarten Gets Ready for Kindergarten', author: 'Joseph Slate', category: 'Vuelta_a_Clases', isbn: '9780140562736', emoji: '🔤', note: 'A parallel structure with the alphabet that reinforces sentence formulation.' },
+  { title: 'Wemberly Worried', author: 'Kevin Henkes', category: 'Vuelta_a_Clases', isbn: '9780688170271', emoji: '🐭', note: 'Helps name specific worries and expands emotional vocabulary.' },
+  { title: 'David Goes to School', author: 'David Shannon', category: 'Vuelta_a_Clases', isbn: '9780439321716', emoji: '🙅', note: 'Opens up conversation about classroom rules and answering what-happened questions.' },
+  { title: "School's First Day of School", author: 'Adam Rex', category: 'Vuelta_a_Clases', isbn: '9781596439641', emoji: '🏫', note: 'An original perspective that helps with perspective-taking and emotions.' },
 
-  // Invierno
-  { title: 'The Snowy Day', author: 'Ezra Jack Keats', category: 'Invierno', isbn: '9780140501827', emoji: '⛄', note: 'Descripciones sensoriales y secuenciación de un día de nieve.' },
-  { title: 'Sneezy the Snowman', author: 'Maureen Wright', category: 'Invierno', isbn: '9780761457114', emoji: '🤧', note: 'Patrón repetitivo genial para causa-efecto y predicciones.' },
-  { title: 'Snowmen at Night', author: 'Caralyn Buehner', category: 'Invierno', isbn: '9780803725508', emoji: '☃️', note: 'Imaginación y narrativa — qué hacen los muñecos de nieve de noche.' },
-  { title: 'The Mitten', author: 'Jan Brett', category: 'Invierno', isbn: '9780399231094', emoji: '🧤', note: 'Cuento acumulativo perfecto para secuenciar animales y comparar tamaños.' },
-  { title: 'Snowballs', author: 'Lois Ehlert', category: 'Invierno', isbn: '9780152000745', emoji: '⛄', note: 'Fomenta describir personajes por sus características físicas usando materiales reciclados.' },
-  { title: 'Over and Under the Snow', author: 'Kate Messner', category: 'Invierno', isbn: '9780811867849', emoji: '🦫', note: 'Ideal para practicar las preposiciones espaciales y el vocabulario de hábitats.' },
-  { title: 'The Hat', author: 'Jan Brett', category: 'Invierno', isbn: '9780399231018', emoji: '🦔', note: 'Historia acumulativa que trabaja secuenciación y resolución de problemas simples.' },
-  { title: 'Snow', author: 'Uri Shulevitz', category: 'Invierno', isbn: '9780374370930', emoji: '❄️', note: 'Lenguaje descriptivo y predictivo mínimo, ideal para ampliar frases cortas.' },
-  { title: 'Bear Snores On', author: 'Karma Wilson', category: 'Invierno', isbn: '9780689831874', emoji: '🐻', note: 'Onomatopeyas y personajes que se suman ayudan a secuenciar y repetir sonidos.' },
+  // Winter
+  { title: 'The Snowy Day', author: 'Ezra Jack Keats', category: 'Invierno', isbn: '9780140501827', emoji: '⛄', note: 'Sensory descriptions and sequencing a snowy day.' },
+  { title: 'Sneezy the Snowman', author: 'Maureen Wright', category: 'Invierno', isbn: '9780761457114', emoji: '🤧', note: 'A repetitive pattern that\'s great for cause-and-effect and predictions.' },
+  { title: 'Snowmen at Night', author: 'Caralyn Buehner', category: 'Invierno', isbn: '9780803725508', emoji: '☃️', note: 'Imagination and narrative — what snowmen get up to at night.' },
+  { title: 'The Mitten', author: 'Jan Brett', category: 'Invierno', isbn: '9780399231094', emoji: '🧤', note: 'A perfect cumulative tale for sequencing animals and comparing sizes.' },
+  { title: 'Snowballs', author: 'Lois Ehlert', category: 'Invierno', isbn: '9780152000745', emoji: '⛄', note: 'Encourages describing characters by their physical features using recycled materials.' },
+  { title: 'Over and Under the Snow', author: 'Kate Messner', category: 'Invierno', isbn: '9780811867849', emoji: '🦫', note: 'Ideal for practicing spatial prepositions and habitat vocabulary.' },
+  { title: 'The Hat', author: 'Jan Brett', category: 'Invierno', isbn: '9780399231018', emoji: '🦔', note: 'A cumulative story that works on sequencing and simple problem-solving.' },
+  { title: 'Snow', author: 'Uri Shulevitz', category: 'Invierno', isbn: '9780374370930', emoji: '❄️', note: 'Minimal, descriptive and predictive language, ideal for expanding short phrases.' },
+  { title: 'Bear Snores On', author: 'Karma Wilson', category: 'Invierno', isbn: '9780689831874', emoji: '🐻', note: 'Sound effects and characters that add up help with sequencing and repeating sounds.' },
 
-  // Navidad
-  { title: 'The Polar Express', author: 'Chris Van Allsburg', category: 'Navidad', isbn: '9780395389492', emoji: '🚂', note: 'Vocabulario narrativo rico y secuencia de un viaje mágico.' },
-  { title: 'Bear Stays Up for Christmas', author: 'Karma Wilson', category: 'Navidad', isbn: '9781442427907', emoji: '🐻', note: 'Vocabulario de tradiciones navideñas y turnos entre personajes.' },
-  { title: 'How the Grinch Stole Christmas!', author: 'Dr. Seuss', category: 'Navidad', isbn: '9780394800790', emoji: '🎁', note: 'Rima fuerte para conciencia fonológica y cambio de actitud del personaje.' },
-  { title: 'The Night Before Christmas', author: 'Clement C. Moore (ilus. Jan Brett)', category: 'Navidad', isbn: '9780399256707', emoji: '🎅', note: 'Poema rimado clásico útil para memorizar secuencias y practicar la prosodia.' },
-  { title: 'Llama Llama Holiday Drama', author: 'Anna Dewdney', category: 'Navidad', isbn: '9780670011612', emoji: '🎄', note: 'Trabaja la espera, la paciencia y el vocabulario de las emociones en fechas especiales.' },
-  { title: 'The Gingerbread Man', author: 'Jim Aylesworth', category: 'Navidad', isbn: '9780590812986', emoji: '🍪', note: 'Cuento acumulativo ideal para secuenciar personajes y repetir la frase clave de la persecución.' },
-  { title: 'Pete the Cat Saves Christmas', author: 'Eric Litwin & James Dean', category: 'Navidad', isbn: '9780062110633', emoji: '🐱', note: 'Presenta un problema y una solución sencillos, ideal para practicar secuencias de eventos.' },
-  { title: 'Dream Snow', author: 'Eric Carle', category: 'Navidad', isbn: '9780399235795', emoji: '❄️', note: 'Combina el conteo de animales de granja con un final sorpresa navideño.' },
-  { title: "Mouse's First Christmas", author: 'Lauren Thompson', category: 'Navidad', isbn: '9780689863486', emoji: '🐭', note: 'Perfecto para preguntas de qué y dónde mientras el ratón explora objetos navideños.' },
+  // Christmas
+  { title: 'The Polar Express', author: 'Chris Van Allsburg', category: 'Navidad', isbn: '9780395389492', emoji: '🚂', note: 'Rich narrative vocabulary and sequencing a magical journey.' },
+  { title: 'Bear Stays Up for Christmas', author: 'Karma Wilson', category: 'Navidad', isbn: '9781442427907', emoji: '🐻', note: 'Holiday tradition vocabulary and turn-taking between characters.' },
+  { title: 'How the Grinch Stole Christmas!', author: 'Dr. Seuss', category: 'Navidad', isbn: '9780394800790', emoji: '🎁', note: 'A strong rhyme for phonological awareness and tracking the character\'s change in attitude.' },
+  { title: 'The Night Before Christmas', author: 'Clement C. Moore (illus. Jan Brett)', category: 'Navidad', isbn: '9780399256707', emoji: '🎅', note: 'A classic rhyming poem useful for memorizing sequences and practicing prosody.' },
+  { title: 'Llama Llama Holiday Drama', author: 'Anna Dewdney', category: 'Navidad', isbn: '9780670011612', emoji: '🎄', note: 'Works on waiting, patience, and emotion vocabulary around the holidays.' },
+  { title: 'The Gingerbread Man', author: 'Jim Aylesworth', category: 'Navidad', isbn: '9780590812986', emoji: '🍪', note: 'A cumulative tale ideal for sequencing characters and repeating the key chase phrase.' },
+  { title: 'Pete the Cat Saves Christmas', author: 'Eric Litwin & James Dean', category: 'Navidad', isbn: '9780062110633', emoji: '🐱', note: 'Presents a simple problem and solution, ideal for practicing event sequences.' },
+  { title: 'Dream Snow', author: 'Eric Carle', category: 'Navidad', isbn: '9780399235795', emoji: '❄️', note: 'Combines counting farm animals with a surprise Christmas ending.' },
+  { title: "Mouse's First Christmas", author: 'Lauren Thompson', category: 'Navidad', isbn: '9780689863486', emoji: '🐭', note: 'Perfect for what and where questions as the mouse explores holiday objects.' },
 
-  // Verano
-  { title: 'Llama Llama Sand and Sun', author: 'Anna Dewdney', category: 'Verano', isbn: '9780448496399', emoji: '🏖️', note: 'Rima predecible y vocabulario de actividades de playa.' },
-  { title: 'Blueberries for Sal', author: 'Robert McCloskey', category: 'Verano', isbn: '9780140501698', emoji: '🫐', note: 'Secuenciación y conceptos espaciales (adelante/atrás, arriba/abajo).' },
-  { title: 'Sea, Sand, Me!', author: 'Patricia Hubbell', category: 'Verano', isbn: '9780688173784', emoji: '🐚', note: 'Vocabulario sensorial y descriptivo para un día de playa.' },
-  { title: 'Watermelon Day', author: 'Kathi Appelt', category: 'Verano', isbn: '9780805023046', emoji: '🍉', note: 'Apoya conceptos de tamaño y la secuencia de crecimiento de una fruta.' },
-  { title: 'Curious George Goes to the Beach', author: 'Margret & H. A. Rey', category: 'Verano', isbn: '9780395978467', emoji: '🐵', note: 'Las travesuras de George permiten describir acciones y sus consecuencias.' },
-  { title: 'In the Small, Small Pond', author: 'Denise Fleming', category: 'Verano', isbn: '9780805059830', emoji: '🐸', note: 'Rico en verbos de movimiento para describir animales de un estanque.' },
-  { title: 'Commotion in the Ocean', author: 'Giles Andreae', category: 'Verano', isbn: '9781589253667', emoji: '🐠', note: 'Rimas breves sobre animales marinos que refuerzan adjetivos descriptivos.' },
-  { title: 'Ten Little Fish', author: 'Audrey Wood', category: 'Verano', isbn: '9780439635691', emoji: '🐟', note: 'Conteo descendente rimado ideal para practicar números y articulación.' },
-  { title: 'The Relatives Came', author: 'Cynthia Rylant', category: 'Verano', isbn: '9780689845086', emoji: '👨‍👩‍👧‍👦', note: 'Narrativa extensa que apoya la secuenciación de eventos y el lenguaje descriptivo familiar.' }
+  // Summer
+  { title: 'Llama Llama Sand and Sun', author: 'Anna Dewdney', category: 'Verano', isbn: '9780448496399', emoji: '🏖️', note: 'A predictable rhyme and beach-activity vocabulary.' },
+  { title: 'Blueberries for Sal', author: 'Robert McCloskey', category: 'Verano', isbn: '9780140501698', emoji: '🫐', note: 'Sequencing and spatial concepts (in front/behind, up/down).' },
+  { title: 'Sea, Sand, Me!', author: 'Patricia Hubbell', category: 'Verano', isbn: '9780688173784', emoji: '🐚', note: 'Sensory and descriptive vocabulary for a beach day.' },
+  { title: 'Watermelon Day', author: 'Kathi Appelt', category: 'Verano', isbn: '9780805023046', emoji: '🍉', note: 'Supports size concepts and the growth sequence of a fruit.' },
+  { title: 'Curious George Goes to the Beach', author: 'Margret & H. A. Rey', category: 'Verano', isbn: '9780395978467', emoji: '🐵', note: 'George\'s antics allow for describing actions and their consequences.' },
+  { title: 'In the Small, Small Pond', author: 'Denise Fleming', category: 'Verano', isbn: '9780805059830', emoji: '🐸', note: 'Rich in movement verbs for describing pond animals.' },
+  { title: 'Commotion in the Ocean', author: 'Giles Andreae', category: 'Verano', isbn: '9781589253667', emoji: '🐠', note: 'Short rhymes about sea animals that reinforce descriptive adjectives.' },
+  { title: 'Ten Little Fish', author: 'Audrey Wood', category: 'Verano', isbn: '9780439635691', emoji: '🐟', note: 'A rhyming countdown ideal for practicing numbers and articulation.' },
+  { title: 'The Relatives Came', author: 'Cynthia Rylant', category: 'Verano', isbn: '9780689845086', emoji: '👨‍👩‍👧‍👦', note: 'An extended narrative that supports event sequencing and family descriptive language.' }
 ];
 
 let activeCategory = 'all';
@@ -283,7 +283,7 @@ function buildAmazonLink(book) {
 
 function buildChips() {
   const categories = [...new Set(BOOKS.map(b => b.category))];
-  const allChip = makeChip('all', 'Todos', '✨');
+  const allChip = makeChip('all', 'All', '✨');
   chipsEl.appendChild(allChip);
   categories.forEach(cat => {
     const meta = metaFor(cat);
@@ -339,7 +339,7 @@ function render() {
         <h3>${book.title}</h3>
         <p class="book-author">${book.author}</p>
         <p class="book-note">${book.note}</p>
-        <a class="amazon-btn" href="${buildAmazonLink(book)}" target="_blank" rel="nofollow sponsored noopener">🛒 Ver en Amazon</a>
+        <a class="amazon-btn" href="${buildAmazonLink(book)}" target="_blank" rel="nofollow sponsored noopener">🛒 View on Amazon</a>
       </div>
     `;
     gridEl.appendChild(card);

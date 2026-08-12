@@ -29,13 +29,29 @@ Este es el procedimiento (prompt) que ejecuta la tarea programada diaria. Se usa
    - `source`: `"original-ai-generated"`
 5. Verificar que el `id` no exista ya en `activities.json`.
 
-## Paso B — Generar la hoja de trabajo PDF con Canva (nuevo)
+## Paso B — Generar la hoja de actividad PDF con Canva (actualizado)
 
-El objetivo es que cada actividad tenga un documento imprimible que la terapista pueda entregar directamente al estudiante — no solo texto explicativo. Se genera con el conector MCP de Canva (`generate-design`, `create-design-from-candidate`, `get-export-formats`, `export-design`).
+El objetivo es que cada actividad tenga una página imprimible que el niño pueda **hacer** en la sesión — colorear, recortar, pegar, unir con líneas, buscar palabras o encontrar diferencias — no un documento "de oficina" con banners corporativos y bloques de texto informativo. La página misma ES la actividad: casi sin texto, mayormente dibujo/puzzle.
 
-1. Redactar el contenido específico de la hoja (nombres de casillas, línea de instrucción, marco de oración) desde cero, en inglés, apropiado para la edad/habilidad de la actividad de hoy. Nunca usar la mascota, los iconos exactos, ni el wording del material con copyright — solo el formato genérico.
-2. Llamar a `generate-design` con `design_type: "document"` y un `query` detallado y específico (no genérico) que describa layout completo, por ejemplo siguiendo esta plantilla:
-   > "A printable A4/Letter speech therapy worksheet for kids titled '<título original>'. Layout: header banner in teal (#1f5f6b) with the worksheet title; a 'Name: ____  Date: ____' line; one instruction line: '<instrucción original>'; then a grid of N rows/boxes with <descripción del contenido original de cada casilla — íconos genéricos tipo flat-illustration originales, NO copiar de ninguna fuente>; a fill-in-the-blank sentence at the bottom: '<marco de oración original>'; footer text 'SLP Activities Hub — for personal educational use'. Bright, friendly, kid-appropriate flat illustration style, large clear icons, generous spacing."
+**Estilo visual obligatorio para todos los formatos:**
+- Line-art doodle simple, tipo libro de colorear para niños: contornos negros gruesos, sin relleno de color, sin sombreado, sin ilustración "corporativa" ni estilo infografía.
+- Nada de banners de color a todo el ancho, nada de pie de página con copyright/marca, nada de logos.
+- Un título pequeño y casual (estilo escritura a mano) arriba, máximo 1 línea de instrucción corta debajo, y el resto de la página es la actividad visual.
+- Nunca copiar iconos, mascota, wording exacto, combinaciones de color-key, ni layout de "The SLP Curriculum" ni de ningún material con copyright — solo la idea genérica del formato (grid, casillas para colorear, columnas para emparejar, etc., que son ideas de dominio común).
+
+**Rotación de 6 formatos** (elegir uno por actividad nueva, rotando para que no se repita el mismo formato dos días seguidos — revisar `worksheetPdf` de las últimas actividades en `activities.json` para saber cuál tocó la última vez):
+
+1. **Colorear (Coloring)** — dibujos grandes y simples en línea negra para que el niño coloree, relacionados con la habilidad (formas, animales, objetos, escena de una historia, etc.). Casi sin texto.
+2. **Recortar y pegar (Cut-and-paste)** — tarjetitas pequeñas con líneas de corte punteadas en la parte inferior, y 2+ zonas de "pegar" arriba con contorno punteado, para clasificar/ordenar las tarjetas según la habilidad.
+3. **Emparejar (Matching)** — dos columnas de dibujos simples en orden mezclado; el niño traza una línea conectando cada par relacionado.
+4. **Ordenar/clasificar (Sorting)** — grupos o filas de dibujos simples (cantidades, categorías, tamaños) que el niño debe contar, circular, o clasificar coloreando/marcando.
+5. **Busca las diferencias (Find-the-differences)** — dos escenas casi idénticas en línea simple con 4-6 diferencias pequeñas para que el niño encuentre y circule.
+6. **Sopa de letras (Word search)** — grid de letras 8x10 a 10x10 con 6-8 palabras de vocabulario de la actividad escondidas horizontal/vertical/diagonal, más el banco de palabras debajo. (Usar solo para actividades de niños que ya leen, aprox. 5-8 años; para niños más chicos usar otro formato de la lista.)
+
+Pasos técnicos (iguales para cualquier formato):
+
+1. Redactar el contenido específico de la hoja (título casual, 1 línea de instrucción, elementos del dibujo/puzzle) desde cero, en inglés, apropiado para la edad/habilidad de la actividad de hoy.
+2. Llamar a `generate-design` con `design_type: "document"` y un `query` detallado que describa el layout exacto siguiendo el estilo visual obligatorio de arriba y el formato elegido de la rotación (ver ejemplos ya usados en `activities.json` / historial de la tarea para referencia de redacción de `query`).
 3. Elegir uno de los candidatos generados (`create-design-from-candidate`).
 4. Confirmar formato exportable con `get-export-formats` y exportar con `export-design` (`type: "pdf"`, `size: "letter"`).
 5. Guardar la URL de descarga temporal que devuelve `export-design` (expira en unas horas) y el `edit_url`/`view_url` del diseño en Canva.

@@ -10,28 +10,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #1b2a33;
-  --ink-soft: #4b5f6a;
-  --muted: #7d8f97;
-  --primary: #1f5f6b;
-  --primary-dark: #143f48;
-  --primary-light: #e7f1f1;
-  --accent: #e08e45;
-  --accent-soft: #fbe9d7;
-  --bg: #f8f7f4;
+  --ink: #263430;
+  --ink-soft: #4f5f5a;
+  --muted: #839089;
+  --primary: #4f7a6c;
+  --primary-dark: #345448;
+  --primary-light: #e8f0ec;
+  --accent: #c68a52;
+  --accent-soft: #f3e4d3;
+  --bg: #f9f7f2;
   --card-bg: #ffffff;
-  --border: #e7e4dd;
+  --border: #e7e2d8;
   --good: #2f8f5b;
   --good-bg: #e5f5ec;
   --bad: #c14b4b;
   --bad-bg: #fbe9e9;
   --p1-color: #4d8dfa;
   --p2-color: #ffb020;
-  --radius-lg: 22px;
-  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
   --radius-sm: 12px;
-  --shadow-sm: 0 1px 3px rgba(20, 40, 45, 0.06);
-  --shadow-md: 0 12px 28px -8px rgba(20, 40, 45, 0.16);
+  --shadow-sm: 0 1px 3px rgba(38, 52, 48, 0.06);
+  --shadow-md: 0 12px 28px -8px rgba(38, 52, 48, 0.14);
   --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -67,7 +67,7 @@ body::after {
 .wrap { max-width: 780px; margin: 0 auto; padding: 0 24px 60px; }
 
 header.site-header {
-  background: radial-gradient(1100px 420px at 85% -10%, rgba(224, 142, 69, 0.18), transparent 60%),
+  background: radial-gradient(1100px 420px at 85% -10%, rgba(198, 138, 82, 0.14), transparent 60%),
     linear-gradient(160deg, var(--primary-dark), var(--primary) 78%);
   color: white;
   padding: 34px 0 44px;
@@ -111,6 +111,12 @@ header.site-header {
 @keyframes bannerPop { 0%{ transform: scale(0) rotate(-8deg);} 60%{ transform: scale(1.12) rotate(3deg);} 100%{ transform: scale(1) rotate(0deg);} }
 .spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
 @keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
+.topnav { position: sticky; top: 0; z-index: 500; background: var(--primary-dark); box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+.topnav-inner { max-width: 1120px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 8px 14px; border-radius: 999px; transition: background 0.15s ease, color 0.15s ease; white-space: nowrap; }
+.topnav-link:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.topnav-link.active { background: #fff; color: var(--primary-dark); }
+@media (max-width: 560px) { .topnav-inner { padding: 8px 14px; gap: 4px; } .topnav-link { padding: 7px 10px; font-size: 0.8rem; } }
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -402,10 +408,19 @@ header.site-header p.sub {
 </head>
 <body>
 
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-link">🏠 Home</a>
+    <a href="actividades.html" class="topnav-link">📋 Activities</a>
+    <a href="games.html" class="topnav-link active">🎮 Games</a>
+    <a href="books.html" class="topnav-link">📚 Books</a>
+  </div>
+</nav>
+
 <header class="site-header">
   <div class="bg-floaties" id="bgFloaties"></div>
   <div class="wrap">
-    <a class="back-link" href="index.html">&larr; Back to Games</a>
+    <a class="back-link" href="games.html">&larr; Back to Games</a>
     <p class="eyebrow">Speech &amp; language practice</p>
     <h1><span class="mascot">🐙</span> Connect Four with Questions</h1>
     <p class="sub">Answer a question correctly to drop your piece. Connect four in a row — across, up-and-down, or diagonal — to win!</p>
@@ -453,8 +468,8 @@ const CATEGORY_META = {
   Following_Directions_Conceptos_Cuantitativos: { label: 'Quantity concepts', icon: '🔢', color: '#ffb020', soft: '#fff3dc' },
   WH_Questions: { label: 'WH questions', icon: '❓', color: '#9b6bff', soft: '#f1e9ff' }
 };
-const ALL_COLOR = '#1f5f6b';
-const ALL_SOFT = '#e7f1f1';
+const ALL_COLOR = '#4f7a6c';
+const ALL_SOFT = '#e8f0ec';
 
 const QUESTIONS = [
   { category: 'Describing', prompt: 'Which one has 4 straight sides?', options: ['⬛','⚪','🔺','⭐'], correct: 0 },

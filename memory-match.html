@@ -10,12 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink: #2b2a3d; --ink-soft: #5a5872; --muted: #8b8aa0;
-  --primary: #1f5f6b; --primary-dark: #143f48;
-  --bg: #fbf8f2; --card-bg: #ffffff; --border: #ece7f5;
+  --ink: #263430; --ink-soft: #4f5f5a; --muted: #839089;
+  --primary: #4f7a6c; --primary-dark: #345448;
+  --bg: #f9f7f2; --card-bg: #ffffff; --border: #e7e2d8;
   --good: #1fa971; --good-bg: #e2faef; --bad: #ef5b5b; --bad-bg: #ffe9e9;
-  --radius-lg: 26px; --radius-md: 18px;
-  --shadow-md: 0 14px 30px -10px rgba(43,42,61,.18);
+  --radius-lg: 24px; --radius-md: 18px;
+  --shadow-md: 0 14px 30px -10px rgba(38,52,48,.16);
   --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -72,6 +72,12 @@ header {
 .spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
 @keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
 header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.topnav { position: sticky; top: 0; z-index: 500; background: var(--primary-dark); box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+.topnav-inner { max-width: 1120px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 8px 14px; border-radius: 999px; transition: background 0.15s ease, color 0.15s ease; white-space: nowrap; }
+.topnav-link:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.topnav-link.active { background: #fff; color: var(--primary-dark); }
+@media (max-width: 560px) { .topnav-inner { padding: 8px 14px; gap: 4px; } .topnav-link { padding: 7px 10px; font-size: 0.8rem; } }
 .back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
 .back-link:hover { color:#fff; }
 h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
@@ -95,7 +101,7 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 .mode-btn {
   font-family: var(--font-display); font-weight:800; font-size:.95rem; padding: 12px 22px; border-radius:999px;
   border: 2px solid var(--border); background:#fff; color: var(--ink-soft); cursor:pointer; transition: all .15s ease;
-  box-shadow: 0 3px 0 rgba(43,42,61,.08);
+  box-shadow: 0 3px 0 rgba(38,52,48,.08);
 }
 .mode-btn.active { background: #6b7fff; border-color: #4a5ee0; color:#fff; box-shadow: 0 3px 0 #4a5ee0; }
 
@@ -103,10 +109,10 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 .chip {
   border:2px solid transparent; background: #f1eef9; color: var(--ink-soft);
   font-family: var(--font-display); font-size:.86rem; font-weight:700; padding:9px 16px; border-radius:999px; cursor:pointer;
-  box-shadow: 0 3px 0 rgba(43,42,61,.08); transition: transform .1s ease, box-shadow .1s ease;
+  box-shadow: 0 3px 0 rgba(38,52,48,.08); transition: transform .1s ease, box-shadow .1s ease;
 }
 .chip:hover { transform: translateY(-1px); }
-.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(43,42,61,.08); }
+.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(38,52,48,.08); }
 .chip.active { color: #fff; }
 
 .tip-text {
@@ -126,9 +132,12 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
   display:flex; align-items:center; justify-content:center; font-size: 2rem; border: 3px solid var(--border);
   box-shadow: 0 4px 0 var(--border);
 }
-.card-front { background: linear-gradient(155deg, #eef1ff, #dbe2ff); color: #6b7fff; }
+.card-front { background: var(--cardBg, linear-gradient(155deg, #eef1ff, #dbe2ff)); color: #fff; }
+.card-icon { display:inline-block; animation: cardIconFloat 2.2s ease-in-out infinite; filter: drop-shadow(0 2px 2px rgba(0,0,0,.15)); }
+@keyframes cardIconFloat { 0%,100%{ transform: translateY(0) rotate(-6deg);} 50%{ transform: translateY(-4px) rotate(6deg);} }
 .card-back { background: #fff; transform: rotateY(180deg); }
-.card.matched .card-back { background: var(--good-bg); border-color: var(--good); box-shadow: 0 4px 0 var(--good); }
+.card.matched .card-back { background: var(--good-bg); border-color: var(--good); box-shadow: 0 4px 0 var(--good); animation: matchPop .5s ease; }
+@keyframes matchPop { 0%{transform: rotateY(180deg) scale(1);} 50%{transform: rotateY(180deg) scale(1.22);} 100%{transform: rotateY(180deg) scale(1);} }
 
 .sequence-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 420px; margin: 0 auto 24px; }
 .seq-panel {
@@ -174,11 +183,20 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 </head>
 <body>
 
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-link">🏠 Home</a>
+    <a href="actividades.html" class="topnav-link">📋 Activities</a>
+    <a href="games.html" class="topnav-link active">🎮 Games</a>
+    <a href="books.html" class="topnav-link">📚 Books</a>
+  </div>
+</nav>
+
 <header>
   <div class="bg-floaties" id="bgFloaties"></div>
   <div class="wrap">
     <div>
-      <a class="back-link" href="index.html">&larr; All games</a>
+      <a class="back-link" href="games.html">&larr; All games</a>
       <p class="eyebrow">Speech &amp; language practice</p>
       <h1><span class="mascot">🧠</span> Memory Match</h1>
     </div>
@@ -337,6 +355,16 @@ modeToggle.addEventListener('click', (e) => {
 
 /* ---------- Card Match mode ---------- */
 const EMOJI_POOL = ['🍎', '🐶', '🚗', '⭐', '🎈', '🐟', '🌈', '🍩'];
+const CARD_BACK_PALETTE = [
+  'linear-gradient(155deg,#ff9a76,#ff6a6a)',
+  'linear-gradient(155deg,#6bd6ff,#4d8dfa)',
+  'linear-gradient(155deg,#8fe3c0,#17b897)',
+  'linear-gradient(155deg,#c9a6ff,#9b6bff)',
+  'linear-gradient(155deg,#ffd166,#ffb020)',
+  'linear-gradient(155deg,#ff9ecb,#ff4fa3)',
+  'linear-gradient(155deg,#a6c8ff,#6b7fff)',
+  'linear-gradient(155deg,#ffe08a,#ffb020)'
+];
 const DIFFICULTY_META = {
   Easy: { pairs: 4, icon: '🟢', color: '#17b897' },
   Medium: { pairs: 6, icon: '🟡', color: '#ffb020' },
@@ -393,12 +421,13 @@ function buildCardGrid() {
   const emojis = EMOJI_POOL.slice(0, totalPairs);
   const deck = shuffle([...emojis, ...emojis]);
   cardGrid.innerHTML = '';
-  deck.forEach(emoji => {
+  deck.forEach((emoji, idx) => {
     const card = document.createElement('button');
     card.className = 'card';
     card.type = 'button';
     card.dataset.emoji = emoji;
-    card.innerHTML = '<span class="card-inner"><span class="card-front">❓</span><span class="card-back">' + emoji + '</span></span>';
+    const bg = CARD_BACK_PALETTE[idx % CARD_BACK_PALETTE.length];
+    card.innerHTML = '<span class="card-inner"><span class="card-front" style="--cardBg:' + bg + '"><span class="card-icon">❓</span></span><span class="card-back">' + emoji + '</span></span>';
     card.addEventListener('click', () => flipCard(card));
     cardGrid.appendChild(card);
   });
@@ -449,12 +478,12 @@ resetMatchBtn.addEventListener('click', buildCardGrid);
 
 /* ---------- Sequence Recall mode ---------- */
 const SEQ_PANELS = [
-  { emoji: '🔴', soft: '#ffe9e9' },
-  { emoji: '🔵', soft: '#e8f0ff' },
-  { emoji: '🟢', soft: '#e2f9f2' },
-  { emoji: '🟡', soft: '#fff3dc' },
-  { emoji: '🟣', soft: '#f1e9ff' },
-  { emoji: '🟠', soft: '#ffe3f0' }
+  { emoji: '🦁', soft: '#ffe9e9' },
+  { emoji: '🐸', soft: '#e2f9f2' },
+  { emoji: '🐻', soft: '#fff3dc' },
+  { emoji: '🦊', soft: '#ffe3d6' },
+  { emoji: '🐰', soft: '#f1e9ff' },
+  { emoji: '🐼', soft: '#e8f0ff' }
 ];
 let seqRound = 1;
 let seqBest = 0;
