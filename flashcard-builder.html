@@ -73,6 +73,12 @@ header {
 @keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
 
 header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.topnav { position: sticky; top: 0; z-index: 500; background: var(--primary-dark); box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+.topnav-inner { max-width: 1120px; margin: 0 auto; padding: 10px 24px; display: flex; gap: 6px; flex-wrap: wrap; }
+.topnav-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 700; font-size: 0.88rem; padding: 8px 14px; border-radius: 999px; transition: background 0.15s ease, color 0.15s ease; white-space: nowrap; }
+.topnav-link:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.topnav-link.active { background: #fff; color: var(--primary-dark); }
+@media (max-width: 560px) { .topnav-inner { padding: 8px 14px; gap: 4px; } .topnav-link { padding: 7px 10px; font-size: 0.8rem; } }
 .back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
 .back-link:hover { color:#fff; }
 h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
@@ -123,11 +129,14 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
   display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; margin-top: 22px;
 }
 .flash-card {
-  border: 2px solid var(--border); border-radius: var(--radius-md); padding: 16px 12px; text-align:center;
+  border: 2px solid var(--border); border-top: 5px solid var(--cardAccent, var(--border)); border-radius: var(--radius-md); padding: 16px 12px; text-align:center;
   background:#fff; transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  animation: cardPop .3s ease both;
 }
-.flash-card:hover { transform: translateY(-3px); box-shadow: 0 8px 16px -8px rgba(43,42,61,.25); }
-.flash-emoji { font-size: 2.4rem; display:block; margin-bottom: 8px; }
+@keyframes cardPop { from{ opacity:0; transform: scale(.85);} to{ opacity:1; transform: scale(1);} }
+.flash-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 8px 16px -8px rgba(43,42,61,.25); }
+.flash-emoji { font-size: 2.4rem; display:block; margin-bottom: 8px; animation: emojiFloat 2.8s ease-in-out infinite; }
+@keyframes emojiFloat { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-4px);} }
 .flash-word { font-family: var(--font-display); font-weight:800; font-size: 1.02rem; margin: 0 0 8px; text-transform: capitalize; }
 .flash-tags { display:flex; justify-content:center; gap:5px; flex-wrap:wrap; margin-bottom: 10px; }
 .flash-tag {
@@ -139,7 +148,8 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
   border: 2px solid var(--primary); background:#fff; color: var(--primary); cursor:pointer; transition: transform .1s ease;
 }
 .add-btn:hover { transform: translateY(-1px); }
-.add-btn.added { background: var(--good); border-color: var(--good); color:#fff; }
+.add-btn.added { background: var(--good); border-color: var(--good); color:#fff; animation: addPop .4s ease; }
+@keyframes addPop { 0%{transform:scale(1);} 50%{transform:scale(1.15);} 100%{transform:scale(1);} }
 .empty-msg { text-align:center; color: var(--muted); font-weight:600; padding: 30px 10px; grid-column: 1 / -1; }
 
 .list-panel-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom: 16px; }
@@ -191,11 +201,20 @@ h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-siz
 </head>
 <body>
 
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-link">🏠 Inicio</a>
+    <a href="index.html#activityGrid" class="topnav-link">📋 Actividades</a>
+    <a href="games.html" class="topnav-link active">🎮 Juegos</a>
+    <a href="books.html" class="topnav-link">📚 Libros</a>
+  </div>
+</nav>
+
 <header>
   <div class="bg-floaties" id="bgFloaties"></div>
   <div class="wrap">
     <div>
-      <a class="back-link" href="index.html">&larr; All games</a>
+      <a class="back-link" href="games.html">&larr; All games</a>
       <p class="eyebrow">Speech &amp; language practice</p>
       <h1><span class="mascot">🗂️</span> Flashcard Builder</h1>
     </div>
@@ -501,10 +520,12 @@ function renderGrid() {
     return;
   }
 
-  filtered.forEach(item => {
+  filtered.forEach((item, idx) => {
     const meta = CATEGORY_META[item.category];
     const card = document.createElement('div');
     card.className = 'flash-card';
+    card.style.setProperty('--cardAccent', meta.color);
+    card.style.animationDelay = ((idx % 12) * 0.03) + 's';
     const added = isInList(item.word);
     card.innerHTML = `
       <span class="flash-emoji">${item.emoji}</span>

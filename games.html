@@ -93,6 +93,41 @@ header.site-header {
 }
 .mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
 @keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: var(--primary-dark);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+.topnav-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 10px 24px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.topnav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+  white-space: nowrap;
+}
+.topnav-link:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+.topnav-link.active { background: #fff; color: var(--primary-dark); }
+@media (max-width: 560px) {
+  .topnav-inner { padding: 8px 14px; gap: 4px; }
+  .topnav-link { padding: 7px 10px; font-size: 0.8rem; }
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -223,6 +258,15 @@ footer.site-footer {
 </style>
 </head>
 <body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-link">🏠 Inicio</a>
+    <a href="index.html#activityGrid" class="topnav-link">📋 Actividades</a>
+    <a href="games.html" class="topnav-link active">🎮 Juegos</a>
+    <a href="books.html" class="topnav-link">📚 Libros</a>
+  </div>
+</nav>
 
 <header class="site-header">
   <div class="bg-floaties" id="bgFloaties"></div>
