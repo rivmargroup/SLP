@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connect Four with Questions — SLP Activities Hub</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%B4%3C/text%3E%3C/svg%3E">
+<title>Tic-Tac-Toe with Questions — SLP Activities Hub</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%95%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,8 +25,8 @@
   --good-bg: #e5f5ec;
   --bad: #c14b4b;
   --bad-bg: #fbe9e9;
-  --p1-color: #4d8dfa;
-  --p2-color: #ffb020;
+  --x-color: #4d8dfa;
+  --o-color: #ff6a6a;
   --radius-lg: 22px;
   --radius-md: 16px;
   --radius-sm: 12px;
@@ -61,10 +61,10 @@ body::before {
 }
 body::after {
   width: 300px; height: 300px;
-  background: #ffe6bd;
+  background: #ffd6d6;
   bottom: -100px; left: -100px;
 }
-.wrap { max-width: 780px; margin: 0 auto; padding: 0 24px 60px; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 0 24px 60px; }
 
 header.site-header {
   background: radial-gradient(1100px 420px at 85% -10%, rgba(224, 142, 69, 0.18), transparent 60%),
@@ -88,7 +88,7 @@ header.site-header {
 
 /* Mascot that patrols back and forth along the bottom of the header */
 .mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
-.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 9.5s ease-in-out infinite; }
+.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 8.5s ease-in-out infinite; }
 @keyframes patrol {
   0%   { left:0%;  transform: scaleX(1); }
   45%  { left:85%; transform: scaleX(1); }
@@ -135,7 +135,7 @@ header.site-header h1 {
   margin: 0 0 6px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 2.05rem;
+  font-size: 2.1rem;
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
@@ -208,7 +208,10 @@ header.site-header p.sub {
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
-.status-msg { font-weight: 700; color: var(--ink); }
+.status-msg {
+  font-weight: 700;
+  color: var(--ink);
+}
 .reset-btn {
   border: none;
   background: var(--bg);
@@ -225,58 +228,39 @@ header.site-header p.sub {
 }
 .reset-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--border); }
 
-.board-wrap { overflow-x: auto; margin-bottom: 24px; }
 .board {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 7px;
-  background: var(--primary-dark);
-  padding: 12px;
-  border-radius: var(--radius-md);
-  width: max-content;
-  min-width: 100%;
-  box-shadow: 0 6px 0 #0d2a30;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 340px;
+  margin: 0 auto 24px;
 }
-.col-btn {
-  grid-row: 1;
-  background: rgba(255,255,255,0.15);
-  border: none;
-  color: white;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  padding: 7px 0;
-  cursor: pointer;
-  width: 56px;
-  transition: transform 0.08s ease, background 0.1s ease;
-}
-.col-btn:hover:not(:disabled) { background: rgba(255,255,255,0.32); transform: translateY(-2px); }
-.col-btn:active:not(:disabled) { transform: translateY(2px); }
-.col-btn:disabled { opacity: 0.3; cursor: default; }
-
-.slot {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: var(--bg);
+.cell {
+  aspect-ratio: 1;
+  background: #fff;
+  border: 3px solid var(--border);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, border-color .15s ease, box-shadow .15s ease;
+  box-shadow: 0 5px 0 var(--border);
 }
-.slot .piece {
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  display: none;
-}
-.slot.p1 .piece { display: block; background: var(--p1-color); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.15); }
-.slot.p2 .piece { display: block; background: var(--p2-color); box-shadow: inset 0 -4px 0 rgba(0,0,0,0.15); }
-.slot.win .piece { box-shadow: 0 0 0 4px var(--accent-soft), inset 0 -4px 0 rgba(0,0,0,0.15); animation: pillPop 0.5s ease infinite alternate; }
-.piece.drop-anim { animation: pieceDrop 0.4s cubic-bezier(.4,1.4,.6,1); }
-@keyframes pieceDrop {
-  0% { transform: translateY(-260px); opacity: 0.6; }
-  70% { transform: translateY(8px); opacity: 1; }
-  100% { transform: translateY(0); }
+.cell:hover:not(.filled) { background: var(--primary-light); border-color: var(--primary); box-shadow: 0 5px 0 var(--primary); transform: translateY(-2px); }
+.cell.filled { cursor: default; }
+.cell.filled.pop { animation: correctPop 0.4s ease; }
+.cell.x { color: var(--x-color); }
+.cell.o { color: var(--o-color); }
+.cell.win { background: var(--accent-soft); border-color: var(--accent); animation: pillPop 0.5s ease infinite alternate; }
+.cell.active-target { outline: 3px solid var(--accent); outline-offset: -3px; }
+@keyframes correctPop {
+  0% { transform: scale(0.5); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .prompt-card {
@@ -339,11 +323,6 @@ header.site-header p.sub {
 .option-btn:disabled { cursor: default; }
 .option-btn.correct { background: var(--good-bg); color: var(--good); box-shadow: 0 4px 0 #b9dcc4; animation: correctPop 0.4s ease; }
 .option-btn.wrong { background: var(--bad-bg); color: var(--bad); box-shadow: 0 4px 0 #edc4c4; animation: shake 0.4s ease; }
-@keyframes correctPop {
-  0% { transform: scale(0.5); }
-  60% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20% { transform: translateX(-8px); }
@@ -374,7 +353,12 @@ header.site-header p.sub {
 }
 .continue-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--primary-dark); }
 
-.idle-msg { text-align: center; color: var(--muted); padding: 20px 0; font-weight: 600; }
+.idle-msg {
+  text-align: center;
+  color: var(--muted);
+  padding: 20px 0;
+  font-weight: 600;
+}
 
 .confetti-piece {
   position: fixed;
@@ -393,10 +377,8 @@ header.site-header p.sub {
 }
 
 @media (max-width: 560px) {
-  header.site-header h1 { font-size: 1.6rem; }
+  header.site-header h1 { font-size: 1.65rem; }
   .options-grid { grid-template-columns: 1fr; }
-  .slot, .slot .piece { width: 40px; height: 40px; }
-  .col-btn { width: 40px; }
 }
 </style>
 </head>
@@ -407,13 +389,13 @@ header.site-header p.sub {
   <div class="wrap">
     <a class="back-link" href="index.html">&larr; Back to Games</a>
     <p class="eyebrow">Speech &amp; language practice</p>
-    <h1><span class="mascot">🐙</span> Connect Four with Questions</h1>
-    <p class="sub">Answer a question correctly to drop your piece. Connect four in a row — across, up-and-down, or diagonal — to win!</p>
+    <h1><span class="mascot">🦁</span> Tic-Tac-Toe with Questions</h1>
+    <p class="sub">Answer a question correctly to claim your square. Get three in a row to win!</p>
     <div class="pill-row">
-      <span class="pill" id="turnPill">🔵 Player 1's turn</span>
+      <span class="pill" id="turnPill">✖️ Player X's turn</span>
     </div>
   </div>
-  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🦀</span></div></div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🐝</span></div></div>
 </header>
 
 <main class="wrap">
@@ -422,16 +404,14 @@ header.site-header p.sub {
     <div class="chip-group" id="categoryChips"></div>
 
     <div class="status-row">
-      <span class="status-msg" id="statusMsg">Pick a column to answer a question.</span>
+      <span class="status-msg" id="statusMsg">Click any square to answer a question.</span>
       <button type="button" class="reset-btn" id="resetBtn">🔄 New game</button>
     </div>
 
-    <div class="board-wrap">
-      <div class="board" id="board"></div>
-    </div>
+    <div class="board" id="board"></div>
 
     <div id="questionArea">
-      <p class="idle-msg" id="idleMsg">👆 Click a column above the board to get started.</p>
+      <p class="idle-msg" id="idleMsg">👆 Click an empty square to get started.</p>
 
       <div class="prompt-card" id="promptCard" style="display:none;">
         <span class="prompt-label" id="promptCategory">Category</span>
@@ -457,45 +437,48 @@ const ALL_COLOR = '#1f5f6b';
 const ALL_SOFT = '#e7f1f1';
 
 const QUESTIONS = [
-  { category: 'Describing', prompt: 'Which one has 4 straight sides?', options: ['⬛','⚪','🔺','⭐'], correct: 0 },
-  { category: 'Describing', prompt: 'Which one is the biggest?', options: ['🐭','🐝','🐋','🐦'], correct: 2 },
-  { category: 'Describing', prompt: "Which one would you describe as 'sharp'?", options: ['✂️','🧸','🎈','🧦'], correct: 0 },
-  { category: 'Describing', prompt: 'Which one is curved, not straight?', options: ['🌙','📏','📐','🧊'], correct: 0 },
-  { category: 'Describing', prompt: "Which word describes size, not shape?", options: ['big','round','square','flat'], correct: 0, word: true },
+  { category: 'Describing', prompt: 'Which shape has 3 corners?', options: ['⭐','⬛','🔺','⚪'], correct: 2 },
+  { category: 'Describing', prompt: 'Which one is the smallest?', options: ['🐘','🐭','🐋','🦒'], correct: 1 },
+  { category: 'Describing', prompt: "Which one would you describe as 'soft'?", options: ['🧸','🪨','🔨','🥄'], correct: 0 },
+  { category: 'Describing', prompt: 'Which one is round?', options: ['⚽','📦','📐','✏️'], correct: 0 },
+  { category: 'Describing', prompt: "Which word describes a shape, not a color?", options: ['round','red','blue','green'], correct: 0, word: true },
 
-  { category: 'Grammar', prompt: "Choose the correct word: 'The dogs ___ barking.'", options: ['is','are','am','be'], correct: 1, word: true },
-  { category: 'Grammar', prompt: "Choose the correct word: 'My brother ___ two cats.'", options: ['have','has','haves','having'], correct: 1, word: true },
-  { category: 'Grammar', prompt: "Choose the correct past-tense verb: 'She ___ a picture yesterday.'", options: ['draw','drew','draws','drawing'], correct: 1, word: true },
-  { category: 'Grammar', prompt: "Choose the correct word: 'They ___ at the park last night.'", options: ['was','were','is','are'], correct: 1, word: true },
-  { category: 'Grammar', prompt: "Choose the correct word: 'I ___ hungry right now.'", options: ['am','is','are','be'], correct: 0, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'They ___ playing outside.'", options: ['are','is','am','be'], correct: 0, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'She ___ a new backpack.'", options: ['have','has','having','haves'], correct: 1, word: true },
+  { category: 'Grammar', prompt: "Choose the correct past-tense verb: 'Yesterday I ___ to the park.'", options: ['go','goes','went','going'], correct: 2, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'He ___ tired this morning.'", options: ['was','were','is','be'], correct: 0, word: true },
+  { category: 'Grammar', prompt: "Choose the correct word: 'We ___ friends since kindergarten.'", options: ['is','has','are','am'], correct: 2, word: true },
 
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the bird is above the tree?', options: ['under','over','behind','in'], correct: 1, word: true },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the shoe is beneath the bed?', options: ['under','on','next to','above'], correct: 0, word: true },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means you are in the middle of two things?', options: ['behind','between','under','on'], correct: 1, word: true },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the picture is on the wall?', options: ['on','under','behind','between'], correct: 0, word: true },
-  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means something is right beside you?', options: ['far','next to','under','above'], correct: 1, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the ball is inside the box?', options: ['in','on','under','behind'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the cat is on top of the table?', options: ['under','on','next to','behind'], correct: 1, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means two things are side by side?', options: ['next to','under','behind','on'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word describes something hidden from view?', options: ['behind','on','next to','above'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Espaciales', prompt: 'Which word means the toy is between two books?', options: ['under','between','on','behind'], correct: 1, word: true },
 
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has MORE?', options: ['🐝🐝','🐝🐝🐝🐝🐝','🐝🐝🐝','🐝'], correct: 1 },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has FEWER?', options: ['🎈🎈🎈🎈','🎈','🎈🎈🎈','🎈🎈'], correct: 1 },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which word means one group has a smaller amount?', options: ['more','less','same','equal'], correct: 1, word: true },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a lot'?", options: ['🍪','🍪🍪','🍪🍪🍪','🍪🍪🍪🍪🍪🍪'], correct: 3 },
-  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a little'?", options: ['🍪','🍪🍪🍪🍪','🍪🍪🍪🍪🍪','🍪🍪🍪🍪🍪🍪'], correct: 0 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has MORE?', options: ['⭐⭐⭐⭐⭐','⭐⭐','⭐⭐⭐','⭐'], correct: 0 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which group has FEWER?', options: ['🍎🍎🍎','🍎','🍎🍎🍎🍎','🍎🍎'], correct: 1 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: 'Which word means two groups have an equal amount?', options: ['same','more','less','none'], correct: 0, word: true },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a lot'?", options: ['🐟🐟🐟🐟🐟🐟','🐟','🐟🐟','🐟🐟🐟'], correct: 0 },
+  { category: 'Following_Directions_Conceptos_Cuantitativos', prompt: "Which shows 'a little'?", options: ['🐟🐟🐟🐟🐟','🐟','🐟🐟🐟🐟','🐟🐟🐟'], correct: 1 },
 
-  { category: 'WH_Questions', prompt: 'Which question word asks about an animal or object?', options: ['Who','What','When','Why'], correct: 1, word: true },
-  { category: 'WH_Questions', prompt: 'Which question word asks about a specific moment?', options: ['When','Where','Who','What'], correct: 0, word: true },
-  { category: 'WH_Questions', prompt: 'Which question word asks how or why something happened?', options: ['Where','Who','Why','What'], correct: 2, word: true },
-  { category: 'WH_Questions', prompt: 'Which question word would you use to ask about your teacher?', options: ['What','Who','Where','When'], correct: 1, word: true },
-  { category: 'WH_Questions', prompt: 'Which question word asks about a location?', options: ['Where','What','Who','Why'], correct: 0, word: true }
+  { category: 'WH_Questions', prompt: 'Which question word asks about a person?', options: ['Who','What','Where','When'], correct: 0, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about a place?', options: ['Who','Why','Where','When'], correct: 2, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about a reason?', options: ['What','Why','Who','Where'], correct: 1, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about time?', options: ['When','Who','What','Where'], correct: 0, word: true },
+  { category: 'WH_Questions', prompt: 'Which question word asks about a thing or action?', options: ['Who','Where','What','Why'], correct: 2, word: true }
 ];
 
-const ROWS = 6;
-const COLS = 7;
+const WIN_LINES = [
+  [0,1,2],[3,4,5],[6,7,8],
+  [0,3,6],[1,4,7],[2,5,8],
+  [0,4,8],[2,4,6]
+];
 
-let columns = Array.from({ length: COLS }, () => []); // bottom-up piece list per column, 'P1'/'P2'
-let currentPlayer = 'P1';
+let board = Array(9).fill(null);
+let currentPlayer = 'X';
 let activeCategory = 'all';
 let pool = [];
-let activeCol = null;
+let activeCell = null;
 let gameOver = false;
 
 const boardEl = document.getElementById('board');
@@ -651,67 +634,36 @@ function rebuildPool() {
 
 function buildBoard() {
   boardEl.innerHTML = '';
-  boardEl.style.gridTemplateRows = `auto repeat(${ROWS}, 1fr)`;
-
-  for (let c = 0; c < COLS; c++) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'col-btn';
-    btn.textContent = '▼';
-    btn.dataset.col = c;
-    btn.style.gridColumn = c + 1;
-    btn.addEventListener('click', () => onColumnClick(c));
-    boardEl.appendChild(btn);
-  }
-
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const slot = document.createElement('div');
-      slot.className = 'slot';
-      slot.dataset.row = r;
-      slot.dataset.col = c;
-      slot.style.gridColumn = c + 1;
-      slot.style.gridRow = r + 2;
-      const piece = document.createElement('div');
-      piece.className = 'piece';
-      slot.appendChild(piece);
-      boardEl.appendChild(slot);
-    }
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.dataset.idx = i;
+    cell.addEventListener('click', () => onCellClick(i));
+    boardEl.appendChild(cell);
   }
   renderBoard();
 }
 
-function renderBoard(winCells, lastDrop) {
-  const winSet = new Set((winCells || []).map(([r, c]) => `${r}-${c}`));
-  for (let c = 0; c < COLS; c++) {
-    const colBtn = boardEl.querySelector(`.col-btn[data-col="${c}"]`);
-    colBtn.disabled = columns[c].length >= ROWS || gameOver;
-    for (let r = 0; r < ROWS; r++) {
-      const slot = boardEl.querySelector(`.slot[data-row="${r}"][data-col="${c}"]`);
-      const pieceIdx = ROWS - 1 - r; // piece index from bottom for this visual row
-      const val = columns[c][pieceIdx];
-      slot.classList.remove('p1', 'p2', 'win');
-      if (val === 'P1') slot.classList.add('p1');
-      if (val === 'P2') slot.classList.add('p2');
-      if (winSet.has(`${r}-${c}`)) slot.classList.add('win');
-      const pieceEl = slot.querySelector('.piece');
-      pieceEl.classList.remove('drop-anim');
-      if (lastDrop && lastDrop[0] === r && lastDrop[1] === c) {
-        void pieceEl.offsetWidth;
-        pieceEl.classList.add('drop-anim');
-      }
-    }
-  }
+function renderBoard(winLine) {
+  [...boardEl.children].forEach((cell, i) => {
+    cell.textContent = board[i] || '';
+    cell.classList.toggle('filled', !!board[i]);
+    cell.classList.toggle('x', board[i] === 'X');
+    cell.classList.toggle('o', board[i] === 'O');
+    cell.classList.toggle('active-target', i === activeCell);
+    cell.classList.toggle('win', !!winLine && winLine.includes(i));
+  });
 }
 
 function updateTurnPill() {
-  turnPill.textContent = currentPlayer === 'P1' ? "🔵 Player 1's turn" : "🟠 Player 2's turn";
+  turnPill.textContent = currentPlayer === 'X' ? "✖️ Player X's turn" : "⭕ Player O's turn";
   popPill(turnPill);
 }
 
-function onColumnClick(c) {
-  if (gameOver || activeCol !== null || columns[c].length >= ROWS) return;
-  activeCol = c;
+function onCellClick(idx) {
+  if (gameOver || board[idx] || activeCell !== null) return;
+  activeCell = idx;
+  renderBoard();
   showQuestion();
 }
 
@@ -730,7 +682,7 @@ function showQuestion() {
     btn.type = 'button';
     btn.className = 'option-btn' + (q.word ? ' word' : '');
     btn.textContent = opt;
-    btn.addEventListener('click', () => onAnswer(i, q));
+    btn.addEventListener('click', () => onAnswer(i, q, btn));
     optionsGrid.appendChild(btn);
   });
 
@@ -739,12 +691,10 @@ function showQuestion() {
   continueBtn.style.display = 'none';
   idleMsg.style.display = 'none';
   promptCard.style.display = 'block';
-  statusMsg.textContent = `${currentPlayer === 'P1' ? 'Player 1' : 'Player 2'} is answering...`;
+  statusMsg.textContent = `${currentPlayer === 'X' ? 'Player X' : 'Player O'} is answering...`;
 }
 
-let pendingDropCol = null;
-
-function onAnswer(i, q) {
+function onAnswer(i, q, btn) {
   const correct = i === q.correct;
   [...optionsGrid.children].forEach((b, bi) => {
     b.disabled = true;
@@ -753,94 +703,65 @@ function onAnswer(i, q) {
   });
 
   if (correct) {
-    columns[activeCol].push(currentPlayer);
-    pendingDropCol = activeCol;
-    feedback.textContent = '✅ Correct! Piece dropped.';
+    board[activeCell] = currentPlayer;
+    feedback.textContent = '✅ Correct! Square claimed.';
     feedback.className = 'feedback good';
     confettiBurst(14);
   } else {
-    pendingDropCol = null;
-    feedback.textContent = '❌ Not quite — no piece dropped this turn.';
+    feedback.textContent = "❌ Not quite — square stays open.";
     feedback.className = 'feedback bad';
   }
   continueBtn.style.display = 'inline-block';
 }
 
 function afterQuestion() {
-  activeCol = null;
+  const target = activeCell;
+  activeCell = null;
   promptCard.style.display = 'none';
   idleMsg.style.display = 'block';
 
-  let lastDrop = null;
-  if (pendingDropCol !== null) {
-    const pieceIdx = columns[pendingDropCol].length - 1;
-    const r = ROWS - 1 - pieceIdx;
-    lastDrop = [r, pendingDropCol];
-    pendingDropCol = null;
-  }
-
-  const win = checkWin();
-  if (win) {
-    renderBoard(win, lastDrop);
+  const winLine = checkWin();
+  if (winLine) {
+    renderBoard(winLine);
     gameOver = true;
-    const winnerLabel = currentPlayer === 'P1' ? 'Player 1' : 'Player 2';
-    statusMsg.textContent = `🎉 ${winnerLabel} wins!`;
-    turnPill.textContent = `🏆 ${winnerLabel} wins!`;
+    statusMsg.textContent = `🎉 Player ${currentPlayer} wins!`;
+    turnPill.textContent = `🏆 Player ${currentPlayer} wins!`;
     popPill(turnPill);
     confettiBurst(50);
-    celebrateWin(`🏆 ${winnerLabel} wins! 🏆`);
+    celebrateWin(`🏆 Player ${currentPlayer} wins! 🏆`);
     return;
   }
-  if (columns.every(col => col.length >= ROWS)) {
-    renderBoard(null, lastDrop);
+  if (board.every(c => c)) {
+    renderBoard();
     gameOver = true;
     statusMsg.textContent = "🤝 It's a draw! New game?";
     return;
   }
 
-  currentPlayer = currentPlayer === 'P1' ? 'P2' : 'P1';
-  renderBoard(null, lastDrop);
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  renderBoard();
+  boardEl.children[target].classList.add('pop');
   updateTurnPill();
-  statusMsg.textContent = 'Pick a column to answer a question.';
-}
-
-function cellValue(r, c) {
-  const pieceIdx = ROWS - 1 - r;
-  return columns[c][pieceIdx] || null;
+  statusMsg.textContent = 'Click any open square to answer a question.';
 }
 
 function checkWin() {
-  const dirs = [[0,1],[1,0],[1,1],[1,-1]];
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      const val = cellValue(r, c);
-      if (!val) continue;
-      for (const [dr, dc] of dirs) {
-        const cells = [[r,c]];
-        for (let k = 1; k < 4; k++) {
-          const rr = r + dr * k;
-          const cc = c + dc * k;
-          if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) break;
-          if (cellValue(rr, cc) !== val) break;
-          cells.push([rr, cc]);
-        }
-        if (cells.length === 4) return cells;
-      }
-    }
+  for (const line of WIN_LINES) {
+    const [a, b, c] = line;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) return line;
   }
   return null;
 }
 
 function resetGame() {
-  columns = Array.from({ length: COLS }, () => []);
-  currentPlayer = 'P1';
-  activeCol = null;
+  board = Array(9).fill(null);
+  currentPlayer = 'X';
+  activeCell = null;
   gameOver = false;
-  pendingDropCol = null;
   rebuildPool();
   buildBoard();
   updateTurnPill();
-  statusMsg.textContent = 'Pick a column to answer a question.';
+  statusMsg.textContent = 'Click any square to answer a question.';
   promptCard.style.display = 'none';
   idleMsg.style.display = 'block';
 }
