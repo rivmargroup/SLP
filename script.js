@@ -100,6 +100,7 @@ function render() {
         <span class="badge">${meta.icon} ${meta.label}</span>
         ${isNew(activity.dateAdded) ? '<span class="new-badge">NUEVO</span>' : ''}
       </div>
+      ${activity.worksheetPdf ? '<p class="skill" style="margin:-4px 0 6px;font-size:0.78rem;color:var(--accent);font-weight:700;">📄 Incluye hoja imprimible</p>' : ''}
       <h3>${activity.title}</h3>
       <p class="skill">${activity.skill}</p>
       <div class="card-meta">
@@ -138,6 +139,17 @@ function openModal(activity) {
       <h4>🚀 Extensión</h4>
       <p class="extension-text">${activity.extension}</p>
     </div>
+
+    ${activity.worksheetPdf ? `
+    <div class="modal-section">
+      <a class="worksheet-download" href="${activity.worksheetPdf}" target="_blank" rel="noopener">
+        <span class="wd-icon">📄</span>
+        <span class="wd-text">
+          <span class="wd-title">Descargar hoja de trabajo imprimible (PDF)</span>
+          <span class="wd-sub">Lista para imprimir y usar con tu estudiante</span>
+        </span>
+      </a>
+    </div>` : ''}
   `;
   modalOverlay.hidden = false;
 }

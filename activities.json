@@ -133,5 +133,30 @@
     "extension": "Add a memory twist: after collecting 5 objects, ask the student to recall from memory who has what without looking.",
     "dateAdded": "2026-08-11",
     "source": "original-ai-generated"
+  },
+  {
+    "id": "describing-category-train-stowaway-002",
+    "title": "Category Train: Spot the Stowaway",
+    "category": "Describing",
+    "skill": "Categories: identifying what does NOT belong to a group",
+    "ageRange": "4-8 years",
+    "groupSize": "1-4 students",
+    "goal": "Student will identify the item that does not belong in a set of 4 pictures/objects and explain why with 80% accuracy.",
+    "materials": [
+      "Small strips of paper or index cards folded to look like train cars (4-5 per round)",
+      "Picture cards or small toys/objects that can be sorted by category (animals, foods, clothing, vehicles, etc.)",
+      "Marker for drawing simple category pictures if premade cards aren't available"
+    ],
+    "instructions": [
+      "Line up 4-5 'train car' cards in a row, each holding one picture or object.",
+      "Put 3-4 items from the same category in a row (e.g., dog, cat, bird) and one 'stowaway' item from a different category (e.g., shoe).",
+      "Tell the student a stowaway snuck onto the train and ask them to find which car doesn't belong with the rest.",
+      "Student points to or removes the stowaway car and explains why it doesn't fit ('shoe isn't an animal').",
+      "Rebuild the train with a new category and stowaway for each round, starting with obviously different items before moving to subtler categories (e.g., farm animals vs. one zoo animal)."
+    ],
+    "extension": "Have the student choose the stowaway item themselves and challenge a peer or the clinician to spot it and explain their reasoning.",
+    "dateAdded": "2026-08-11",
+    "source": "original-ai-generated",
+    "worksheetPdf": "worksheets/describing-category-train-stowaway-002.pdf"
   }
 ]

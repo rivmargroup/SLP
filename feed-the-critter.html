@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feed the Critter — SLP Activities Hub</title>
+<meta name="description" content="Answer speech and language prompts correctly to feed and grow Bloop the critter — an original reward-loop practice game.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A6%95%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #2b2a3d; --ink-soft: #5a5872; --muted: #8b8aa0;
+  --primary: #1f5f6b; --primary-dark: #143f48;
+  --bg: #fbf8f2; --card-bg: #ffffff; --border: #ece7f5;
+  --good: #1fa971; --good-bg: #e2faef; --bad: #ef5b5b; --bad-bg: #ffe9e9;
+  --radius-lg: 26px; --radius-md: 18px;
+  --shadow-md: 0 14px 30px -10px rgba(43,42,61,.18);
+  --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; font-family: var(--font-body); background: var(--bg); color: var(--ink); overflow-x:hidden;
+}
+body::before, body::after {
+  content:''; position:fixed; border-radius:50%; filter: blur(70px); opacity:.4; z-index:-1;
+}
+body::before { width:360px; height:360px; background:#b7f0d4; top:-100px; right:-100px; }
+body::after { width:400px; height:400px; background:#ffd9a0; bottom:-120px; left:-120px; }
+
+.wrap { max-width: 820px; margin:0 auto; padding: 0 20px 60px; }
+
+header {
+  background: linear-gradient(155deg, var(--primary-dark), var(--primary) 80%);
+  color:#fff; padding: 30px 0 46px; margin-bottom: -30px;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.floaty { position:absolute; opacity:0; animation: floatUp linear infinite; will-change: transform, opacity; }
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
+  12%  { opacity:.6; }
+  88%  { opacity:.5; }
+  100% { transform: translateY(-190px) translateX(var(--drift,10px)) rotate(30deg); opacity:0; }
+}
+
+.mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
+.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 9s ease-in-out infinite; }
+@keyframes patrol {
+  0%   { left:0%;  transform: scaleX(1); }
+  45%  { left:82%; transform: scaleX(1); }
+  50%  { left:82%; transform: scaleX(-1); }
+  95%  { left:0%;  transform: scaleX(-1); }
+  100% { left:0%;  transform: scaleX(1); }
+}
+.mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
+@keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+
+.celebrate-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:1200; opacity:0; transition: opacity .3s ease; }
+.celebrate-overlay.show { opacity:1; }
+.celebrate-banner {
+  font-family: var(--font-display); font-weight:800; font-size: 1.9rem; color:#fff; text-align:center;
+  background: linear-gradient(135deg, #17b897, #4d8dfa);
+  padding: 20px 38px; border-radius: 26px; box-shadow: 0 20px 40px -12px rgba(0,0,0,.35);
+  transform: scale(0); animation: bannerPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes bannerPop { 0%{ transform: scale(0) rotate(-8deg);} 60%{ transform: scale(1.12) rotate(3deg);} 100%{ transform: scale(1) rotate(0deg);} }
+.spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
+@keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
+header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
+.back-link:hover { color:#fff; }
+h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
+.mascot { display:inline-block; animation: bounce 2.2s ease-in-out infinite; font-size: 1.6rem; }
+@keyframes bounce { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-9px) rotate(4deg);} }
+.eyebrow { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color: #c8f5e4; font-family: var(--font-display); }
+.scoreboard { display:flex; gap:10px; }
+.pill {
+  background: rgba(255,255,255,.16); border:2px solid rgba(255,255,255,.25); border-radius:999px;
+  padding:9px 18px; font-size:.88rem; font-weight:800; font-family: var(--font-display); transition: transform .2s ease;
+}
+.pill.pop { animation: pillPop .35s ease; }
+@keyframes pillPop { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+
+.panel {
+  margin-top: 30px; background: var(--card-bg); border:1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 30px; position:relative; z-index:1;
+}
+
+.chip-group { display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 24px; justify-content:center; }
+.chip {
+  border:2px solid transparent; background: #f1eef9; color: var(--ink-soft);
+  font-family: var(--font-display); font-size:.86rem; font-weight:700; padding:9px 16px; border-radius:999px; cursor:pointer;
+  box-shadow: 0 3px 0 rgba(43,42,61,.08); transition: transform .1s ease, box-shadow .1s ease;
+}
+.chip:hover { transform: translateY(-1px); }
+.chip:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(43,42,61,.08); }
+.chip.active { color: #fff; }
+
+/* ---- Habitat / critter ---- */
+.habitat {
+  position: relative; text-align:center; padding: 6px 6px 20px;
+  background: radial-gradient(ellipse at 50% 100%, var(--habC, #e2f9f2), transparent 72%);
+  border-radius: 22px;
+}
+.critter-stage-label {
+  display:inline-block; font-family: var(--font-display); font-size:.78rem; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; padding: 5px 14px; border-radius:999px; margin-bottom: 10px;
+  background: var(--habSoft, #e2f9f2); color: var(--habC, #17b897);
+}
+.critter-hab { position:relative; width:180px; height:180px; margin:0 auto 8px; display:flex; align-items:center; justify-content:center; }
+.critter-ring {
+  position:absolute; inset:10px; border-radius:50%;
+  background: var(--habSoft, #e2f9f2);
+  border: 3px dashed var(--habC, #17b897);
+  animation: ringSpin 18s linear infinite;
+}
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+.critter { position:relative; width:96px; height:96px; z-index:1; animation: critterBob 3s ease-in-out infinite; transition: width .4s cubic-bezier(.34,1.56,.64,1), height .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes critterBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+.critter-body {
+  width:100%; height:100%; position:relative;
+  border-radius: 46% 54% 50% 50% / 58% 52% 48% 42%;
+  background: linear-gradient(160deg, #7fe3c7, #24b493);
+  box-shadow: inset -10px -12px 0 rgba(0,0,0,.08), 0 8px 18px -6px rgba(20,63,72,.35);
+}
+.critter-body.chomp { animation: chompPunch .4s ease; }
+@keyframes chompPunch { 0%{transform:scale(1,1)} 30%{transform:scale(1.16,.84)} 60%{transform:scale(.92,1.1)} 100%{transform:scale(1,1)} }
+.critter-eye { position:absolute; top:30%; width:22px; height:26px; background:#fff; border-radius:50%; box-shadow:0 2px 4px rgba(0,0,0,.15); display:flex; align-items:center; justify-content:center; }
+.critter-eye.left { left:20%; } .critter-eye.right { right:20%; }
+.critter-pupil { width:11px; height:11px; background:#20242c; border-radius:50%; transition: transform .2s ease; }
+.critter-cheek { position:absolute; bottom:30%; width:13px; height:9px; border-radius:50%; background:#ff9fc0; opacity:.75; }
+.critter-cheek.left { left:8%; } .critter-cheek.right { right:8%; }
+.critter-mouth { position:absolute; bottom:22%; left:50%; transform:translateX(-50%); width:22px; height:11px; background:#20242c; border-radius:0 0 14px 14px; transition: all .16s ease; }
+.critter-mouth.open { width:26px; height:24px; border-radius:50%; background:#7a2b2b; }
+.critter-mouth.sad { border-radius:14px 14px 0 0; }
+.critter-bow, .critter-crown, .critter-sparkle {
+  position:absolute; left:50%; transform:translateX(-50%) scale(0); transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  font-size:1.4rem; pointer-events:none;
+}
+.critter-bow { top:-4px; }
+.critter-crown { top:-22px; font-size:1.7rem; }
+.critter-sparkle-l, .critter-sparkle-r { position:absolute; top:18%; font-size:1.1rem; opacity:0; transition: opacity .35s ease; }
+.critter-sparkle-l { left:-14px; } .critter-sparkle-r { right:-14px; }
+.critter-hab.stage-2 .critter { width:110px; height:110px; }
+.critter-hab.stage-2 .critter-bow { transform: translateX(-50%) scale(1); }
+.critter-hab.stage-3 .critter { width:126px; height:126px; }
+.critter-hab.stage-3 .critter-crown { transform: translateX(-50%) scale(1); }
+.critter-hab.stage-4 .critter { width:142px; height:142px; }
+.critter-hab.stage-4 .critter-sparkle-l, .critter-hab.stage-4 .critter-sparkle-r { opacity:1; animation: sparkleTwinkle 1.4s ease-in-out infinite; }
+@keyframes sparkleTwinkle { 0%,100%{ opacity:.4; transform: scale(.8);} 50%{ opacity:1; transform: scale(1.15);} }
+
+.feed-track { width:180px; height:12px; margin:10px auto 4px; background:#e9f6f1; border-radius:999px; overflow:hidden; border:1px solid rgba(23,184,151,.25); }
+.feed-track-fill { height:100%; width:0%; background: linear-gradient(90deg, #17b897, #4d8dfa); border-radius:999px; transition: width .5s ease; }
+.feed-track-label { font-size:.76rem; color: var(--muted); font-weight:700; margin: 0 0 4px; }
+
+.food-fly { position:fixed; z-index:900; font-size:1.7rem; pointer-events:none; animation: foodFly .6s ease-in forwards; }
+@keyframes foodFly { 0%{ transform: translate(0,0) scale(.7) rotate(0deg); opacity:1;} 75%{ opacity:1;} 100%{ transform: translate(var(--fx), var(--fy)) scale(1) rotate(200deg); opacity:0;} }
+
+/* ---- Prompt + options ---- */
+.prompt-card { text-align:center; padding: 20px 6px 6px; }
+.prompt-label {
+  display:inline-block; font-family: var(--font-display); font-size:.78rem; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; padding: 5px 14px; border-radius:999px; margin-bottom: 14px;
+}
+.prompt-text { font-family: var(--font-display); font-size:1.28rem; font-weight:700; color: var(--ink); margin: 0 0 22px; line-height:1.4; }
+
+.option-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 480px; margin: 0 auto; }
+.option-btn {
+  font-family: var(--font-body); font-weight:700; font-size:.86rem; padding: 16px 8px 12px; border-radius: var(--radius-md);
+  border: 3px solid var(--border); background:#fff; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; box-shadow: 0 4px 0 var(--border);
+}
+.option-btn .opt-icon { font-size:2rem; }
+.option-btn:hover:not(:disabled) { transform: translateY(-3px); }
+.option-btn:disabled { cursor:default; }
+.option-btn.correct { background: var(--good-bg); border-color: var(--good); box-shadow: 0 4px 0 var(--good); animation: correctPop .4s ease; }
+.option-btn.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 4px 0 var(--bad); animation: shake .4s ease; }
+@keyframes correctPop { 0%{transform:scale(1)} 45%{transform:scale(1.08)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.feedback { text-align:center; min-height: 26px; margin-top:18px; font-weight:800; font-family: var(--font-display); }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.actions { display:flex; justify-content:center; margin-top: 10px; }
+.next-btn {
+  font-family: var(--font-display); font-weight:800; font-size:1rem; padding: 14px 30px; border-radius:999px;
+  border:none; background: var(--primary); color:#fff; cursor:pointer; visibility:hidden;
+  box-shadow: 0 5px 0 var(--primary-dark); transition: transform .1s ease, box-shadow .1s ease;
+}
+.next-btn.visible { visibility: visible; }
+.next-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--primary-dark); }
+
+.confetti-piece { position:fixed; width:9px; height:9px; border-radius:3px; pointer-events:none; z-index:999; animation: confettiFall linear forwards; }
+@keyframes confettiFall { to { transform: translate(var(--dx), 300px) rotate(var(--dr)); opacity:0; } }
+
+@media (max-width: 520px) {
+  h1 { font-size: 1.5rem; }
+  .option-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .option-btn { font-size:.76rem; padding: 12px 4px 10px; }
+  .option-btn .opt-icon { font-size:1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bg-floaties" id="bgFloaties"></div>
+  <div class="wrap">
+    <div>
+      <a class="back-link" href="games.html">&larr; All games</a>
+      <p class="eyebrow">Speech &amp; language practice</p>
+      <h1><span class="mascot">🦕</span> Feed the Critter</h1>
+    </div>
+    <div class="scoreboard">
+      <span class="pill" id="scorePill">⭐ Score: 0</span>
+      <span class="pill" id="streakPill">🔥 Streak: 0</span>
+    </div>
+  </div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🍓</span></div></div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <div class="chip-group" id="categoryChips"></div>
+
+    <div class="habitat" id="habitat">
+      <p class="critter-stage-label" id="critterStageLabel">Baby Bloop</p>
+      <div class="critter-hab stage-1" id="critterHab">
+        <span class="critter-ring" id="critterRing"></span>
+        <div class="critter" id="critter">
+          <span class="critter-sparkle-l">✨</span>
+          <span class="critter-sparkle-r">✨</span>
+          <span class="critter-crown">👑</span>
+          <span class="critter-bow">🎀</span>
+          <div class="critter-body" id="critterBody">
+            <span class="critter-eye left"><span class="critter-pupil"></span></span>
+            <span class="critter-eye right"><span class="critter-pupil"></span></span>
+            <span class="critter-cheek left"></span>
+            <span class="critter-cheek right"></span>
+            <span class="critter-mouth" id="critterMouth"></span>
+          </div>
+        </div>
+      </div>
+      <p class="feed-track-label" id="feedTrackLabel">Feed Bloop 3 times to grow!</p>
+      <div class="feed-track"><div class="feed-track-fill" id="feedTrackFill"></div></div>
+    </div>
+
+    <div class="prompt-card" id="promptCard">
+      <p class="prompt-label" id="promptCategory">Category</p>
+      <p class="prompt-text" id="promptText">Loading...</p>
+      <div class="option-grid" id="optionGrid"></div>
+      <p class="feedback" id="feedback"></p>
+      <div class="actions">
+        <button class="next-btn" id="nextBtn">Next round →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORY_META = {
+  WH_Questions:  { label: 'WH questions', icon: '❓', color: '#4d8dfa', soft: '#e8f0ff' },
+  Categories:    { label: 'Categories',   icon: '🗂️', color: '#17b897', soft: '#e2f9f2' },
+  Describing:    { label: 'Describing',   icon: '🔎', color: '#e08e45', soft: '#fbe9d7' },
+  Sound_Play:    { label: 'Sound & word play', icon: '🗣️', color: '#ff4fa3', soft: '#ffe3f0' }
+};
+const ALL_COLOR = '#17b897';
+
+const PROMPTS = [
+  { category: 'WH_Questions', prompt: 'Where do you sleep at night?', options: [
+    { icon: '🛏️', label: 'Bed', correct: true }, { icon: '🚗', label: 'Car', correct: false }, { icon: '🍕', label: 'Pizza', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'Who reads you a bedtime story?', options: [
+    { icon: '👩', label: 'A grown-up', correct: true }, { icon: '🐘', label: 'An elephant', correct: false }, { icon: '🚀', label: 'A rocket', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'What do you use to brush your teeth?', options: [
+    { icon: '🪥', label: 'Toothbrush', correct: true }, { icon: '🔨', label: 'Hammer', correct: false }, { icon: '🎣', label: 'Fishing rod', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'When do you usually eat breakfast?', options: [
+    { icon: '🌅', label: 'Morning', correct: true }, { icon: '🌙', label: 'Midnight', correct: false }, { icon: '🎆', label: 'Fireworks time', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'Why do we wear a coat outside in winter?', options: [
+    { icon: '🥶', label: 'To stay warm', correct: true }, { icon: '🏊', label: 'To swim faster', correct: false }, { icon: '📖', label: 'To read better', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'How do you usually get to school?', options: [
+    { icon: '🚌', label: 'Bus or car', correct: true }, { icon: '🛶', label: 'Canoe', correct: false }, { icon: '🎈', label: 'Balloon', correct: false } ] },
+
+  { category: 'Categories', prompt: "Which one is a fruit?", options: [
+    { icon: '🍎', label: 'Apple', correct: true }, { icon: '🚲', label: 'Bike', correct: false }, { icon: '📚', label: 'Book', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is an animal?", options: [
+    { icon: '🐘', label: 'Elephant', correct: true }, { icon: '🪑', label: 'Chair', correct: false }, { icon: '⏰', label: 'Clock', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is a vehicle?", options: [
+    { icon: '🚗', label: 'Car', correct: true }, { icon: '🍌', label: 'Banana', correct: false }, { icon: '🛏️', label: 'Bed', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is clothing?", options: [
+    { icon: '👟', label: 'Shoe', correct: true }, { icon: '🥕', label: 'Carrot', correct: false }, { icon: '🌳', label: 'Tree', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is a shape?", options: [
+    { icon: '⭐', label: 'Star', correct: true }, { icon: '🐟', label: 'Fish', correct: false }, { icon: '🍞', label: 'Bread', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is food?", options: [
+    { icon: '🍕', label: 'Pizza', correct: true }, { icon: '🚂', label: 'Train', correct: false }, { icon: '🦋', label: 'Butterfly', correct: false } ] },
+
+  { category: 'Describing', prompt: "Which one is cold and white?", options: [
+    { icon: '❄️', label: 'Snow', correct: true }, { icon: '🔥', label: 'Fire', correct: false }, { icon: '🌞', label: 'Sun', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is round and bounces?", options: [
+    { icon: '⚽', label: 'Ball', correct: true }, { icon: '📏', label: 'Ruler', correct: false }, { icon: '🪟', label: 'Window', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is tall and green with leaves?", options: [
+    { icon: '🌳', label: 'Tree', correct: true }, { icon: '🪨', label: 'Rock', correct: false }, { icon: '🧦', label: 'Sock', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is soft and fluffy?", options: [
+    { icon: '🧸', label: 'Teddy bear', correct: true }, { icon: '🪨', label: 'Rock', correct: false }, { icon: '🔪', label: 'Knife', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is sour and yellow?", options: [
+    { icon: '🍋', label: 'Lemon', correct: true }, { icon: '🍫', label: 'Chocolate', correct: false }, { icon: '🥔', label: 'Potato', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is loud and flashes in the sky?", options: [
+    { icon: '⛈️', label: 'Thunderstorm', correct: true }, { icon: '🦋', label: 'Butterfly', correct: false }, { icon: '🐌', label: 'Snail', correct: false } ] },
+
+  { category: 'Sound_Play', prompt: "Which word starts with the same sound as 'Sun'?", options: [
+    { icon: '🐍', label: 'Snake', correct: true }, { icon: '🐱', label: 'Cat', correct: false }, { icon: '🐟', label: 'Fish', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word starts with the same sound as 'Ball'?", options: [
+    { icon: '🎈', label: 'Balloon', correct: true }, { icon: '🐘', label: 'Elephant', correct: false }, { icon: '🍎', label: 'Apple', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word rhymes with 'Cat'?", options: [
+    { icon: '🎩', label: 'Hat', correct: true }, { icon: '🐶', label: 'Dog', correct: false }, { icon: '🚗', label: 'Car', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word rhymes with 'Star'?", options: [
+    { icon: '🚗', label: 'Car', correct: true }, { icon: '🐟', label: 'Fish', correct: false }, { icon: '🌳', label: 'Tree', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word starts with the same sound as 'Moon'?", options: [
+    { icon: '🐭', label: 'Mouse', correct: true }, { icon: '🦁', label: 'Lion', correct: false }, { icon: '🐢', label: 'Turtle', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word rhymes with 'Bee'?", options: [
+    { icon: '🌳', label: 'Tree', correct: true }, { icon: '🐱', label: 'Cat', correct: false }, { icon: '🚀', label: 'Rocket', correct: false } ] }
+];
+
+const STAGE_THRESHOLDS = [0, 3, 7, 12];
+const STAGE_LABELS = ['Baby Bloop', 'Growing Bloop', 'Big Bloop', 'Super Bloop!'];
+
+let activeCategory = 'all';
+let pool = [];
+let current = null;
+let score = 0;
+let streak = 0;
+let feeds = 0;
+let stage = 1;
+let answered = false;
+
+const chipsEl = document.getElementById('categoryChips');
+const habitatEl = document.getElementById('habitat');
+const critterHabEl = document.getElementById('critterHab');
+const critterRingEl = document.getElementById('critterRing');
+const critterBodyEl = document.getElementById('critterBody');
+const critterMouthEl = document.getElementById('critterMouth');
+const critterStageLabelEl = document.getElementById('critterStageLabel');
+const feedTrackFillEl = document.getElementById('feedTrackFill');
+const feedTrackLabelEl = document.getElementById('feedTrackLabel');
+const promptCategoryEl = document.getElementById('promptCategory');
+const promptTextEl = document.getElementById('promptText');
+const optionGridEl = document.getElementById('optionGrid');
+const feedbackEl = document.getElementById('feedback');
+const nextBtn = document.getElementById('nextBtn');
+const scorePill = document.getElementById('scorePill');
+const streakPill = document.getElementById('streakPill');
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const amt = Math.round(2.55 * percent);
+  let R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+  R = R < 255 ? (R < 0 ? 0 : R) : 255; G = G < 255 ? (G < 0 ? 0 : G) : 255; B = B < 255 ? (B < 0 ? 0 : B) : 255;
+  return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+}
+
+function popPill(el) {
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function confettiBurst(count) {
+  const colors = ['#17b897', '#4d8dfa', '#ffb020', '#ff4fa3', '#9b6bff', '#7fe3c7'];
+  const cx = window.innerWidth / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'confetti-piece';
+    el.style.left = (cx + (Math.random() * 300 - 150)) + 'px';
+    el.style.top = '110px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+    el.style.setProperty('--dr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.7 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+}
+
+function spawnFloaties(container, emojis, count) {
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'floaty';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 90 + 2) + '%';
+    el.style.bottom = '0px';
+    el.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+    el.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+    el.style.animationDuration = (5 + Math.random() * 4) + 's';
+    el.style.animationDelay = (Math.random() * 6) + 's';
+    container.appendChild(el);
+  }
+}
+
+function sparkleBurst(count) {
+  const sparkles = ['✨', '⭐', '🌟', '💫'];
+  const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'spark-piece';
+    el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+    el.style.left = cx + 'px'; el.style.top = cy + 'px';
+    const angle = Math.random() * Math.PI * 2, dist = 80 + Math.random() * 220;
+    el.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+    el.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+    el.style.setProperty('--sr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1600);
+  }
+}
+
+function celebrateWin(message) {
+  const overlay = document.createElement('div');
+  overlay.className = 'celebrate-overlay';
+  overlay.innerHTML = `<div class="celebrate-banner">${message}</div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  sparkleBurst(50);
+  confettiBurst(50);
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 400);
+  }, 1900);
+}
+
+function buildChips() {
+  const cats = ['all', ...Object.keys(CATEGORY_META)];
+  cats.forEach(cat => {
+    const color = cat === 'all' ? ALL_COLOR : CATEGORY_META[cat].color;
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (cat === activeCategory ? ' active' : '');
+    btn.type = 'button';
+    btn.dataset.value = cat;
+    btn.textContent = cat === 'all' ? '✨ All' : `${CATEGORY_META[cat].icon} ${CATEGORY_META[cat].label}`;
+    if (cat === activeCategory) {
+      btn.style.background = color;
+      btn.style.boxShadow = `0 3px 0 ${shadeColor(color, -20)}`;
+    }
+    btn.addEventListener('click', () => {
+      activeCategory = cat;
+      [...chipsEl.children].forEach(c => {
+        const isActive = c.dataset.value === cat;
+        c.classList.toggle('active', isActive);
+        const cColor = c.dataset.value === 'all' ? ALL_COLOR : CATEGORY_META[c.dataset.value].color;
+        if (isActive) {
+          c.style.background = cColor;
+          c.style.boxShadow = `0 3px 0 ${shadeColor(cColor, -20)}`;
+        } else {
+          c.style.background = '';
+          c.style.boxShadow = '';
+        }
+      });
+      rebuildPool();
+      nextQuestion();
+    });
+    chipsEl.appendChild(btn);
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function rebuildPool() {
+  const source = activeCategory === 'all' ? PROMPTS : PROMPTS.filter(q => q.category === activeCategory);
+  pool = shuffle(source);
+}
+
+function updateHabitatColor(meta) {
+  const color = meta ? meta.color : ALL_COLOR;
+  const soft = meta ? meta.soft : '#e2f9f2';
+  habitatEl.style.setProperty('--habC', color);
+  habitatEl.style.setProperty('--habSoft', soft);
+}
+
+function updateFeedTrack() {
+  const idx = stage - 1;
+  if (stage >= STAGE_THRESHOLDS.length) {
+    feedTrackFillEl.style.width = '100%';
+    feedTrackLabelEl.textContent = 'Bloop is fully grown! 🌟';
+    return;
+  }
+  const lo = STAGE_THRESHOLDS[idx], hi = STAGE_THRESHOLDS[idx + 1];
+  const pct = Math.round(((feeds - lo) / (hi - lo)) * 100);
+  feedTrackFillEl.style.width = pct + '%';
+  feedTrackLabelEl.textContent = `Feed Bloop ${hi - feeds} more time${hi - feeds === 1 ? '' : 's'} to grow!`;
+}
+
+function nextQuestion() {
+  answered = false;
+  feedbackEl.textContent = '';
+  feedbackEl.className = 'feedback';
+  nextBtn.classList.remove('visible');
+  optionGridEl.innerHTML = '';
+
+  if (pool.length === 0) rebuildPool();
+  current = pool.pop();
+
+  const meta = CATEGORY_META[current.category];
+  promptCategoryEl.textContent = `${meta.icon} ${meta.label}`;
+  promptCategoryEl.style.background = meta.soft;
+  promptCategoryEl.style.color = meta.color;
+  promptTextEl.textContent = current.prompt;
+
+  const opts = shuffle(current.options);
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="opt-icon">${opt.icon}</span><span>${opt.label}</span>`;
+    btn.dataset.correct = opt.correct ? '1' : '0';
+    btn.addEventListener('click', () => selectOption(btn, opt));
+    optionGridEl.appendChild(btn);
+  });
+}
+
+function flyFood(icon, fromEl) {
+  const fromRect = fromEl.getBoundingClientRect();
+  const toRect = critterBodyEl.getBoundingClientRect();
+  const food = document.createElement('span');
+  food.className = 'food-fly';
+  food.textContent = icon;
+  const startX = fromRect.left + fromRect.width / 2 - 14;
+  const startY = fromRect.top + fromRect.height / 2 - 14;
+  food.style.left = startX + 'px';
+  food.style.top = startY + 'px';
+  const targetX = toRect.left + toRect.width / 2 - 14;
+  const targetY = toRect.top + toRect.height / 2 - 14;
+  food.style.setProperty('--fx', (targetX - startX) + 'px');
+  food.style.setProperty('--fy', (targetY - startY) + 'px');
+  document.body.appendChild(food);
+  setTimeout(() => food.remove(), 650);
+}
+
+function feedCritter() {
+  critterMouthEl.classList.add('open');
+  critterBodyEl.classList.remove('chomp');
+  void critterBodyEl.offsetWidth;
+  critterBodyEl.classList.add('chomp');
+  setTimeout(() => { critterMouthEl.classList.remove('open'); }, 380);
+
+  feeds++;
+  const prevStage = stage;
+  stage = STAGE_THRESHOLDS.filter(t => feeds >= t).length;
+  if (stage > STAGE_THRESHOLDS.length) stage = STAGE_THRESHOLDS.length;
+  updateFeedTrack();
+
+  if (stage > prevStage) {
+    critterHabEl.className = 'critter-hab stage-' + stage;
+    critterStageLabelEl.textContent = STAGE_LABELS[stage - 1];
+    setTimeout(() => celebrateWin(`🎉 Bloop grew up! ${STAGE_LABELS[stage - 1]}! 🎉`), 300);
+  }
+}
+
+function selectOption(btn, opt) {
+  if (answered) return;
+  answered = true;
+  const allBtns = [...optionGridEl.children];
+  allBtns.forEach(b => b.disabled = true);
+
+  if (opt.correct) {
+    btn.classList.add('correct');
+    score++;
+    streak++;
+    feedbackEl.textContent = 'Yum! Bloop loved that! 🎉';
+    feedbackEl.classList.add('good');
+    confettiBurst(16);
+    flyFood(opt.icon, btn);
+    setTimeout(() => feedCritter(), 280);
+  } else {
+    btn.classList.add('wrong');
+    streak = 0;
+    feedbackEl.textContent = "Not quite — Bloop is still hungry. Try the next one!";
+    feedbackEl.classList.add('bad');
+    critterMouthEl.classList.add('sad');
+    setTimeout(() => critterMouthEl.classList.remove('sad'), 700);
+  }
+
+  // Reveal the correct option regardless
+  allBtns.forEach(b => {
+    if (b.dataset.correct === '1') b.classList.add('correct');
+  });
+
+  scorePill.textContent = `⭐ Score: ${score}`;
+  streakPill.textContent = `🔥 Streak: ${streak}`;
+  popPill(scorePill);
+  popPill(streakPill);
+  nextBtn.classList.add('visible');
+}
+
+nextBtn.addEventListener('click', () => {
+  nextQuestion();
+  updateHabitatColor(CATEGORY_META[current.category]);
+});
+
+spawnFloaties(document.getElementById('bgFloaties'), ['✨', '⭐', '💫', '🍓'], 10);
+buildChips();
+rebuildPool();
+nextQuestion();
+updateHabitatColor(CATEGORY_META[current.category]);
+updateFeedTrack();
+</script>
+</body>
+</html>

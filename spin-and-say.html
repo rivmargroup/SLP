@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spin &amp; Say — SLP Activities Hub</title>
+<meta name="description" content="Spin an original picture wheel and answer the speech and language prompt it lands on. Free browser game.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #2b2a3d; --ink-soft: #5a5872; --muted: #8b8aa0;
+  --primary: #1f5f6b; --primary-dark: #143f48;
+  --bg: #fbf8f2; --card-bg: #ffffff; --border: #ece7f5;
+  --good: #1fa971; --good-bg: #e2faef; --bad: #ef5b5b; --bad-bg: #ffe9e9;
+  --radius-lg: 26px; --radius-md: 18px;
+  --shadow-md: 0 14px 30px -10px rgba(43,42,61,.18);
+  --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; font-family: var(--font-body); background: var(--bg); color: var(--ink); overflow-x:hidden;
+}
+body::before, body::after {
+  content:''; position:fixed; border-radius:50%; filter: blur(70px); opacity:.4; z-index:-1;
+}
+body::before { width:360px; height:360px; background:#ffd1e8; top:-100px; right:-100px; }
+body::after { width:400px; height:400px; background:#c7d2fe; bottom:-120px; left:-120px; }
+
+.wrap { max-width: 820px; margin:0 auto; padding: 0 20px 60px; }
+
+header {
+  background: linear-gradient(155deg, var(--primary-dark), var(--primary) 80%);
+  color:#fff; padding: 30px 0 46px; margin-bottom: -30px;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-floaties { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.floaty { position:absolute; opacity:0; animation: floatUp linear infinite; will-change: transform, opacity; }
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
+  12%  { opacity:.6; }
+  88%  { opacity:.5; }
+  100% { transform: translateY(-190px) translateX(var(--drift,10px)) rotate(30deg); opacity:0; }
+}
+
+.mascot-track { position:absolute; left:0; right:0; bottom:0; height:40px; overflow:hidden; pointer-events:none; z-index:0; }
+.mascot-patrol { position:absolute; left:0; top:0; animation: patrol 9s ease-in-out infinite; }
+@keyframes patrol {
+  0%   { left:0%;  transform: scaleX(1); }
+  45%  { left:82%; transform: scaleX(1); }
+  50%  { left:82%; transform: scaleX(-1); }
+  95%  { left:0%;  transform: scaleX(-1); }
+  100% { left:0%;  transform: scaleX(1); }
+}
+.mascot-patrol .walker { display:inline-block; font-size:1.6rem; animation: walkBob .4s ease-in-out infinite; }
+@keyframes walkBob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-8px) rotate(3deg);} }
+
+.celebrate-overlay { position: fixed; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:1200; opacity:0; transition: opacity .3s ease; }
+.celebrate-overlay.show { opacity:1; }
+.celebrate-banner {
+  font-family: var(--font-display); font-weight:800; font-size: 1.9rem; color:#fff; text-align:center;
+  background: linear-gradient(135deg, #ff4fa3, #9b6bff);
+  padding: 20px 38px; border-radius: 26px; box-shadow: 0 20px 40px -12px rgba(0,0,0,.35);
+  transform: scale(0); animation: bannerPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes bannerPop { 0%{ transform: scale(0) rotate(-8deg);} 60%{ transform: scale(1.12) rotate(3deg);} 100%{ transform: scale(1) rotate(0deg);} }
+.spark-piece { position:fixed; pointer-events:none; z-index:1201; font-size:1.4rem; animation: sparkOut ease-out forwards; }
+@keyframes sparkOut { 0%{ transform: translate(0,0) scale(0) rotate(0deg); opacity:1;} 100%{ transform: translate(var(--sx), var(--sy)) scale(1) rotate(var(--sr)); opacity:0;} }
+header .wrap { display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap:wrap; }
+.back-link { color: rgba(255,255,255,.85); text-decoration:none; font-size:.85rem; font-weight:700; font-family: var(--font-display); }
+.back-link:hover { color:#fff; }
+h1 { font-family: var(--font-display); font-weight:800; margin:8px 0 0; font-size: 1.9rem; display:flex; align-items:center; gap:10px; }
+.mascot { display:inline-block; animation: bounce 2.2s ease-in-out infinite; font-size: 1.6rem; }
+@keyframes bounce { 0%,100%{ transform: translateY(0) rotate(-4deg);} 50%{ transform: translateY(-9px) rotate(4deg);} }
+.eyebrow { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color: #ffd6ec; font-family: var(--font-display); }
+.scoreboard { display:flex; gap:10px; }
+.pill {
+  background: rgba(255,255,255,.16); border:2px solid rgba(255,255,255,.25); border-radius:999px;
+  padding:9px 18px; font-size:.88rem; font-weight:800; font-family: var(--font-display); transition: transform .2s ease;
+}
+.pill.pop { animation: pillPop .35s ease; }
+@keyframes pillPop { 0%{transform:scale(1)} 50%{transform:scale(1.18)} 100%{transform:scale(1)} }
+
+.panel {
+  margin-top: 30px; background: var(--card-bg); border:1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-md); padding: 30px; position:relative; z-index:1;
+  text-align:center;
+}
+
+/* ---- Wheel ---- */
+.wheel-stage { padding: 6px 6px 10px; }
+.wheel-wrap {
+  position:relative; width:250px; height:250px; margin: 6px auto 20px;
+  animation: wheelPulse 3s ease-in-out infinite;
+}
+@keyframes wheelPulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.015);} }
+.wheel-pointer {
+  position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:2.2rem; z-index:3;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,.3));
+}
+.wheel-disc {
+  width:100%; height:100%; display:block;
+  transition: transform 3.4s cubic-bezier(.15,.7,.25,1.01);
+  will-change: transform;
+  filter: drop-shadow(0 12px 22px rgba(20,63,72,.4));
+}
+.wheel-hub {
+  position:absolute; top:50%; left:50%; width:50px; height:50px; margin:-25px 0 0 -25px;
+  border-radius:50%; background:#fff; border:4px solid var(--primary);
+  display:flex; align-items:center; justify-content:center; font-size:1.5rem; z-index:2;
+  box-shadow: 0 3px 8px rgba(0,0,0,.22);
+}
+
+.spin-btn {
+  font-family: var(--font-display); font-weight:800; font-size:1.15rem; padding: 16px 40px; border-radius:999px;
+  border:none; background: linear-gradient(135deg, #ff4fa3, #9b6bff); color:#fff; cursor:pointer;
+  box-shadow: 0 6px 0 #7a3fc7; transition: transform .1s ease, box-shadow .1s ease;
+}
+.spin-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 #7a3fc7; }
+.spin-btn:disabled { opacity:.55; cursor:default; }
+.wheel-hint { margin: 4px 0 18px; color: var(--muted); font-size:.9rem; font-weight:600; }
+
+/* ---- Prompt + options (revealed after landing) ---- */
+.prompt-section { display:none; }
+.prompt-section.show { display:block; animation: promptIn .35s ease; }
+@keyframes promptIn { 0%{ opacity:0; transform: translateY(10px);} 100%{ opacity:1; transform: translateY(0);} }
+.prompt-card { text-align:center; padding: 8px 6px 6px; }
+.prompt-label {
+  display:inline-block; font-family: var(--font-display); font-size:.78rem; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; padding: 5px 14px; border-radius:999px; margin-bottom: 14px;
+}
+.prompt-text { font-family: var(--font-display); font-size:1.28rem; font-weight:700; color: var(--ink); margin: 0 0 22px; line-height:1.4; }
+
+.option-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 480px; margin: 0 auto; }
+.option-btn {
+  font-family: var(--font-body); font-weight:700; font-size:.86rem; padding: 16px 8px 12px; border-radius: var(--radius-md);
+  border: 3px solid var(--border); background:#fff; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px;
+  transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; box-shadow: 0 4px 0 var(--border);
+}
+.option-btn .opt-icon { font-size:2rem; }
+.option-btn:hover:not(:disabled) { transform: translateY(-3px); }
+.option-btn:disabled { cursor:default; }
+.option-btn.correct { background: var(--good-bg); border-color: var(--good); box-shadow: 0 4px 0 var(--good); animation: correctPop .4s ease; }
+.option-btn.wrong { background: var(--bad-bg); border-color: var(--bad); box-shadow: 0 4px 0 var(--bad); animation: shake .4s ease; }
+@keyframes correctPop { 0%{transform:scale(1)} 45%{transform:scale(1.08)} 100%{transform:scale(1)} }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.feedback { text-align:center; min-height: 26px; margin-top:18px; font-weight:800; font-family: var(--font-display); }
+.feedback.good { color: var(--good); }
+.feedback.bad { color: var(--bad); }
+
+.actions { display:flex; justify-content:center; margin-top: 10px; }
+.next-btn {
+  font-family: var(--font-display); font-weight:800; font-size:1rem; padding: 14px 30px; border-radius:999px;
+  border:none; background: var(--primary); color:#fff; cursor:pointer; visibility:hidden;
+  box-shadow: 0 5px 0 var(--primary-dark); transition: transform .1s ease, box-shadow .1s ease;
+}
+.next-btn.visible { visibility: visible; }
+.next-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--primary-dark); }
+
+.confetti-piece { position:fixed; width:9px; height:9px; border-radius:3px; pointer-events:none; z-index:999; animation: confettiFall linear forwards; }
+@keyframes confettiFall { to { transform: translate(var(--dx), 300px) rotate(var(--dr)); opacity:0; } }
+
+@media (max-width: 520px) {
+  h1 { font-size: 1.5rem; }
+  .wheel-wrap { width:210px; height:210px; }
+  .option-grid { gap: 8px; }
+  .option-btn { font-size:.76rem; padding: 12px 4px 10px; }
+  .option-btn .opt-icon { font-size:1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bg-floaties" id="bgFloaties"></div>
+  <div class="wrap">
+    <div>
+      <a class="back-link" href="games.html">&larr; All games</a>
+      <p class="eyebrow">Speech &amp; language practice</p>
+      <h1><span class="mascot">🎡</span> Spin &amp; Say</h1>
+    </div>
+    <div class="scoreboard">
+      <span class="pill" id="scorePill">⭐ Score: 0</span>
+      <span class="pill" id="streakPill">🔥 Streak: 0</span>
+    </div>
+  </div>
+  <div class="mascot-track"><div class="mascot-patrol"><span class="walker">🦊</span></div></div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+
+    <div class="wheel-stage" id="wheelStage">
+      <div class="wheel-wrap" id="wheelWrap">
+        <span class="wheel-pointer">🔻</span>
+        <svg class="wheel-disc" id="wheelDisc" viewBox="0 0 200 200">
+          <g id="wheelSegments"></g>
+        </svg>
+        <span class="wheel-hub">🎯</span>
+      </div>
+      <p class="wheel-hint">Tap Spin, see where it lands, then answer the prompt!</p>
+      <button class="spin-btn" id="spinBtn" type="button">🎡 Spin the wheel!</button>
+    </div>
+
+    <div class="prompt-section" id="promptSection">
+      <div class="prompt-card">
+        <p class="prompt-label" id="promptCategory">Category</p>
+        <p class="prompt-text" id="promptText">Loading...</p>
+        <div class="option-grid" id="optionGrid"></div>
+        <p class="feedback" id="feedback"></p>
+        <div class="actions">
+          <button class="next-btn" id="nextBtn">Spin again →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SEGMENTS = [
+  { key: 'WH_Questions', label: 'WH Qs',      icon: '❓', color: '#4d8dfa', soft: '#e8f0ff' },
+  { key: 'Categories',   label: 'Categories', icon: '🗂️', color: '#17b897', soft: '#e2f9f2' },
+  { key: 'Describing',   label: 'Describe',   icon: '🔎', color: '#e08e45', soft: '#fbe9d7' },
+  { key: 'Actions',      label: 'Actions',    icon: '🏃', color: '#ff6a6a', soft: '#ffe9e9' },
+  { key: 'Feelings',     label: 'Feelings',   icon: '😊', color: '#9b6bff', soft: '#f1e9ff' },
+  { key: 'Sound_Play',   label: 'Sounds',     icon: '🗣️', color: '#ff4fa3', soft: '#ffe3f0' }
+];
+
+const PROMPTS = [
+  { category: 'WH_Questions', prompt: 'What do you wear on your feet?', options: [
+    { icon: '👟', label: 'Shoes', correct: true }, { icon: '🧢', label: 'Hat', correct: false }, { icon: '🧤', label: 'Gloves', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'Where do fish live?', options: [
+    { icon: '🌊', label: 'In the water', correct: true }, { icon: '🌳', label: 'In a tree', correct: false }, { icon: '🏜️', label: 'In the desert', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'Who drives the school bus?', options: [
+    { icon: '🚌', label: 'The bus driver', correct: true }, { icon: '🐧', label: 'A penguin', correct: false }, { icon: '🦄', label: 'A unicorn', correct: false } ] },
+  { category: 'WH_Questions', prompt: 'When do you brush your teeth?', options: [
+    { icon: '🌙', label: 'Morning and night', correct: true }, { icon: '🎈', label: 'During a party', correct: false }, { icon: '🚀', label: 'On the moon', correct: false } ] },
+
+  { category: 'Categories', prompt: "Which one is a vegetable?", options: [
+    { icon: '🥕', label: 'Carrot', correct: true }, { icon: '🎸', label: 'Guitar', correct: false }, { icon: '⚽', label: 'Ball', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is a bird?", options: [
+    { icon: '🦜', label: 'Parrot', correct: true }, { icon: '🐟', label: 'Fish', correct: false }, { icon: '🐕', label: 'Dog', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is furniture?", options: [
+    { icon: '🪑', label: 'Chair', correct: true }, { icon: '🍦', label: 'Ice cream', correct: false }, { icon: '🌈', label: 'Rainbow', correct: false } ] },
+  { category: 'Categories', prompt: "Which one is a toy?", options: [
+    { icon: '🧸', label: 'Teddy bear', correct: true }, { icon: '🥦', label: 'Broccoli', correct: false }, { icon: '🚿', label: 'Shower', correct: false } ] },
+
+  { category: 'Describing', prompt: "Which one is hot and orange?", options: [
+    { icon: '🔥', label: 'Fire', correct: true }, { icon: '❄️', label: 'Ice', correct: false }, { icon: '💧', label: 'Water', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is long, yellow, and you peel it?", options: [
+    { icon: '🍌', label: 'Banana', correct: true }, { icon: '🍇', label: 'Grapes', correct: false }, { icon: '🥔', label: 'Potato', correct: false } ] },
+  { category: 'Describing', prompt: "Which one is sticky and sweet?", options: [
+    { icon: '🍯', label: 'Honey', correct: true }, { icon: '🧂', label: 'Salt', correct: false }, { icon: '🧊', label: 'Ice cube', correct: false } ] },
+  { category: 'Describing', prompt: "Which one has wheels and rolls?", options: [
+    { icon: '🚲', label: 'Bicycle', correct: true }, { icon: '📖', label: 'Book', correct: false }, { icon: '🪟', label: 'Window', correct: false } ] },
+
+  { category: 'Actions', prompt: "Which one shows someone running?", options: [
+    { icon: '🏃', label: 'Running', correct: true }, { icon: '😴', label: 'Sleeping', correct: false }, { icon: '🍽️', label: 'Eating quietly', correct: false } ] },
+  { category: 'Actions', prompt: "Which one shows someone jumping?", options: [
+    { icon: '🤸', label: 'Jumping', correct: true }, { icon: '🪑', label: 'Sitting still', correct: false }, { icon: '📖', label: 'Reading', correct: false } ] },
+  { category: 'Actions', prompt: "Which one shows someone drawing a picture?", options: [
+    { icon: '🎨', label: 'Drawing', correct: true }, { icon: '🚿', label: 'Showering', correct: false }, { icon: '🛌', label: 'Napping', correct: false } ] },
+  { category: 'Actions', prompt: "Which one shows someone throwing a ball?", options: [
+    { icon: '🤾', label: 'Throwing', correct: true }, { icon: '🧘', label: 'Meditating', correct: false }, { icon: '🍽️', label: 'Eating soup', correct: false } ] },
+
+  { category: 'Feelings', prompt: "Which face shows happy?", options: [
+    { icon: '😊', label: 'Happy', correct: true }, { icon: '😢', label: 'Sad', correct: false }, { icon: '😠', label: 'Angry', correct: false } ] },
+  { category: 'Feelings', prompt: "Which face shows scared?", options: [
+    { icon: '😱', label: 'Scared', correct: true }, { icon: '😊', label: 'Happy', correct: false }, { icon: '😴', label: 'Sleepy', correct: false } ] },
+  { category: 'Feelings', prompt: "Which face shows surprised?", options: [
+    { icon: '😲', label: 'Surprised', correct: true }, { icon: '🙂', label: 'Calm', correct: false }, { icon: '😢', label: 'Sad', correct: false } ] },
+  { category: 'Feelings', prompt: "Which face shows tired?", options: [
+    { icon: '😴', label: 'Tired', correct: true }, { icon: '😆', label: 'Excited', correct: false }, { icon: '😠', label: 'Angry', correct: false } ] },
+
+  { category: 'Sound_Play', prompt: "Which word starts with the same sound as 'Ring'?", options: [
+    { icon: '🐇', label: 'Rabbit', correct: true }, { icon: '🐱', label: 'Cat', correct: false }, { icon: '🐟', label: 'Fish', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word rhymes with 'Log'?", options: [
+    { icon: '🐸', label: 'Frog', correct: true }, { icon: '🐘', label: 'Elephant', correct: false }, { icon: '🚂', label: 'Train', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word starts with the same sound as 'Look'?", options: [
+    { icon: '🦁', label: 'Lion', correct: true }, { icon: '🐻', label: 'Bear', correct: false }, { icon: '🐍', label: 'Snake', correct: false } ] },
+  { category: 'Sound_Play', prompt: "Which word rhymes with 'Cake'?", options: [
+    { icon: '🐍', label: 'Snake', correct: true }, { icon: '🐱', label: 'Cat', correct: false }, { icon: '🐟', label: 'Fish', correct: false } ] }
+];
+
+let score = 0;
+let streak = 0;
+let accumulatedRotation = 0;
+let spinning = false;
+let current = null;
+let answered = false;
+let lastCategoryKey = null;
+
+const wheelDiscEl = document.getElementById('wheelDisc');
+const wheelSegmentsEl = document.getElementById('wheelSegments');
+const spinBtn = document.getElementById('spinBtn');
+const wheelStageEl = document.getElementById('wheelStage');
+const promptSectionEl = document.getElementById('promptSection');
+const promptCategoryEl = document.getElementById('promptCategory');
+const promptTextEl = document.getElementById('promptText');
+const optionGridEl = document.getElementById('optionGrid');
+const feedbackEl = document.getElementById('feedback');
+const nextBtn = document.getElementById('nextBtn');
+const scorePill = document.getElementById('scorePill');
+const streakPill = document.getElementById('streakPill');
+
+function shadeColor(hex, percent) {
+  const num = parseInt(hex.replace('#',''), 16);
+  const amt = Math.round(2.55 * percent);
+  let R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+  R = R < 255 ? (R < 0 ? 0 : R) : 255; G = G < 255 ? (G < 0 ? 0 : G) : 255; B = B < 255 ? (B < 0 ? 0 : B) : 255;
+  return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+}
+
+function popPill(el) {
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+}
+
+function confettiBurst(count) {
+  const colors = ['#ff4fa3', '#4d8dfa', '#ffb020', '#17b897', '#9b6bff', '#ff8fce'];
+  const cx = window.innerWidth / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'confetti-piece';
+    el.style.left = (cx + (Math.random() * 300 - 150)) + 'px';
+    el.style.top = '110px';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.setProperty('--dx', (Math.random() * 260 - 130) + 'px');
+    el.style.setProperty('--dr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.7 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1500);
+  }
+}
+
+function spawnFloaties(container, emojis, count) {
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'floaty';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = (Math.random() * 90 + 2) + '%';
+    el.style.bottom = '0px';
+    el.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+    el.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+    el.style.animationDuration = (5 + Math.random() * 4) + 's';
+    el.style.animationDelay = (Math.random() * 6) + 's';
+    container.appendChild(el);
+  }
+}
+
+function sparkleBurst(count) {
+  const sparkles = ['✨', '⭐', '🌟', '💫'];
+  const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'spark-piece';
+    el.textContent = sparkles[Math.floor(Math.random() * sparkles.length)];
+    el.style.left = cx + 'px'; el.style.top = cy + 'px';
+    const angle = Math.random() * Math.PI * 2, dist = 80 + Math.random() * 220;
+    el.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+    el.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+    el.style.setProperty('--sr', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDuration = (0.8 + Math.random() * 0.6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1600);
+  }
+}
+
+function celebrateWin(message) {
+  const overlay = document.createElement('div');
+  overlay.className = 'celebrate-overlay';
+  overlay.innerHTML = `<div class="celebrate-banner">${message}</div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('show'));
+  sparkleBurst(50);
+  confettiBurst(50);
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    setTimeout(() => overlay.remove(), 400);
+  }, 1900);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildWheel() {
+  const n = SEGMENTS.length;
+  const wedge = 360 / n;
+  const cx = 100, cy = 100, r = 96;
+  let svg = '';
+  SEGMENTS.forEach((seg, i) => {
+    const a0 = i * wedge, a1 = a0 + wedge, mid = a0 + wedge / 2;
+    const x0 = cx + r * Math.sin(a0 * Math.PI / 180);
+    const y0 = cy - r * Math.cos(a0 * Math.PI / 180);
+    const x1 = cx + r * Math.sin(a1 * Math.PI / 180);
+    const y1 = cy - r * Math.cos(a1 * Math.PI / 180);
+    svg += `<path d="M ${cx} ${cy} L ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${seg.color}" stroke="#fff" stroke-width="3"></path>`;
+    svg += `<g transform="rotate(${mid} ${cx} ${cy})">`;
+    svg += `<text x="${cx}" y="34" text-anchor="middle" font-size="20">${seg.icon}</text>`;
+    svg += `<text x="${cx}" y="52" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff" font-family="Baloo 2, Trebuchet MS, sans-serif">${seg.label}</text>`;
+    svg += `</g>`;
+  });
+  wheelSegmentsEl.innerHTML = svg;
+}
+
+function pickTargetIndex() {
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * SEGMENTS.length);
+  } while (SEGMENTS.length > 1 && SEGMENTS[idx].key === lastCategoryKey);
+  return idx;
+}
+
+function spinWheel() {
+  if (spinning) return;
+  spinning = true;
+  spinBtn.disabled = true;
+  promptSectionEl.classList.remove('show');
+
+  const n = SEGMENTS.length;
+  const wedge = 360 / n;
+  const targetIdx = pickTargetIndex();
+  const targetMid = targetIdx * wedge + wedge / 2;
+
+  const desiredFinalMod = (360 - targetMid + 360) % 360;
+  const currentMod = ((accumulatedRotation % 360) + 360) % 360;
+  const delta = (desiredFinalMod - currentMod + 360) % 360;
+  const extraTurns = 6 + Math.floor(Math.random() * 3);
+  accumulatedRotation += delta + extraTurns * 360;
+
+  wheelDiscEl.style.transform = `rotate(${accumulatedRotation}deg)`;
+
+  setTimeout(() => {
+    spinning = false;
+    lastCategoryKey = SEGMENTS[targetIdx].key;
+    showPrompt(SEGMENTS[targetIdx].key);
+  }, 3500);
+}
+
+function showPrompt(categoryKey) {
+  answered = false;
+  feedbackEl.textContent = '';
+  feedbackEl.className = 'feedback';
+  nextBtn.classList.remove('visible');
+  optionGridEl.innerHTML = '';
+
+  const seg = SEGMENTS.find(s => s.key === categoryKey);
+  const choices = shuffle(PROMPTS.filter(p => p.category === categoryKey));
+  current = choices[0];
+
+  promptCategoryEl.textContent = `${seg.icon} ${seg.label}`;
+  promptCategoryEl.style.background = seg.soft;
+  promptCategoryEl.style.color = seg.color;
+  promptTextEl.textContent = current.prompt;
+
+  const opts = shuffle(current.options);
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="opt-icon">${opt.icon}</span><span>${opt.label}</span>`;
+    btn.dataset.correct = opt.correct ? '1' : '0';
+    btn.addEventListener('click', () => selectOption(btn));
+    optionGridEl.appendChild(btn);
+  });
+
+  promptSectionEl.classList.add('show');
+}
+
+function selectOption(btn) {
+  if (answered) return;
+  answered = true;
+  const allBtns = [...optionGridEl.children];
+  allBtns.forEach(b => b.disabled = true);
+
+  if (btn.dataset.correct === '1') {
+    btn.classList.add('correct');
+    score++;
+    streak++;
+    feedbackEl.textContent = 'Nice pick! 🎉';
+    feedbackEl.classList.add('good');
+    confettiBurst(18);
+  } else {
+    btn.classList.add('wrong');
+    streak = 0;
+    feedbackEl.textContent = "Not quite — spin again and try another!";
+    feedbackEl.classList.add('bad');
+  }
+
+  allBtns.forEach(b => {
+    if (b.dataset.correct === '1') b.classList.add('correct');
+  });
+
+  scorePill.textContent = `⭐ Score: ${score}`;
+  streakPill.textContent = `🔥 Streak: ${streak}`;
+  popPill(scorePill);
+  popPill(streakPill);
+  nextBtn.classList.add('visible');
+
+  if (streak > 0 && streak % 5 === 0) {
+    celebrateWin(`🌟 ${streak} in a row! 🌟`);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  promptSectionEl.classList.remove('show');
+  spinBtn.disabled = false;
+});
+
+spinBtn.addEventListener('click', spinWheel);
+
+spawnFloaties(document.getElementById('bgFloaties'), ['✨', '⭐', '💫', '🎈'], 10);
+buildWheel();
+</script>
+</body>
+</html>
