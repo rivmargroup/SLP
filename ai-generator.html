@@ -184,7 +184,7 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
     <p class="hint" id="keyStatus">No key saved yet.</p>
   </div>
 
-  <div class="panel no-print">
+  <div class="panel no-print" id="generatePanel">
     <h2>✨ Generate an activity</h2>
     <p class="panel-sub">All generated content is original — written fresh by the AI model, in English, for pediatric speech-language therapy. Nothing is copied from any purchased or third-party curriculum.</p>
 
@@ -716,6 +716,21 @@ function defaultInstructionLine(type) {
   };
   return map[type] || '';
 }
+
+// ---------- prefill from URL (?topic=...), e.g. from the homepage generate widget ----------
+(function initFromQuery() {
+  const params = new URLSearchParams(location.search);
+  const topicParam = params.get('topic');
+  if (!topicParam) return;
+  $('topicInput').value = topicParam;
+  const panel = $('generatePanel');
+  if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (loadKey()) {
+    setTimeout(runGenerate, 500);
+  } else {
+    showNotice('Save your DeepSeek API key above, then click "Generate with AI" to create your activity.');
+  }
+})();
 
 $('generateBtn').addEventListener('click', runGenerate);
 $('regenerateBtn').addEventListener('click', runGenerate);
