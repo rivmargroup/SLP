@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -32,6 +32,15 @@
       </div>
     </div>
     <p class="tagline">A calm, easy-to-navigate space with original activities and games for speech therapy sessions — ready to print or play on screen, with new content added every week.</p>
+
+    <form class="hero-generate" id="heroGenerateForm" action="ai-generator.html" method="get">
+      <span class="hero-generate-label">✨ Generate an activity now</span>
+      <div class="hero-generate-row">
+        <input type="text" name="topic" id="heroGenerateInput" class="hero-generate-input" placeholder="e.g. past tense verbs, following 2-step directions…" autocomplete="off">
+        <button type="submit" class="hero-generate-btn">Generate <span aria-hidden="true">→</span></button>
+      </div>
+      <p class="hero-generate-hint">Free AI activity generator — describe any skill and get an original therapy activity plus a printable practice sheet in seconds.</p>
+    </form>
 
     <div class="stats-row" id="statsRow" aria-live="polite">
       <div class="stat">
@@ -70,6 +79,13 @@
       <h2>Books</h2>
       <p>Storybooks selected to support language and communication goals.</p>
       <span class="home-link-cta">View books →</span>
+    </a>
+    <a href="ai-generator.html" class="home-link-card">
+      <span class="home-link-badge">New</span>
+      <span class="home-link-icon" aria-hidden="true">🤖</span>
+      <h2>AI Generator</h2>
+      <p>Describe any skill and generate an original activity plus a printable sheet in seconds.</p>
+      <span class="home-link-cta">Generate now →</span>
     </a>
   </section>
 
