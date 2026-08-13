@@ -133,12 +133,18 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 .ps-title { font-family: Georgia, serif; font-weight:700; font-size: calc(var(--ps-font-size) * 1.6); margin: 0 0 2px; color: var(--ps-accent); line-height:1.15; }
 .ps-instruction { font-size: var(--ps-font-size); margin: 0 0 14px; }
 
-/* ---- worksheet banner: icon + title, printed on the sheet itself ---- */
-.ps-banner { display:flex; align-items:center; gap:16px; background: color-mix(in srgb, var(--ps-accent) 13%, white); border: 1.5px solid color-mix(in srgb, var(--ps-accent) 32%, white); border-radius: 18px; padding: 16px 18px; margin: 0 0 18px; }
-.ps-banner-icon { width:58px; height:58px; flex-shrink:0; border-radius:15px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.9rem; box-shadow: 0 4px 10px -3px rgba(0,0,0,.14); overflow:hidden; }
-.ps-banner-icon img { width:38px; height:38px; }
-.ps-banner-text { flex:1; min-width:0; }
-.ps-banner-skill { font-family: var(--font-body); font-size: calc(var(--ps-font-size) * .74); font-weight:800; text-transform:uppercase; letter-spacing:.04em; color: var(--ps-accent); }
+/* ---- worksheet hero band: real photo + title, printed on the sheet itself ---- */
+.ps-hero { position:relative; margin: 0 0 14px; border-radius: 18px; overflow:hidden; min-height: 148px; display:flex; align-items:flex-end;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ps-accent) 55%, white), color-mix(in srgb, var(--ps-accent) 18%, white)); }
+.ps-hero-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ps-hero-scrim { position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,0) 100%); }
+.ps-hero-content { position:relative; z-index:1; padding: 18px 22px 16px; width:100%; }
+.ps-hero .ps-title { color:#fff; text-shadow: 0 1px 5px rgba(0,0,0,.4); margin-bottom:3px; }
+.ps-hero.no-photo .ps-title { color: var(--ps-accent); text-shadow:none; }
+.ps-hero-skill { font-family: var(--font-body); font-size: calc(var(--ps-font-size) * .74); font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.35); }
+.ps-hero.no-photo .ps-hero-skill { color: var(--ps-accent); text-shadow:none; }
+.ps-photo-credit { font-size:.66rem; color: var(--muted); text-align:right; margin: -8px 0 16px; }
+.ps-photo-credit a { color: var(--muted); }
 .ps-nameline { font-size: calc(var(--ps-font-size) * .9); margin-bottom: 18px; border-bottom: 1px solid #333; display:inline-block; padding-bottom:2px; }
 .ps-wordbank { display:flex; flex-wrap:wrap; gap:8px 10px; margin-top: 16px; }
 .ps-wordbank span { display:inline-block; background: color-mix(in srgb, var(--ps-accent) 12%, white); border:1.5px solid color-mix(in srgb, var(--ps-accent) 35%, white); border-radius:999px; padding:5px 14px; font-weight:800; font-size: calc(var(--ps-font-size) * .85); color: var(--ps-accent); }
@@ -169,10 +175,10 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 .ps-answers h3 { font-family: Georgia, serif; font-size: calc(var(--ps-font-size) * 1.2); margin:0 0 10px; color: var(--ps-accent); }
 .ps-answers ol, .ps-answers p { font-size: var(--ps-font-size); line-height:1.9; margin:0; }
 
-/* ---- topic icon / illustration ---- */
+/* ---- topic photo preview ---- */
 .topic-icon-wrap { display:flex; justify-content:center; margin: -6px 0 20px; }
-.topic-icon { width:84px; height:84px; display:flex; align-items:center; justify-content:center; background: linear-gradient(155deg, #efe9ff, #e7f5ff); border-radius: 26px; font-size:2.6rem; box-shadow: var(--shadow-md); overflow:hidden; }
-.topic-icon img { width:50px; height:50px; }
+.topic-icon { width:100%; max-width:300px; height:130px; display:flex; align-items:center; justify-content:center; background: linear-gradient(155deg, #efe9ff, #e7f5ff); border-radius: 18px; box-shadow: var(--shadow-md); overflow:hidden; }
+.topic-icon img { width:100%; height:100%; object-fit:cover; }
 
 /* ---- reading-level segmented control ---- */
 .seg-control { display:flex; gap:6px; flex-wrap:wrap; }
@@ -231,9 +237,17 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
   .result-sidebar { width:100%; position:static; max-height:none; }
 }
 
+@page { size: letter; margin: 12mm; }
+
 @media print {
   body::before, body::after, header, .no-print, .topnav { display:none !important; }
   .print-sheet { display:block; padding: 0; border:none; box-shadow:none; max-width:none; margin:0; border-radius:0; }
+  .ps-hero, .ps-photo-credit, .ps-nameline, .ps-instruction, .ps-wordbank, .ps-grid, .ps-grid table,
+  .ps-cat-box, .ps-answers, .ps-story,
+  .ps-pairs li, .ps-sentences li, .ps-mc > ol > li, .ps-comprehension li, .ps-mc-choices {
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .ps-categories { break-inside: avoid; page-break-inside: avoid; }
 }
 
 @media (max-width: 780px) {
@@ -347,7 +361,7 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
       <div class="result-main">
         <div class="no-print">
 
-          <div class="topic-icon-wrap"><div class="topic-icon" id="topicIconEl">🧩</div></div>
+          <div class="topic-icon-wrap"><div class="topic-icon" id="topicIconEl"></div></div>
 
           <div class="edit-field">
             <label>Title</label>
@@ -800,15 +814,18 @@ function buildPrintSheet() {
   const ps = $('printSheet');
   ps.dataset.theme = design.theme;
   ps.style.setProperty('--ps-font-size', FONT_SIZES[design.fontSize] || '1rem');
-  const iconEl = $('topicIconEl');
-  const iconHtml = iconEl ? iconEl.innerHTML : '🧩';
-  let html = `<div class="ps-banner">
-      <div class="ps-banner-icon">${iconHtml}</div>
-      <div class="ps-banner-text">
+  const photo = state.photo;
+  const heroInner = photo
+    ? `<img class="ps-hero-photo" src="${photo.thumbnail}" alt="${escapeHtml(photo.title || '')}"><div class="ps-hero-scrim"></div>`
+    : '';
+  let html = `<div class="ps-hero${photo ? '' : ' no-photo'}">
+      ${heroInner}
+      <div class="ps-hero-content">
         <div class="ps-title">${escapeHtml(sheet.title || activity.title)}</div>
-        ${activity.skill ? `<div class="ps-banner-skill">${escapeHtml(activity.skill)}</div>` : ''}
+        ${activity.skill ? `<div class="ps-hero-skill">${escapeHtml(activity.skill)}</div>` : ''}
       </div>
     </div>
+    ${photo ? `<div class="ps-photo-credit">Photo: ${photo.creatorUrl ? `<a href="${photo.creatorUrl}" target="_blank" rel="noopener">${escapeHtml(photo.creator || 'Openverse')}</a>` : escapeHtml(photo.creator || 'Openverse')}${photo.license ? ` (${escapeHtml(photo.license)})` : ''}${photo.foreignLandingUrl ? ` &middot; <a href="${photo.foreignLandingUrl}" target="_blank" rel="noopener">source</a>` : ''}</div>` : ''}
     <div class="ps-instruction">${escapeHtml(sheet.instructionLine || '')}</div>`;
   if (design.showNameDate) {
     html += `<div class="ps-nameline">Name: ____________________ &nbsp;&nbsp;&nbsp; Date: ____________</div>`;
@@ -872,29 +889,41 @@ document.querySelectorAll('#readingLevelControl .seg-btn').forEach(btn => {
   });
 });
 
-// ---------- topic icon / illustration (free, no key: emoji instantly + best-effort Iconify search) ----------
-// Only these Iconify sets are full-color illustrated icons — anything else (line/mono sets)
-// tends to render as a flat, mismatched-looking silhouette, so we skip it and keep the emoji.
-const ICONIFY_COLOR_SETS = ['noto', 'fluent-emoji-flat', 'fluent-emoji', 'flat-color-icons', 'emojione', 'emojione-v1', 'twemoji', 'streamline-emojis'];
+// ---------- topic photo (free, no key: Openverse real-photo search, Creative Commons licensed) ----------
+// Uses only licenses that permit commercial use + modification (site carries ads), and excludes
+// mature content. No icons/emoji here by design — a soft gradient placeholder shows while loading,
+// and stays as a graceful fallback if no good photo match is found for the topic.
 function applyTopicIcon(emoji, keywords) {
   const wrap = $('topicIconEl');
   if (!wrap) return;
-  wrap.textContent = emoji || '🧩';
-  if (state) buildPrintSheet();
-  if (!keywords) return;
-  const q = encodeURIComponent(String(keywords).split(',')[0].trim());
+  wrap.textContent = '';
+  if (state) { state.photo = null; buildPrintSheet(); }
+  const raw = (keywords && String(keywords).split(',')[0].trim()) || (state && state.activity && state.activity.title) || '';
+  const q = encodeURIComponent(raw);
   if (!q) return;
-  fetch(`https://api.iconify.design/search?query=${q}&limit=32`)
+  fetch(`https://api.openverse.org/v1/images/?q=${q}&license_type=commercial,modification&mature=false&page_size=6`)
     .then(r => (r.ok ? r.json() : null))
     .then(data => {
-      const icons = (data && data.icons) || [];
-      const best = icons.find(id => ICONIFY_COLOR_SETS.some(set => id.startsWith(set + ':')));
-      if (!best) return; // no good colorful match — the emoji stays, which still looks clean
+      const results = (data && data.results) || [];
+      const best = results.find(r => r.thumbnail && !r.mature);
+      if (!best) return; // no good match — the gradient placeholder stays, which still looks clean
+      const photo = {
+        thumbnail: best.thumbnail,
+        title: best.title || '',
+        creator: best.creator || '',
+        creatorUrl: best.creator_url || '',
+        foreignLandingUrl: best.foreign_landing_url || '',
+        license: (best.license || '').toUpperCase(),
+      };
       const img = document.createElement('img');
-      img.alt = keywords;
-      img.onload = () => { wrap.textContent = ''; wrap.appendChild(img); if (state) buildPrintSheet(); };
+      img.alt = photo.title || raw;
+      img.onload = () => {
+        wrap.textContent = '';
+        wrap.appendChild(img);
+        if (state) { state.photo = photo; buildPrintSheet(); }
+      };
       img.onerror = () => {};
-      img.src = `https://api.iconify.design/${best}.svg`;
+      img.src = photo.thumbnail;
     })
     .catch(() => {});
 }
