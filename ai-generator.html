@@ -130,19 +130,40 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 .print-sheet[data-theme="marker"] { --ps-accent:#4a4a4a; }
 .print-sheet[data-theme="arcade"] { --ps-accent:#7c3aed; }
 .print-sheet[data-theme="clearprint"] { --ps-accent:#000000; }
-.ps-title { font-family: Georgia, serif; font-weight:700; font-size: calc(var(--ps-font-size) * 1.7); margin: 0 0 4px; color: var(--ps-accent); }
+.ps-title { font-family: Georgia, serif; font-weight:700; font-size: calc(var(--ps-font-size) * 1.6); margin: 0 0 2px; color: var(--ps-accent); line-height:1.15; }
 .ps-instruction { font-size: var(--ps-font-size); margin: 0 0 14px; }
+
+/* ---- worksheet banner: icon + title, printed on the sheet itself ---- */
+.ps-banner { display:flex; align-items:center; gap:16px; background: color-mix(in srgb, var(--ps-accent) 13%, white); border: 1.5px solid color-mix(in srgb, var(--ps-accent) 32%, white); border-radius: 18px; padding: 16px 18px; margin: 0 0 18px; }
+.ps-banner-icon { width:58px; height:58px; flex-shrink:0; border-radius:15px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:1.9rem; box-shadow: 0 4px 10px -3px rgba(0,0,0,.14); overflow:hidden; }
+.ps-banner-icon img { width:38px; height:38px; }
+.ps-banner-text { flex:1; min-width:0; }
+.ps-banner-skill { font-family: var(--font-body); font-size: calc(var(--ps-font-size) * .74); font-weight:800; text-transform:uppercase; letter-spacing:.04em; color: var(--ps-accent); }
 .ps-nameline { font-size: calc(var(--ps-font-size) * .9); margin-bottom: 18px; border-bottom: 1px solid #333; display:inline-block; padding-bottom:2px; }
-.ps-wordbank { display:flex; flex-wrap:wrap; gap:10px 22px; margin-top: 16px; font-size: calc(var(--ps-font-size) * .95); }
+.ps-wordbank { display:flex; flex-wrap:wrap; gap:8px 10px; margin-top: 16px; }
+.ps-wordbank span { display:inline-block; background: color-mix(in srgb, var(--ps-accent) 12%, white); border:1.5px solid color-mix(in srgb, var(--ps-accent) 35%, white); border-radius:999px; padding:5px 14px; font-weight:800; font-size: calc(var(--ps-font-size) * .85); color: var(--ps-accent); }
 .ps-grid table { border-collapse: collapse; margin-top: 10px; }
 .ps-grid td { border:1px solid #999; width: 26px; height: 26px; text-align:center; font-family: monospace; font-size: calc(var(--ps-font-size) * .95); }
 .ps-pairs { display:flex; justify-content:space-between; gap:60px; margin-top:14px; max-width: 480px; }
 .ps-pairs ul { list-style:none; padding:0; margin:0; }
-.ps-pairs li { margin-bottom: 22px; font-size: var(--ps-font-size); }
-.ps-sentences ol, .ps-categories, .ps-mc ol, .ps-comprehension ol { font-size: var(--ps-font-size); line-height:2; }
-.ps-categories { display:flex; gap:30px; margin-top:10px; }
-.ps-cat-box { border:1.5px dashed #999; border-radius:8px; padding:12px; min-width:150px; min-height:100px; }
-.ps-cat-box h4 { margin:0 0 8px; font-size: var(--ps-font-size); color: var(--ps-accent); }
+.ps-pairs li { margin-bottom: 22px; font-size: var(--ps-font-size); padding-left:26px; position:relative; }
+.ps-pairs li::before { content:''; position:absolute; left:0; top:6px; width:9px; height:9px; border-radius:50%; background: var(--ps-accent); }
+.ps-categories { font-size: var(--ps-font-size); line-height:2; display:flex; gap:24px; margin-top:10px; flex-wrap:wrap; }
+.ps-cat-box { border:1.5px dashed color-mix(in srgb, var(--ps-accent) 45%, white); border-radius:14px; padding:12px 14px; min-width:150px; min-height:100px; }
+.ps-cat-box h4 { margin:0 0 8px; font-size: var(--ps-font-size); font-family: var(--font-display); color: var(--ps-accent); }
+
+/* numbered questions as colored circle badges, like a printed workbook */
+.ps-sentences ol, .ps-mc > ol, .ps-comprehension ol { list-style:none; counter-reset:q; padding-left:0; margin:0; }
+.ps-sentences ol li, .ps-mc > ol > li, .ps-comprehension ol li { counter-increment:q; position:relative; padding-left:36px; margin-bottom:13px; font-size: var(--ps-font-size); line-height:1.5; }
+.ps-sentences ol li::before, .ps-mc > ol > li::before, .ps-comprehension ol li::before {
+  content: counter(q); position:absolute; left:0; top:-2px; width:24px; height:24px; border-radius:50%;
+  background: var(--ps-accent); color:#fff; font-family: var(--font-display); font-weight:800; font-size:.78rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.ps-mc-q { font-weight:600; }
+.ps-mc-choices { display:flex; flex-wrap:wrap; gap:7px 18px; margin-top:7px; }
+.ps-choice { display:inline-flex; align-items:center; gap:7px; font-size: var(--ps-font-size); }
+.ps-choice b { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; border:1.5px solid var(--ps-accent); color: var(--ps-accent); font-size:.72em; font-family: var(--font-display); flex-shrink:0; }
 .ps-story { font-size: var(--ps-font-size); line-height:1.7; margin-bottom: 14px; }
 .ps-answers { margin-top: 24px; padding-top:14px; border-top: 2px dashed #999; }
 .ps-answers h3 { font-family: Georgia, serif; font-size: calc(var(--ps-font-size) * 1.2); margin:0 0 10px; color: var(--ps-accent); }
@@ -779,7 +800,15 @@ function buildPrintSheet() {
   const ps = $('printSheet');
   ps.dataset.theme = design.theme;
   ps.style.setProperty('--ps-font-size', FONT_SIZES[design.fontSize] || '1rem');
-  let html = `<div class="ps-title">${escapeHtml(sheet.title || activity.title)}</div>
+  const iconEl = $('topicIconEl');
+  const iconHtml = iconEl ? iconEl.innerHTML : '🧩';
+  let html = `<div class="ps-banner">
+      <div class="ps-banner-icon">${iconHtml}</div>
+      <div class="ps-banner-text">
+        <div class="ps-title">${escapeHtml(sheet.title || activity.title)}</div>
+        ${activity.skill ? `<div class="ps-banner-skill">${escapeHtml(activity.skill)}</div>` : ''}
+      </div>
+    </div>
     <div class="ps-instruction">${escapeHtml(sheet.instructionLine || '')}</div>`;
   if (design.showNameDate) {
     html += `<div class="ps-nameline">Name: ____________________ &nbsp;&nbsp;&nbsp; Date: ____________</div>`;
@@ -804,7 +833,7 @@ function buildPrintSheet() {
       <p style="margin-top:16px; font-size:1rem;">Word bank: ${sheet.categories.flatMap(c => c.items).sort(() => Math.random() - 0.5).map(w => escapeHtml(w)).join(', ')}</p>`;
   }
   if (sheetType === 'multiplechoice') {
-    html += `<div class="ps-mc"><ol>${sheet.questions.map(q => `<li>${escapeHtml(q.question)}<br>${(q.choices || []).map((c, i) => `${String.fromCharCode(97 + i)}) ${escapeHtml(c)}`).join('&nbsp;&nbsp;&nbsp;')}</li>`).join('')}</ol></div>`;
+    html += `<div class="ps-mc"><ol>${sheet.questions.map(q => `<li><div class="ps-mc-q">${escapeHtml(q.question)}</div><div class="ps-mc-choices">${(q.choices || []).map((c, i) => `<span class="ps-choice"><b>${String.fromCharCode(97 + i)}</b>${escapeHtml(c)}</span>`).join('')}</div></li>`).join('')}</ol></div>`;
   }
   if (sheetType === 'comprehension') {
     html += `<div class="ps-story">${escapeHtml(sheet.story)}</div><div class="ps-comprehension"><ol>${sheet.questions.map(q => `<li>${escapeHtml(q)}</li>`).join('')}</ol></div>`;
@@ -844,23 +873,28 @@ document.querySelectorAll('#readingLevelControl .seg-btn').forEach(btn => {
 });
 
 // ---------- topic icon / illustration (free, no key: emoji instantly + best-effort Iconify search) ----------
+// Only these Iconify sets are full-color illustrated icons — anything else (line/mono sets)
+// tends to render as a flat, mismatched-looking silhouette, so we skip it and keep the emoji.
+const ICONIFY_COLOR_SETS = ['noto', 'fluent-emoji-flat', 'fluent-emoji', 'flat-color-icons', 'emojione', 'emojione-v1', 'twemoji', 'streamline-emojis'];
 function applyTopicIcon(emoji, keywords) {
   const wrap = $('topicIconEl');
   if (!wrap) return;
   wrap.textContent = emoji || '🧩';
+  if (state) buildPrintSheet();
   if (!keywords) return;
   const q = encodeURIComponent(String(keywords).split(',')[0].trim());
   if (!q) return;
-  fetch(`https://api.iconify.design/search?query=${q}&limit=1`)
+  fetch(`https://api.iconify.design/search?query=${q}&limit=32`)
     .then(r => (r.ok ? r.json() : null))
     .then(data => {
-      const icon = data && data.icons && data.icons[0];
-      if (!icon) return;
+      const icons = (data && data.icons) || [];
+      const best = icons.find(id => ICONIFY_COLOR_SETS.some(set => id.startsWith(set + ':')));
+      if (!best) return; // no good colorful match — the emoji stays, which still looks clean
       const img = document.createElement('img');
       img.alt = keywords;
-      img.onload = () => { wrap.textContent = ''; wrap.appendChild(img); };
+      img.onload = () => { wrap.textContent = ''; wrap.appendChild(img); if (state) buildPrintSheet(); };
       img.onerror = () => {};
-      img.src = `https://api.iconify.design/${icon}.svg`;
+      img.src = `https://api.iconify.design/${best}.svg`;
     })
     .catch(() => {});
 }
