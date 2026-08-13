@@ -22,11 +22,11 @@
   --bg: #f9f7f2;
   --card-bg: #ffffff;
   --border: #e7e2d8;
-  --radius-lg: 24px;
-  --radius-md: 18px;
-  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --radius-md: 20px;
+  --radius-sm: 13px;
   --shadow-sm: 0 1px 3px rgba(38, 52, 48, 0.06);
-  --shadow-md: 0 12px 28px -8px rgba(38, 52, 48, 0.14);
+  --shadow-md: 0 16px 36px -10px rgba(38, 52, 48, 0.16);
   --font-display: "Baloo 2", "Trebuchet MS", "Verdana", sans-serif;
   --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -59,14 +59,14 @@ body::after {
   background: #cfe0ff;
   bottom: -110px; left: -120px;
 }
-.wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 
 header.site-header {
   background: radial-gradient(1100px 420px at 85% -10%, rgba(198, 138, 82, 0.14), transparent 60%),
     linear-gradient(160deg, var(--primary-dark), var(--primary) 82%);
   color: white;
-  padding: 46px 0 44px;
-  border-radius: 0 0 44px 44px;
+  padding: 60px 0 56px;
+  border-radius: 0 0 52px 52px;
   position: relative;
   overflow: hidden;
 }
@@ -134,14 +134,14 @@ header.site-header {
   gap: 6px;
   color: rgba(255,255,255,0.85);
   text-decoration: none;
-  font-size: 0.86rem;
+  font-size: 0.92rem;
   font-weight: 600;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 .back-link:hover { color: white; }
 .eyebrow {
-  margin: 0 0 4px;
-  font-size: 0.78rem;
+  margin: 0 0 6px;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -149,14 +149,14 @@ header.site-header {
   opacity: 0.9;
 }
 header.site-header h1 {
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 2.3rem;
+  font-size: 3rem;
   letter-spacing: -0.01em;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 .mascot {
   display: inline-block;
@@ -169,16 +169,16 @@ header.site-header h1 {
 header.site-header p.sub {
   margin: 0;
   color: rgba(255,255,255,0.86);
-  max-width: 560px;
-  font-size: 1rem;
+  max-width: 620px;
+  font-size: 1.15rem;
 }
 
-main.wrap { margin-top: -26px; padding-bottom: 60px; }
+main.wrap { margin-top: -30px; padding-bottom: 70px; }
 
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 26px;
   position: relative;
   z-index: 1;
 }
@@ -188,10 +188,10 @@ main.wrap { margin-top: -26px; padding-bottom: 60px; }
   border: none;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
-  padding: 26px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   color: inherit;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -201,26 +201,26 @@ main.wrap { margin-top: -26px; padding-bottom: 60px; }
 .game-card:active { transform: translateY(-1px); }
 
 .game-icon {
-  font-size: 2.6rem;
+  font-size: 3rem;
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
+  border-radius: 18px;
   background: var(--card-soft, var(--primary-light));
 }
 .game-card h3 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.48rem;
 }
 .game-card p {
   margin: 0;
   color: var(--ink-soft);
-  font-size: 0.93rem;
+  font-size: 1rem;
   flex-grow: 1;
 }
 .game-tag {
@@ -229,31 +229,33 @@ main.wrap { margin-top: -26px; padding-bottom: 60px; }
   background: var(--card-soft, var(--primary-light));
   color: var(--card-color, var(--primary-dark));
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 999px;
 }
 .play-cta {
-  margin-top: 4px;
+  margin-top: 6px;
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--card-color, var(--primary));
-  font-size: 0.95rem;
+  font-size: 1.03rem;
 }
 
 footer.site-footer {
   background: var(--primary-dark);
   color: rgba(255, 255, 255, 0.72);
-  padding: 26px 0;
-  font-size: 0.85rem;
+  padding: 30px 0;
+  font-size: 0.9rem;
   text-align: center;
 }
 
-@media (max-width: 560px) {
-  header.site-header h1 { font-size: 1.9rem; }
+@media (max-width: 780px) {
+  header.site-header h1 { font-size: 2.2rem; }
+  header.site-header { padding: 44px 0 40px; border-radius: 0 0 36px 36px; }
+  .game-card { padding: 24px; }
 }
 </style>
 </head>
