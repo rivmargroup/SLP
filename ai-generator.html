@@ -160,29 +160,11 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
     <a class="back-link" href="games.html">&larr; All games</a>
     <p class="eyebrow">AI-powered · Custom Tool</p>
     <h1><span class="mascot">🤖</span> AI Activity Generator</h1>
-    <p class="sub">Describe a skill, get a brand-new therapy activity plus a printable practice sheet in seconds. Drag to reorder, edit anything, then print. Your API key stays in your browser — nothing is stored on this site.</p>
+    <p class="sub">Describe a skill, get a brand-new therapy activity plus a printable practice sheet in seconds. Drag to reorder, edit anything, then print. Free — no account or API key needed, up to 30 generations per day.</p>
   </div>
 </header>
 
 <div class="wrap">
-
-  <div class="panel no-print">
-    <h2>🔑 Your DeepSeek API key</h2>
-    <p class="panel-sub">This page is a static, no-backend site, so it calls the DeepSeek API directly from your browser using your own key. The key is saved only in this browser's local storage — it is never sent to us or to anyone but DeepSeek. Get a key at <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">platform.deepseek.com</a>. Because the key lives in the browser, don't use this on a shared/public computer.</p>
-    <div class="field-row">
-      <div class="field" style="flex:2;">
-        <label for="apiKeyInput">API key</label>
-        <input type="password" id="apiKeyInput" placeholder="sk-...">
-      </div>
-      <div class="field" style="flex:0 0 auto; justify-content:flex-end;">
-        <div class="btn-row" style="margin-top:22px;">
-          <button class="btn btn-primary btn-small" id="saveKeyBtn" type="button">Save key</button>
-          <button class="btn btn-ghost btn-small" id="clearKeyBtn" type="button">Clear</button>
-        </div>
-      </div>
-    </div>
-    <p class="hint" id="keyStatus">No key saved yet.</p>
-  </div>
 
   <div class="panel no-print" id="generatePanel">
     <h2>✨ Generate an activity</h2>
@@ -241,6 +223,7 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 
     <div class="btn-row">
       <button class="btn btn-primary" id="generateBtn" type="button"><span class="spinner" id="genSpinner"></span>Generate with AI</button>
+      <span class="hint" id="remainingHint"></span>
     </div>
 
     <div id="noticeArea"></div>
@@ -304,25 +287,11 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 <script>
 const $ = id => document.getElementById(id);
 
-// ---------- API key handling ----------
-const KEY_STORAGE = 'aiGenDeepSeekKey';
-function loadKey() { return localStorage.getItem(KEY_STORAGE) || ''; }
-function refreshKeyStatus() {
-  const k = loadKey();
-  $('keyStatus').textContent = k ? `Key saved in this browser (${k.slice(0,5)}••••${k.slice(-3)}).` : 'No key saved yet.';
-  $('apiKeyInput').value = k;
-}
-$('saveKeyBtn').addEventListener('click', () => {
-  const v = $('apiKeyInput').value.trim();
-  if (!v) return;
-  localStorage.setItem(KEY_STORAGE, v);
-  refreshKeyStatus();
-});
-$('clearKeyBtn').addEventListener('click', () => {
-  localStorage.removeItem(KEY_STORAGE);
-  refreshKeyStatus();
-});
-refreshKeyStatus();
+// ---------- Worker proxy endpoint ----------
+// Set this to your deployed Cloudflare Worker URL (see cloudflare-worker/README.md).
+// The Worker holds the DeepSeek key secret and enforces a 30/IP/day free limit,
+// so no visitor needs their own API key.
+const WORKER_URL = 'https://slp-ai-generator.rivmargroup.workers.dev';
 
 // ---------- notices ----------
 function showNotice(msg, isErr) {
@@ -368,26 +337,27 @@ All text must be in English. Keep materials simple and inexpensive (nothing requ
 }
 
 async function callDeepSeek(topic, category, ageRange, groupSize, sheetType) {
-  const key = loadKey();
-  if (!key) throw new Error('NO_KEY');
   const userMsg = `Topic/skill: ${topic || category}\nCategory: ${category}\nAge range: ${ageRange}\nGroup size: ${groupSize}\nPractice sheet type: ${sheetType}\nCreate one new original activity and matching practice sheet now.`;
-  const resp = await fetch('https://api.deepseek.com/chat/completions', {
+  const resp = await fetch(WORKER_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'deepseek-v4-flash',
       messages: [
         { role: 'system', content: buildSystemPrompt(sheetType) },
         { role: 'user', content: userMsg }
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.85
+      ]
     })
   });
+  if (resp.status === 429) {
+    const errData = await resp.json().catch(() => ({}));
+    throw new Error(errData.message || "You've reached today's free limit. Please try again tomorrow.");
+  }
   if (!resp.ok) {
     const text = await resp.text().catch(() => '');
-    throw new Error(`API responded with ${resp.status}. ${text.slice(0, 300)}`);
+    throw new Error(`Generator responded with ${resp.status}. ${text.slice(0, 300)}`);
   }
+  const remaining = resp.headers.get('X-RateLimit-Remaining');
+  if (remaining !== null) updateRemainingBadge(remaining);
   const data = await resp.json();
   const content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
   if (!content) throw new Error('Empty response from the model.');
@@ -395,6 +365,11 @@ async function callDeepSeek(topic, category, ageRange, groupSize, sheetType) {
   try { parsed = JSON.parse(content); }
   catch (e) { throw new Error('The model did not return valid JSON. Try generating again.'); }
   return parsed;
+}
+
+function updateRemainingBadge(remaining) {
+  const el = $('remainingHint');
+  if (el) el.textContent = `${remaining} free generation${remaining == 1 ? '' : 's'} left today.`;
 }
 
 // ---------- word search grid builder (client-side, deterministic) ----------
@@ -664,8 +639,6 @@ function buildPrintSheet() {
 // ---------- generate flow ----------
 async function runGenerate() {
   clearNotice();
-  const key = loadKey();
-  if (!key) { showNotice('Save your DeepSeek API key above first.', true); return; }
   const topic = $('topicInput').value.trim();
   const category = $('categorySelect').value;
   const ageRange = $('ageSelect').value;
@@ -693,10 +666,8 @@ async function runGenerate() {
     $('resultPanel').classList.add('show');
     $('resultPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
-    if (err.message === 'NO_KEY') {
-      showNotice('Save your DeepSeek API key above first.', true);
-    } else if (err.message && err.message.toLowerCase().includes('failed to fetch')) {
-      showNotice('The request to the DeepSeek API failed to even reach the network — this is usually either an invalid key, no internet connection, or the DeepSeek API blocking direct browser (CORS) requests. If this persists, DeepSeek\'s API may require a small server-side relay rather than calling it straight from a static page.', true);
+    if (err.message && err.message.toLowerCase().includes('failed to fetch')) {
+      showNotice('The request to the AI generator failed to reach the network — check your internet connection and try again.', true);
     } else {
       showNotice(err.message || 'Unknown error.', true);
     }
@@ -725,11 +696,7 @@ function defaultInstructionLine(type) {
   $('topicInput').value = topicParam;
   const panel = $('generatePanel');
   if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  if (loadKey()) {
-    setTimeout(runGenerate, 500);
-  } else {
-    showNotice('Save your DeepSeek API key above, then click "Generate with AI" to create your activity.');
-  }
+  setTimeout(runGenerate, 500);
 })();
 
 $('generateBtn').addEventListener('click', runGenerate);
