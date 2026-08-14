@@ -198,11 +198,11 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 /* ---- result layout: main content + sidebar ---- */
 .result-layout { display:flex; gap:22px; align-items:flex-start; }
 .result-main { flex:1; min-width:0; }
-.result-sidebar { width: 320px; flex-shrink:0; background: var(--card-bg); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow:hidden; position: sticky; top: 76px; }
+.result-sidebar { width: 350px; flex-shrink:0; background: var(--card-bg); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); overflow:hidden; position: sticky; top: 76px; }
 .sidebar-tabs { display:flex; border-bottom: 2px solid var(--border); }
-.sidebar-tab { flex:1; text-align:center; padding: 13px 4px; font-family: var(--font-display); font-weight:800; font-size:.8rem; color: var(--muted); background:none; border:none; cursor:pointer; border-bottom: 3px solid transparent; }
+.sidebar-tab { flex:1; text-align:center; padding: 13px 3px; font-family: var(--font-display); font-weight:800; font-size:.72rem; color: var(--muted); background:none; border:none; cursor:pointer; border-bottom: 3px solid transparent; }
 .sidebar-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
-.sidebar-pane { display:none; padding: 18px; max-height: 560px; overflow-y:auto; }
+.sidebar-pane { display:none; padding: 18px; max-height: 640px; overflow-y:auto; }
 .sidebar-pane.active { display:block; }
 
 /* chat pane */
@@ -252,6 +252,13 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
 @media print {
   body::before, body::after, header, .no-print, .topnav { display:none !important; }
   .print-sheet { display:block; padding: 0; border:none; box-shadow:none; max-width:none; margin:0; border-radius:0; }
+  /* Force colored backgrounds/gradients (hero band, scrim, word-bank chips, badges) to print
+     even if the browser's "Background graphics" print option is left unchecked. */
+  .print-sheet, .print-sheet * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
   .ps-hero, .ps-photo-credit, .ps-nameline, .ps-instruction, .ps-wordbank, .ps-grid, .ps-grid table,
   .ps-cat-box, .ps-answers, .ps-story,
   .ps-pairs li, .ps-sentences li, .ps-mc > ol > li, .ps-comprehension li, .ps-mc-choices {
@@ -364,14 +371,49 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
   </div>
 
   <div class="panel result-panel" id="resultPanel">
-    <h2>📝 Activity — edit anything, drag ⠿ to reorder</h2>
-    <p class="panel-sub">Everything below is fully editable. Drag list items by the ⠿ handle to reorder them, or ask the chat assistant on the right to make a change for you.</p>
+    <h2>📝 Activity — live preview</h2>
+    <p class="panel-sub">Ask the chat assistant on the right to make any change, switch reading level, or restyle the sheet. Prefer to type fields by hand? Open the ✏️ Edit tab.</p>
 
     <div class="result-layout">
       <div class="result-main">
-        <div class="no-print">
+        <div class="no-print topic-icon-wrap"><div class="topic-icon" id="topicIconEl"></div></div>
 
-          <div class="topic-icon-wrap"><div class="topic-icon" id="topicIconEl"></div></div>
+        <div class="preview-wrap">
+          <p class="preview-label">Live preview</p>
+          <div class="print-sheet" id="printSheet"></div>
+        </div>
+
+        <div class="btn-row no-print" style="margin-top:20px; border-top: 2px dashed var(--border); padding-top:18px;">
+          <button class="btn btn-primary" id="printBtn" type="button">🖨️ Print / Save as PDF</button>
+          <button class="btn btn-ghost" id="copyJsonBtn" type="button">📋 Copy activities.json entry</button>
+          <button class="btn btn-ghost" id="regenerateBtn" type="button">🔄 Generate a new one</button>
+        </div>
+        <p class="hint no-print" id="copyStatus"></p>
+      </div>
+
+      <div class="result-sidebar no-print">
+        <div class="sidebar-tabs">
+          <button class="sidebar-tab active" type="button" data-pane="Chat">💬 Chat</button>
+          <button class="sidebar-tab" type="button" data-pane="Edit">✏️ Edit</button>
+          <button class="sidebar-tab" type="button" data-pane="Diff">🧩 Levels</button>
+          <button class="sidebar-tab" type="button" data-pane="Design">🎨 Design</button>
+        </div>
+
+        <div class="sidebar-pane active" id="paneChat">
+          <div class="chat-quick" id="chatQuick">
+            <button type="button" data-msg="Increase the reading level and vocabulary difficulty.">📈 Raise reading level</button>
+            <button type="button" data-msg="Add two more items to the practice sheet.">➕ Add more items</button>
+            <button type="button" data-msg="Simplify the language and shorten the instructions.">✂️ Simplify language</button>
+          </div>
+          <div class="chat-log" id="chatLog"></div>
+          <div class="chat-input-row">
+            <textarea id="chatInput" rows="1" placeholder="Ask for a change, e.g. add one more word to the bank..."></textarea>
+            <button class="chat-send-btn" id="chatSendBtn" type="button" title="Send">➤</button>
+          </div>
+        </div>
+
+        <div class="sidebar-pane" id="paneEdit">
+          <p class="hint" style="margin-bottom:12px;">Manual editing — most people won't need this, the Chat tab is faster. Drag ⠿ to reorder items.</p>
 
           <div class="edit-field">
             <label>Title</label>
@@ -411,39 +453,6 @@ header p.sub { margin: 12px 0 0; color: rgba(255,255,255,0.88); max-width: 660px
             <input type="text" id="sheetInstructionField">
           </div>
           <div id="sheetEditorArea"></div>
-
-          <div class="btn-row" style="margin-top:20px; border-top: 2px dashed var(--border); padding-top:18px;">
-            <button class="btn btn-primary" id="printBtn" type="button">🖨️ Print / Save as PDF</button>
-            <button class="btn btn-ghost" id="copyJsonBtn" type="button">📋 Copy activities.json entry</button>
-            <button class="btn btn-ghost" id="regenerateBtn" type="button">🔄 Generate a new one</button>
-          </div>
-          <p class="hint" id="copyStatus"></p>
-        </div>
-
-        <div class="preview-wrap">
-          <p class="preview-label">Live preview</p>
-          <div class="print-sheet" id="printSheet"></div>
-        </div>
-      </div>
-
-      <div class="result-sidebar no-print">
-        <div class="sidebar-tabs">
-          <button class="sidebar-tab active" type="button" data-pane="Chat">💬 Chat</button>
-          <button class="sidebar-tab" type="button" data-pane="Diff">🧩 Levels</button>
-          <button class="sidebar-tab" type="button" data-pane="Design">🎨 Design</button>
-        </div>
-
-        <div class="sidebar-pane active" id="paneChat">
-          <div class="chat-quick" id="chatQuick">
-            <button type="button" data-msg="Increase the reading level and vocabulary difficulty.">📈 Raise reading level</button>
-            <button type="button" data-msg="Add two more items to the practice sheet.">➕ Add more items</button>
-            <button type="button" data-msg="Simplify the language and shorten the instructions.">✂️ Simplify language</button>
-          </div>
-          <div class="chat-log" id="chatLog"></div>
-          <div class="chat-input-row">
-            <textarea id="chatInput" rows="1" placeholder="Ask for a change, e.g. add one more word to the bank..."></textarea>
-            <button class="chat-send-btn" id="chatSendBtn" type="button" title="Send">➤</button>
-          </div>
         </div>
 
         <div class="sidebar-pane" id="paneDiff">
@@ -507,30 +516,30 @@ const SHEET_LABELS = {
 
 // ---------- DeepSeek call ----------
 const SHEET_SHAPES = {
-  wordsearch: `"sheet": { "wordbank": ["word1","word2", ... 6 to 8 short vocabulary words related to the topic, no spaces, English only] }`,
-  matching: `"sheet": { "pairs": [ {"left": "...", "right": "..."} , ... 5 to 7 pairs that logically match for this skill/topic ] }`,
-  fillblank: `"sheet": { "sentences": [ {"sentence": "a sentence with a blank shown as ____", "answer": "the missing word"} , ... 6 to 8 items ] }`,
-  sorting: `"sheet": { "categories": [ {"name": "Category name", "items": ["item1","item2","item3"]} , ... 2 to 4 categories with 3-4 items each, related to the topic ] }`,
-  multiplechoice: `"sheet": { "questions": [ {"question": "...", "choices": ["a","b","c"], "answerIndex": 0} , ... 5 to 8 items ] }`,
-  comprehension: `"sheet": { "story": "a short 4-6 sentence original story appropriate for the age range", "questions": ["Who...","What...","Where...","When...","Why..."] }`
+  wordsearch: `"sheet": { "wordbank": ["word1","word2", ... 9 to 11 short vocabulary words related to the topic, no spaces, English only] }`,
+  matching: `"sheet": { "pairs": [ {"left": "...", "right": "..."} , ... 8 to 10 pairs that logically match for this skill/topic ] }`,
+  fillblank: `"sheet": { "sentences": [ {"sentence": "a sentence with a blank shown as ____", "answer": "the missing word"} , ... 9 to 12 items ] }`,
+  sorting: `"sheet": { "categories": [ {"name": "Category name", "items": ["item1","item2","item3","item4"]} , ... 3 to 4 categories with 4-6 items each, related to the topic ] }`,
+  multiplechoice: `"sheet": { "questions": [ {"question": "...", "choices": ["a","b","c"], "answerIndex": 0} , ... 9 to 12 items ] }`,
+  comprehension: `"sheet": { "story": "a rich, original 8-12 sentence story appropriate for the age range, with enough detail (characters, setting, a small problem, a resolution) to support at least 9 varied questions", "questions": ["at least 9 varied questions mixing WH-questions (Who/What/Where/When/Why/How), a main-idea question, an inference question, and a vocabulary-in-context question, in a natural teaching order"] }`
 };
 
 function buildSystemPrompt(sheetType) {
-  return `You are an expert pediatric speech-language pathologist and curriculum writer. You design 100% original therapy materials — never copy or closely paraphrase any existing published curriculum, brand, or character. Always respond with ONLY a single valid JSON object, no markdown, no commentary, matching exactly this shape:
+  return `You are an expert pediatric speech-language pathologist and curriculum writer. You design 100% original therapy materials — never copy or closely paraphrase any existing published curriculum, brand, or character. Your worksheets should feel like a full, polished page — generous, detailed, and professionally designed — not a minimal draft. Always respond with ONLY a single valid JSON object, no markdown, no commentary, matching exactly this shape:
 {
   "activity": {
     "title": "short catchy title",
     "skill": "one-line skill description",
     "goal": "measurable goal, include a percent accuracy criterion when appropriate",
-    "materials": ["material 1", "material 2", ...],
-    "instructions": ["step 1", "step 2", ...],
+    "materials": ["material 1", "material 2", ... 4 to 6 items],
+    "instructions": ["step 1", "step 2", ... 4 to 6 clear, detailed steps],
     "extension": "one idea to increase difficulty",
     "emoji": "a single emoji that best represents this activity's topic",
     "iconKeywords": "2-3 short English keywords, comma-separated, describing the topic for an icon search (e.g. 'speech bubble, communication')"
   },
   ${SHEET_SHAPES[sheetType]}
 }
-All text must be in English. Keep materials simple and inexpensive (nothing requiring purchase of special equipment). Keep instructions clear and actionable for a clinician running the session. The practice sheet content must be self-contained and correct (e.g. fill-in-blank answers must actually match the blank, multiple choice answerIndex must be correct, sorting items must genuinely belong to their category). If the requested reading level is "below grade level", simplify vocabulary and sentence structure and add extra scaffolding cues in the instructions. If it is "above grade level", increase complexity and add a higher-order-thinking twist to the extension idea.`;
+All text must be in English. Keep materials simple and inexpensive (nothing requiring purchase of special equipment). Keep instructions clear and actionable for a clinician running the session. Always hit the upper end of the requested item counts above by default — longer, richer worksheets with more practice items are strongly preferred over short ones, as long as every item stays genuinely relevant to the topic and skill. The practice sheet content must be self-contained and correct (e.g. fill-in-blank answers must actually match the blank, multiple choice answerIndex must be correct, sorting items must genuinely belong to their category). If the requested reading level is "below grade level", simplify vocabulary and sentence structure and add extra scaffolding cues in the instructions. If it is "above grade level", increase complexity and add a higher-order-thinking twist to the extension idea.`;
 }
 
 async function callDeepSeek(topic, category, ageRange, groupSize, sheetType, readingLevel) {
@@ -842,7 +851,7 @@ function buildPrintSheet() {
   }
 
   if (sheetType === 'wordsearch') {
-    const { grid, placed } = generateWordSearch(sheet.wordbank, 12);
+    const { grid, placed } = generateWordSearch(sheet.wordbank, 14);
     let table = '<table><tbody>';
     grid.forEach(row => { table += '<tr>' + row.map(c => `<td>${c}</td>`).join('') + '</tr>'; });
     table += '</tbody></table>';
@@ -1159,7 +1168,24 @@ renderThemeList();
 
 $('generateBtn').addEventListener('click', runGenerate);
 $('regenerateBtn').addEventListener('click', runGenerate);
-$('printBtn').addEventListener('click', () => { buildPrintSheet(); window.print(); });
+$('printBtn').addEventListener('click', async () => {
+  buildPrintSheet();
+  // The hero photo is a hotlinked external image (Openverse). If we call window.print()
+  // immediately, some browsers rasterize the page before that image has finished loading
+  // over the network, so the print/PDF output shows a blank box. Wait for it to actually
+  // finish loading (or fail, or time out) before opening the print dialog.
+  const heroImg = document.querySelector('#printSheet .ps-hero-photo');
+  if (heroImg) {
+    await new Promise(resolve => {
+      if (heroImg.complete && heroImg.naturalWidth > 0) { resolve(); return; }
+      const done = () => { heroImg.removeEventListener('load', done); heroImg.removeEventListener('error', done); resolve(); };
+      heroImg.addEventListener('load', done);
+      heroImg.addEventListener('error', done);
+      setTimeout(done, 4000); // safety timeout so a slow/broken image never blocks printing
+    });
+  }
+  window.print();
+});
 $('copyJsonBtn').addEventListener('click', () => {
   const { activity, category, ageRange, groupSize } = state;
   const slug = (activity.title || 'activity').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
